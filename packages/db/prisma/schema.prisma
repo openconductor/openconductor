@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  output   = "../types"
 }
 
 datasource db {
@@ -117,8 +118,8 @@ model Block {
   input      String
   workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
   workflowId String
-  agent      Agent?   @relation(fields: [agentId], references: [id])
-  agentId    String?
+  agent      Agent    @relation(fields: [agentId], references: [id])
+  agentId    String
   creator    User     @relation(fields: [creatorId], references: [id])
   creatorId  String
   events     Event[]
@@ -160,20 +161,22 @@ enum Agents {
 }
 
 model Agent {
-  id            String      @id @default(cuid())
-  name          String
-  description   String?
-  type          Agents      @default(TRANSFORM)
-  input         String?
-  output        String?
-  isPublic      Boolean
-  integration   Integration @relation(fields: [integrationId], references: [id])
-  integrationId String
-  team          Team        @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  teamId        String
-  creator       User        @relation(fields: [creatorId], references: [id])
-  creatorId     String
-  blocks        Block[]
+  id             String      @id @default(cuid())
+  name           String
+  description    String?
+  type           Agents      @default(TRANSFORM)
+  input          String?
+  output         String?
+  systemTemplate String?
+  promptTemplate String?
+  isPublic       Boolean
+  integration    Integration @relation(fields: [integrationId], references: [id])
+  integrationId  String
+  team           Team        @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId         String
+  creator        User        @relation(fields: [creatorId], references: [id])
+  creatorId      String
+  blocks         Block[]
 }
 
 enum Integrations {

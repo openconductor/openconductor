@@ -1,3 +1,4 @@
+import { updateBlockSchema } from '../schema/block';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 import { z } from 'zod';
 
@@ -33,8 +34,8 @@ export const blockRouter = createTRPCRouter({
         }),
         ctx.prisma.block.create({
           data: {
-            name: 'Block 1',
-            input: 'Airbyte',
+            name: 'New block',
+            input: 'Add input',
             order: input.prevOrder + 1,
             workflow: {
               connect: {
@@ -57,25 +58,17 @@ export const blockRouter = createTRPCRouter({
 
       return newBlock;
     }),
-  update: protectedProcedure
-    .input(
-      z.object({
-        blockId: z.string().min(1),
-        agentId: z.string().min(1),
-        input: z.string().optional(),
-        order: z.number().optional(),
-      }),
-    )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.block.update({
-        where: { id: input.blockId },
-        data: {
-          ...(input.agentId && { input: input.agentId }),
-          ...(input.input && { input: input.input }),
-          ...(input.order && { order: input.order }),
-        },
-      });
-    }),
+  update: protectedProcedure.input(updateBlockSchema).mutation(({ ctx, input }) => {
+    return ctx.prisma.block.update({
+      where: { id: input.blockId },
+      data: {
+        ...(input.name && { name: input.name }),
+        ...(input.input && { input: input.input }),
+        ...(input.agentId && { agentId: input.agentId }),
+        ...(input.order && { order: input.order }),
+      },
+    });
+  }),
   moveUp: protectedProcedure.input(z.string().min(1)).mutation(async ({ ctx, input }) => {
     const block = await ctx.prisma.block.findFirstOrThrow({
       where: { id: input },

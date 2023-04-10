@@ -1,29 +1,13 @@
 import { NextPage } from 'next';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import SidebarLayout from '~/components/layouts/sidebarLayout';
+import AppLayout from '~/components/layouts/appLayout';
 import AgentTable from '~/pages/agents/agentTable';
 
-const Dashboard: NextPage = () => {
-  const { data: userData, status: userStatus } = useSession();
-  const router = useRouter();
-
-  if (userStatus === 'loading') {
-    return <></>;
-  }
-
-  if (userStatus === 'unauthenticated' || !userData) {
-    void router.push('/login');
-    return null;
-  }
-
+const Agents: NextPage = () => {
   return (
-    <div className="h-screen">
-      <SidebarLayout>
-        <AgentTable />
-      </SidebarLayout>
-    </div>
+    <AppLayout>
+      <AgentTable />
+    </AppLayout>
   );
 };
 
-export default Dashboard;
+export default Agents;

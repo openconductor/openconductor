@@ -6,7 +6,11 @@ export const workflowRouter = createTRPCRouter({
     return ctx.prisma.workflow.findMany({
       orderBy: { id: 'desc' },
       include: {
-        blocks: true,
+        blocks: {
+          include: {
+            agent: true,
+          },
+        },
         runs: true,
       },
       where: {
@@ -32,6 +36,7 @@ export const workflowRouter = createTRPCRouter({
             events: {
               orderBy: { startedAt: 'asc' },
             },
+            agent: true,
           },
         },
         runs: {

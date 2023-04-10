@@ -1,11 +1,11 @@
-import { z } from "zod";
-
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from '../trpc';
+import { Integrations } from '@openconductor/db';
+import { z } from 'zod';
 
 export const integrationRouter = createTRPCRouter({
   all: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.integration.findMany({
-      orderBy: { id: "desc" },
+      orderBy: { id: 'desc' },
       where: {
         team: {
           members: {
@@ -30,17 +30,15 @@ export const integrationRouter = createTRPCRouter({
       },
     });
   }),
-  byId: protectedProcedure
-    .input(z.object({ id: z.string() }))
-    .query(({ ctx, input }) => {
-      return ctx.prisma.integration.findFirst({
-        where: { id: input.id },
-      });
-    }),
+  byId: protectedProcedure.input(z.object({ id: z.string() })).query(({ ctx, input }) => {
+    return ctx.prisma.integration.findFirst({
+      where: { id: input.id },
+    });
+  }),
   create: protectedProcedure
     .input(
       z.object({
-        type: z.string(),
+        type: z.nativeEnum(Integrations),
         teamId: z.string(),
       }),
     )
@@ -58,7 +56,7 @@ export const integrationRouter = createTRPCRouter({
       });
     }),
   update: protectedProcedure
-    .input(z.object({ id: z.string(), type: z.string() }))
+    .input(z.object({ id: z.string(), type: z.nativeEnum(Integrations) }))
     .mutation(({ ctx, input }) => {
       return ctx.prisma.integration.update({
         where: { id: input.id },

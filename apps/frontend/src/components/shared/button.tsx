@@ -1,48 +1,42 @@
-import clsx from "clsx";
+import clsx from 'clsx';
 
-export enum ButtonType {
-  Primary = "primary",
-  Secondary = "secondary",
-  Tertiary = "tertiary",
+export const SpinIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+      />
+    </svg>
+  );
+};
+
+export enum ButtonVariant {
+  Primary = 'primary',
+  Secondary = 'secondary',
+  Tertiary = 'tertiary',
 }
 interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  shortcuts?: string | null;
-  type?: ButtonType;
+  variant?: ButtonVariant;
 }
-export default function Button({
-  children,
-  shortcuts = null,
-  type = ButtonType.Primary,
-  ...props
-}: ButtonProps) {
+export default function Button({ children, variant = ButtonVariant.Secondary, ...props }: ButtonProps) {
   return (
     <button
-      className={clsx(
-        type === ButtonType.Primary
-          ? "border-transparent bg-outer-space-700 text-white hover:bg-outer-space-600 focus:ring-neutral-500"
-          : "",
-        type === ButtonType.Secondary
-          ? "border-tasman-400 text-outer-space-700 hover:bg-neutral-100 focus:ring-neutral-300"
-          : "",
-        "justify-left group relative flex w-full rounded-xl border py-2.5 px-5 font-text text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-      )}
       {...props}
+      type="button"
+      className={clsx(
+        variant === ButtonVariant.Primary ? ' border-indigo-700 bg-indigo-600 text-white hover:bg-indigo-500' : '',
+        variant === ButtonVariant.Secondary
+          ? 'border-neutral-200 bg-neutral-100 text-neutral-700 hover:bg-neutral-200 '
+          : '',
+        variant === ButtonVariant.Tertiary ? 'border-indigo-700 bg-white text-indigo-500 hover:bg-indigo-50' : '',
+        'mx-1  px-3.5 py-2 text-sm font-semibold border rounded-md shadow-sm',
+      )}
     >
       {children}
-      {shortcuts ? (
-        <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-sm">
-          <div
-            className={clsx(
-              type === ButtonType.Primary ? "bg-opacity-20" : "",
-              type === ButtonType.Secondary ? "bg-outer-space-700" : "",
-              "w-12 rounded-md px-1.5 py-1",
-            )}
-          >
-            {shortcuts}
-          </div>
-        </span>
-      ) : null}
     </button>
   );
 }
