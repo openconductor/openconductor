@@ -1,0 +1,24 @@
+{
+  "name": "@openconductor/auth",
+  "version": "0.1.0",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "eslint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@next-auth/prisma-adapter": "^1.0.5",
+    "@openconductor/db": "*",
+    "next": "^13.2.4",
+    "next-auth": "^4.20.1",
+    "nodemailer": "^6.9.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.7",
+    "@types/random-number": "^0.0.1"
+  }
+}
