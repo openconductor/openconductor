@@ -36,7 +36,7 @@ export default function BlockCard({
           <div className="min-w-0 flex-1 justify-center py-2">
             <p className="font-semibold">{block.name}</p>
           </div>
-          {/* <div className="flex flex-shrink-0 self-center">
+          <div className="flex flex-shrink-0 self-center">
             <span className="isolate inline-flex rounded-md shadow-sm">
               {block.order > 1 && (
                 <button
@@ -63,7 +63,7 @@ export default function BlockCard({
                 <ChevronDownIcon className="h-5 w-5" aria-hidden="true" />
               </button>
             </span>
-          </div> */}
+          </div>
         </div>
         <div className="py-4">
           {block.agent?.name}

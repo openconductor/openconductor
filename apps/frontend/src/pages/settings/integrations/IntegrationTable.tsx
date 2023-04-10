@@ -33,7 +33,7 @@ export default function IntegrationTable() {
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <h1 className="text-base font-semibold leading-6 ">Integrations</h1>
-          <p className="mt-2 text-sm text-neutral-700">A list of all of your AI-powered integrations.</p>
+          <p className="mt-2 text-sm text-neutral-700">All your AI-powered integrations.</p>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
           <button
@@ -71,17 +71,8 @@ export default function IntegrationTable() {
                   <tr key={integration.id}>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-0">
                       <div className="flex items-center">
-                        <div className="h-6 w-6 flex-shrink-0">
-                          <img
-                            className="h-6 w-6 rounded-full mx-auto"
-                            src={'https://em-content.zobj.net/thumbs/240/apple/354/light-bulb_1f4a1.png'}
-                            alt=""
-                          />
-                        </div>
-                        <div className="ml-4">
-                          <div className="font-medium hover:underline">
-                            <Link href={`/integrations/${integration.id}`}>{integration.type}</Link>
-                          </div>
+                        <div className="font-medium hover:underline">
+                          <Link href={`/integrations/${integration.id}`}>{integration.type}</Link>
                         </div>
                       </div>
                     </td>
@@ -90,22 +81,6 @@ export default function IntegrationTable() {
                       <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
                         Active
                       </span>
-                    </td>
-
-                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <Link href={`/integrations/${integration.id}`} className="text-gigas-600 hover:text-gigas-900">
-                        Edit
-                      </Link>
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          deleteIntegration(integration.id);
-                        }}
-                        className="text-red-600 hover:text-red-900 ml-4"
-                      >
-                        Delete
-                      </a>
                     </td>
                   </tr>
                 ))}

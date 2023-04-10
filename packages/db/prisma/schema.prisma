@@ -180,6 +180,7 @@ model Agent {
 }
 
 enum Integrations {
+  OPENCONDUCTOR
   OPENAI
   GITHUB
   SUPABASE
@@ -188,7 +189,7 @@ enum Integrations {
 
 model Integration {
   id        String       @id @default(cuid())
-  type      Integrations @default(OPENAI)
+  type      Integrations @default(OPENCONDUCTOR)
   authId    String?
   authToken String?
   team      Team         @relation(fields: [teamId], references: [id], onDelete: Cascade)
