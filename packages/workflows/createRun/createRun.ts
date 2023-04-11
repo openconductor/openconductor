@@ -16,15 +16,19 @@ export async function test({ workflowId, userId }: { workflowId: string; userId:
   const temporalId = uuid4();
   const run = await createDbRun(workflow.id, temporalId, userId);
 
-  for (const block of workflow.blocks) {
+  let previousBlockResponse = '';
+
+  for (const [index, block] of workflow.blocks.entries()) {
     const event = await createDbEvent(block.id, run.id);
     try {
       const { response, tokens } = await createLangchainConversationChain({
         systemTemplate: block.agent.systemTemplate || undefined,
         promptTemplate: block.agent.promptTemplate || undefined,
-        input: block.input,
+        input: index === 0 ? block.input : previousBlockResponse,
       });
+
       await updateDbEvent(event.id, 'success', response, tokens);
+      previousBlockResponse = response;
     } catch (error) {
       await updateDbEvent(event.id, 'failed');
     }
