@@ -1,5 +1,5 @@
 import { createTRPCRouter, protectedProcedure } from '../trpc';
-import { Integrations } from '@openconductor/db';
+import { Integrations } from '@openconductor/db/types';
 import { z } from 'zod';
 
 export const integrationRouter = createTRPCRouter({

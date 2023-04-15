@@ -10,7 +10,7 @@ export default function Slideover({ children }: { children: React.ReactNode }) {
   const handleOnClose = async () => {
     delete router.query.block_id;
     delete router.query.agent_id;
-    router.replace({ pathname, query }, undefined, { shallow: true });
+    await router.replace({ pathname, query }, undefined, { shallow: true });
     setOpen(false);
   };
 

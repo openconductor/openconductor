@@ -5,8 +5,18 @@
  */
 !process.env.SKIP_ENV_VALIDATION && (await import("./src/env.mjs"));
 
+import { PrismaPlugin } from '@prisma/nextjs-monorepo-workaround-plugin'
+
+
 /** @type {import("next").NextConfig} */
 const config = {
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.plugins = [...config.plugins, new PrismaPlugin()]
+    }
+
+    return config
+  },
   reactStrictMode: true,
   /** Enables hot reloading for local packages without a build step */
   transpilePackages: [
@@ -25,3 +35,4 @@ const config = {
 };
 
 export default config;
+

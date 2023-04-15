@@ -42,6 +42,7 @@ importers:
       '@openconductor/auth': '*'
       '@openconductor/config-tailwind': '*'
       '@openconductor/db': '*'
+      '@prisma/nextjs-monorepo-workaround-plugin': ^4.12.0
       '@radix-ui/react-icons': ^1.1.1
       '@tanstack/react-query': ^4.28.0
       '@trpc/next': ^10.19.1
@@ -53,6 +54,7 @@ importers:
       next: ^13.2.4
       next-auth: ^4.20.1
       next-themes: ^0.2.1
+      nextjs-monorepo-workaround-plugin: link:@types/prisma/nextjs-monorepo-workaround-plugin
       openai: ^3.1.0
       react: 18.2.0
       react-dom: 18.2.0
@@ -68,6 +70,7 @@ importers:
       '@openconductor/auth': link:../../packages/auth
       '@openconductor/config-tailwind': link:../../packages/config/tailwind
       '@openconductor/db': link:../../packages/db
+      '@prisma/nextjs-monorepo-workaround-plugin': 4.12.0
       '@radix-ui/react-icons': 1.1.1_react@18.2.0
       '@tanstack/react-query': 4.28.0_biqbaboplfbrettd7655fr4n2y
       '@trpc/next': 10.19.1_puvizg6sq5dn43ycpuktnxh4ai
@@ -77,6 +80,7 @@ importers:
       next: 13.2.4_biqbaboplfbrettd7655fr4n2y
       next-auth: 4.20.1_ld2jel3hspngo3u5lti2kgl2sq
       next-themes: 0.2.1_ld2jel3hspngo3u5lti2kgl2sq
+      nextjs-monorepo-workaround-plugin: link:@types/prisma/nextjs-monorepo-workaround-plugin
       openai: 3.2.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -111,12 +115,12 @@ importers:
       '@dqbd/tiktoken': ^1.0.4
       '@openconductor/db': '*'
       '@temporalio/activity': ^1.6.0
-      langchain: ^0.0.51
+      langchain: ^0.0.56
     dependencies:
       '@dqbd/tiktoken': 1.0.4
       '@openconductor/db': link:../db
       '@temporalio/activity': 1.7.0
-      langchain: 0.0.51_@dqbd+tiktoken@1.0.4
+      langchain: 0.0.56
 
   packages/api:
     specifiers:
@@ -124,9 +128,9 @@ importers:
       '@openconductor/config-temporal': '*'
       '@openconductor/db': '*'
       '@openconductor/workflows': '*'
-      '@trpc/client': ^10.9.0
-      '@trpc/server': ^10.9.0
-      langchain: ^0.0.42
+      '@trpc/client': ^10.19.1
+      '@trpc/server': ^10.19.1
+      langchain: ^0.0.56
       openai: ^3.1.0
       superjson: 1.12.2
       zod: ^3.20.2
@@ -135,9 +139,9 @@ importers:
       '@openconductor/config-temporal': link:../config/temporal
       '@openconductor/db': link:../db
       '@openconductor/workflows': link:../workflows
-      '@trpc/client': 10.9.0_@trpc+server@10.9.0
-      '@trpc/server': 10.9.0
-      langchain: 0.0.42
+      '@trpc/client': 10.19.1_@trpc+server@10.19.1
+      '@trpc/server': 10.19.1
+      langchain: 0.0.56
       openai: 3.1.0
       superjson: 1.12.2
       zod: 3.20.2
@@ -1052,6 +1056,10 @@ packages:
     requiresBuild: true
     dev: false
 
+  /@prisma/nextjs-monorepo-workaround-plugin/4.12.0:
+    resolution: {integrity: sha512-YIv6wF1ifCPGMacg9f8khnz9Ti2djytdCi0FnC9DJy+icNqCXI8craMKtFl3Yh434M8oyL+SDQCWKsbCYjmgfA==}
+    dev: false
+
   /@protobufjs/aspromise/1.1.2:
     resolution: {integrity: sha512-j+gKExEuLmKwvz3OgROXtrJ2UG2x8Ch2YZUxahh+s1F2HZ+wAceUNLkvy6zKCPVRkU++ZWQrdxsUeQXmcg4uoQ==}
     dev: false
@@ -1389,14 +1397,6 @@ packages:
       '@trpc/server': 10.19.1
     dev: false
 
-  /@trpc/client/10.9.0_@trpc+server@10.9.0:
-    resolution: {integrity: sha512-id6318qpgqllNOuBp7nuciXFPXCe+zae5d4r1hze6Eyp5fFFNO58TqA+4Q44KIcHgpfWyW2egs6iPeql3PrdKA==}
-    peerDependencies:
-      '@trpc/server': 10.9.0
-    dependencies:
-      '@trpc/server': 10.9.0
-    dev: false
-
   /@trpc/next/10.19.1_puvizg6sq5dn43ycpuktnxh4ai:
     resolution: {integrity: sha512-xe1Ygp4oGtn+zUJu+pCKhbfZ7aveyVAMyYrka81v0BwZTKAAGzp6YuO4t6JtW+3x+ZSJ7sHphJP2bwThJQo9kQ==}
     peerDependencies:
@@ -1436,10 +1436,6 @@ packages:
 
   /@trpc/server/10.19.1:
     resolution: {integrity: sha512-LAa8BQhMYJL+GU28cigOPKlEogCEBeff1wIKflnUj34ou1ythwTboe7Mi6rjDW3Q9EasP7s9YmqRv9Fkp8fL4Q==}
-    dev: false
-
-  /@trpc/server/10.9.0:
-    resolution: {integrity: sha512-5psyZgbvy29pJND32hwkWTMbv6s86IbsPOeDopsgNF0VegZT6Dsijmb7Ub/TDhuJVQVq5u4u5briMXi3SxmBkw==}
     dev: false
 
   /@types/debug/4.1.7:
@@ -1533,6 +1529,10 @@ packages:
     dependencies:
       '@types/node': 18.11.18
     dev: true
+
+  /@types/retry/0.12.0:
+    resolution: {integrity: sha512-wWKOClTTiizcZhXnPY4wikVAwmdYHp8q6DmC+EJUzAMsycb7HB32Kh9RN4+0gExjmPmZSAQjgURXIGATPegAvA==}
+    dev: false
 
   /@types/scheduler/0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
@@ -1897,10 +1897,6 @@ packages:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
     dev: true
 
-  /array-keyed-map/2.1.3:
-    resolution: {integrity: sha512-JIUwuFakO+jHjxyp4YgSiKXSZeC0U+R1jR94bXWBcVlFRBycqXlb+kH9JHxBGcxnVuSqx5bnn0Qz9xtSeKOjiA==}
-    dev: false
-
   /array-union/2.1.0:
     resolution: {integrity: sha512-HGyxoOTYUyCM6stUe6EJgnd4EoewAI7zMdfqO+kGjnlZmBDz/cR5pf8r/cR4Wq60sL/p0IkcjUEEPwS3GFrIyw==}
     engines: {node: '>=8'}
@@ -1945,6 +1941,10 @@ packages:
   /binary-extensions/2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
     engines: {node: '>=8'}
+
+  /binary-search/1.3.6:
+    resolution: {integrity: sha512-nbE1WxOTTrUWIfsfZ4aHGYu5DOuNkbxGokjV6Z2kxfJK3uaAb8zNK1muzOeipoLHZjInT4Br88BHpzevc681xA==}
+    dev: false
 
   /brace-expansion/1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
@@ -2516,15 +2516,6 @@ packages:
     engines: {node: '>=0.8.x'}
     dev: false
 
-  /eventsource-parser/0.1.0:
-    resolution: {integrity: sha512-M9QjFtEIkwytUarnx113HGmgtk52LSn3jNAtnWKi3V+b9rqSfQeVdLsaD5AG/O4IrGQwmAAHBIsqbmURPTd2rA==}
-    engines: {node: '>=14.18'}
-    dev: false
-
-  /exponential-backoff/3.1.1:
-    resolution: {integrity: sha512-dX7e/LHVJ6W3DE1MHWi9S1EYzDESENfLrYohG2G++ovZrYOkm4Knwa0mc1cn84xJOR4KEU0WSchhLbd0UklbHw==}
-    dev: false
-
   /expr-eval/2.0.2:
     resolution: {integrity: sha512-4EMSHGOPSwAfBiibw3ndnP0AvjDWLsMvGOvWEZ2F96IGk0bIVdjQisOHxReSkE13mHcfbuCiXw+G4y0zv6N8Eg==}
     dev: false
@@ -2767,13 +2758,6 @@ packages:
       url-parse-lax: 3.0.0
     dev: true
 
-  /gpt3-tokenizer/1.1.5:
-    resolution: {integrity: sha512-O9iCL8MqGR0Oe9wTh0YftzIbysypNQmS5a5JG3cB3M4LMYjlAVvNnf8LUzVY9MrI7tj+YLY356uHtO2lLX2HpA==}
-    engines: {node: '>=12'}
-    dependencies:
-      array-keyed-map: 2.1.3
-    dev: false
-
   /graceful-fs/4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
 
@@ -2854,11 +2838,16 @@ packages:
     resolution: {integrity: sha512-7NXolsK4CAS5+xvdj5OMMbI962hU/wvwoxk+LWR9Ek9bVtyuuYScDN6eS0rUm6TxApFpw7CX1o4uJzcd4AyD3Q==}
     dev: false
 
+  /is-any-array/2.0.0:
+    resolution: {integrity: sha512-WdPV58rT3aOWXvvyuBydnCq4S2BM1Yz8shKxlEpk/6x+GX202XRvXOycEFtNgnHVLoc46hpexPFx8Pz1/sMS0w==}
+    dev: false
+
   /is-binary-path/2.1.0:
     resolution: {integrity: sha512-ZMERYes6pDydyuGidse7OsHxtbI7WVeUEozgR/g7rd0xUimYNlvZRE/K2MgZTjWy725IfelLeVcEM97mmtRGXw==}
     engines: {node: '>=8'}
     dependencies:
       binary-extensions: 2.2.0
+    dev: true
 
   /is-buffer/2.0.5:
     resolution: {integrity: sha512-i2R6zNFDwgEHJyQUtJEk0XFi1i0dPFn/oqjK3/vPCcDeJvW5NQ83V8QbicfF1SupOaB0h8ntgBC2YiE7dfyctQ==}
@@ -3003,82 +2992,19 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
-  /langchain/0.0.42:
-    resolution: {integrity: sha512-SFffgFmt7+Xv2tvc4ZKHy5p/M7xCDzog7dvzaXs/2M8lbVCHT7jGAo2o46OLDQBlM5m0tRIHm6WJRZBpWc8Wvg==}
-    peerDependencies:
-      '@dqbd/tiktoken': ^1.0.2
-      '@huggingface/inference': ^1.5.1
-      '@pinecone-database/pinecone': ^0.0.10
-      '@supabase/supabase-js': ^2.10.0
-      cheerio: ^1.0.0-rc.12
-      chromadb: ^1.3.0
-      cohere-ai: ^5.0.2
-      d3-dsv: ^3.0.1
-      hnswlib-node: ^1.4.2
-      pdf-parse: ^1.1.1
-      puppeteer: ^19.7.2
-      redis: ^4.6.4
-      serpapi: ^1.1.1
-      srt-parser-2: ^1.2.2
-      typeorm: ^0.3.12
-    peerDependenciesMeta:
-      '@dqbd/tiktoken':
-        optional: true
-      '@huggingface/inference':
-        optional: true
-      '@pinecone-database/pinecone':
-        optional: true
-      '@supabase/supabase-js':
-        optional: true
-      cheerio:
-        optional: true
-      chromadb:
-        optional: true
-      cohere-ai:
-        optional: true
-      d3-dsv:
-        optional: true
-      hnswlib-node:
-        optional: true
-      pdf-parse:
-        optional: true
-      puppeteer:
-        optional: true
-      redis:
-        optional: true
-      serpapi:
-        optional: true
-      srt-parser-2:
-        optional: true
-      typeorm:
-        optional: true
-    dependencies:
-      browser-or-node: 2.1.1
-      eventsource-parser: 0.1.0
-      exponential-backoff: 3.1.1
-      expr-eval: 2.0.2
-      gpt3-tokenizer: 1.1.5
-      is-binary-path: 2.1.0
-      jsonpointer: 5.0.1
-      object-hash: 3.0.0
-      openai: 3.2.1
-      p-queue: 7.3.4
-      uuid: 9.0.0
-      yaml: 2.2.1
-      zod: 3.21.4
-    transitivePeerDependencies:
-      - debug
-    dev: false
-
-  /langchain/0.0.51_@dqbd+tiktoken@1.0.4:
-    resolution: {integrity: sha512-uKjH4NZjiuKXVFfRhHSNEiPpwFb/P34hVpkg6HSFCJ2iynrtLTRNRLLAHbkXb1e2gMZT0cFVrKZuwC59xL13+g==}
+  /langchain/0.0.56:
+    resolution: {integrity: sha512-5+UCYhKwg//fm2Gb32EpKQiuNlJqt2YdKIFyZRCEyqMSmTd1Cu4QcdRMjFfl7IVwyY3xrUC7dQIMsJ6k+TsRrA==}
     engines: {node: '>=18'}
     peerDependencies:
-      '@dqbd/tiktoken': ^1.0.2
+      '@aws-sdk/client-lambda': ^3.310.0
+      '@aws-sdk/client-s3': ^3.310.0
       '@getmetal/metal-sdk': '*'
       '@huggingface/inference': ^1.5.1
-      '@pinecone-database/pinecone': ^0.0.10
+      '@opensearch-project/opensearch': '*'
+      '@pinecone-database/pinecone': '*'
       '@supabase/supabase-js': ^2.10.0
+      '@zilliz/milvus2-sdk-node': ^2.2.0
+      axios: ^0.26.0
       cheerio: ^1.0.0-rc.12
       chromadb: ^1.3.0
       cohere-ai: ^5.0.2
@@ -3087,22 +3013,33 @@ packages:
       hnswlib-node: ^1.4.2
       html-to-text: ^9.0.5
       mammoth: '*'
+      mongodb: ^5.2.0
       pdfjs-dist: ^3.4.120
+      playwright: ^1.32.1
       puppeteer: ^19.7.2
       redis: ^4.6.4
       replicate: ^0.9.0
       srt-parser-2: ^1.2.2
       typeorm: ^0.3.12
+      weaviate-ts-client: ^1.0.0
     peerDependenciesMeta:
-      '@dqbd/tiktoken':
+      '@aws-sdk/client-lambda':
+        optional: true
+      '@aws-sdk/client-s3':
         optional: true
       '@getmetal/metal-sdk':
         optional: true
       '@huggingface/inference':
         optional: true
+      '@opensearch-project/opensearch':
+        optional: true
       '@pinecone-database/pinecone':
         optional: true
       '@supabase/supabase-js':
+        optional: true
+      '@zilliz/milvus2-sdk-node':
+        optional: true
+      axios:
         optional: true
       cheerio:
         optional: true
@@ -3120,7 +3057,11 @@ packages:
         optional: true
       mammoth:
         optional: true
+      mongodb:
+        optional: true
       pdfjs-dist:
+        optional: true
+      playwright:
         optional: true
       puppeteer:
         optional: true
@@ -3132,19 +3073,21 @@ packages:
         optional: true
       typeorm:
         optional: true
+      weaviate-ts-client:
+        optional: true
     dependencies:
       '@anthropic-ai/sdk': 0.4.3
       '@dqbd/tiktoken': 1.0.4
-      '@fortaine/fetch-event-source': 3.0.6
+      binary-extensions: 2.2.0
       browser-or-node: 2.1.1
-      exponential-backoff: 3.1.1
       expr-eval: 2.0.2
       flat: 5.0.2
-      is-binary-path: 2.1.0
       jsonpointer: 5.0.1
+      ml-distance: 4.0.0
       object-hash: 3.0.0
       openai: 3.2.1
       p-queue: 6.6.2
+      p-retry: 4.6.2
       uuid: 9.0.0
       yaml: 2.2.1
       zod: 3.21.4
@@ -3531,6 +3474,37 @@ packages:
     resolution: {integrity: sha512-bzfL1YUZsP41gmu/qjrEk0Q6i2ix/cVeAhbCbqH9u3zYutS1cLg00qhrD0M2MVdCcx4Sc0UpP2eBWo9rotpq6g==}
     dev: true
 
+  /ml-array-mean/1.1.6:
+    resolution: {integrity: sha512-MIdf7Zc8HznwIisyiJGRH9tRigg3Yf4FldW8DxKxpCCv/g5CafTw0RRu51nojVEOXuCQC7DRVVu5c7XXO/5joQ==}
+    dependencies:
+      ml-array-sum: 1.1.6
+    dev: false
+
+  /ml-array-sum/1.1.6:
+    resolution: {integrity: sha512-29mAh2GwH7ZmiRnup4UyibQZB9+ZLyMShvt4cH4eTK+cL2oEMIZFnSyB3SS8MlsTh6q/w/yh48KmqLxmovN4Dw==}
+    dependencies:
+      is-any-array: 2.0.0
+    dev: false
+
+  /ml-distance-euclidean/2.0.0:
+    resolution: {integrity: sha512-yC9/2o8QF0A3m/0IXqCTXCzz2pNEzvmcE/9HFKOZGnTjatvBbsn4lWYJkxENkA4Ug2fnYl7PXQxnPi21sgMy/Q==}
+    dev: false
+
+  /ml-distance/4.0.0:
+    resolution: {integrity: sha512-zj7+UGZpHk3uL7n79XTfGNUjIGnhLn8xVvrxYvBHvXFxo3jq1q+/UjP311hZxnLVhbxbXCjUniThX8gozjacYA==}
+    dependencies:
+      ml-array-mean: 1.1.6
+      ml-distance-euclidean: 2.0.0
+      ml-tree-similarity: 1.0.0
+    dev: false
+
+  /ml-tree-similarity/1.0.0:
+    resolution: {integrity: sha512-XJUyYqjSuUQkNQHMscr6tcjldsOoAekxADTplt40QKfwW6nd++1wHWV9AArl0Zvw/TIHgNaZZNvr8QGvE8wLRg==}
+    dependencies:
+      binary-search: 1.3.6
+      num-sort: 2.1.0
+    dev: false
+
   /mri/1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
     engines: {node: '>=4'}
@@ -3705,6 +3679,11 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /num-sort/2.1.0:
+    resolution: {integrity: sha512-1MQz1Ed8z2yckoBeSfkQHHO9K1yDRxxtotKSJ9yvcTUUxSvfvzEq5GwBrjjHEpMlq/k5gvXdmJ1SbYxWtpNoVg==}
+    engines: {node: '>=8'}
+    dev: false
+
   /oauth/0.9.15:
     resolution: {integrity: sha512-a5ERWK1kh38ExDEfoO6qUHJb32rd7aYmPHuyCu3Fta/cnICvYmgd2uhuKXvPD+PXB+gCEYYEaQdIRAjCOwAKNA==}
     dev: false
@@ -3819,12 +3798,12 @@ packages:
       p-timeout: 3.2.0
     dev: false
 
-  /p-queue/7.3.4:
-    resolution: {integrity: sha512-esox8CWt0j9EZECFvkFl2WNPat8LN4t7WWeXq73D9ha0V96qPRufApZi4ZhPwXAln1uVVal429HVVKPa2X0yQg==}
-    engines: {node: '>=12'}
+  /p-retry/4.6.2:
+    resolution: {integrity: sha512-312Id396EbJdvRONlngUx0NydfrIQ5lsYu0znKVUzVvArzEIt08V1qhtyESbGVd1FGX7UKtiFp5uwKZdM8wIuQ==}
+    engines: {node: '>=8'}
     dependencies:
-      eventemitter3: 4.0.7
-      p-timeout: 5.1.0
+      '@types/retry': 0.12.0
+      retry: 0.13.1
     dev: false
 
   /p-timeout/3.2.0:
@@ -3832,11 +3811,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       p-finally: 1.0.0
-    dev: false
-
-  /p-timeout/5.1.0:
-    resolution: {integrity: sha512-auFDyzzzGZZZdHz3BtET9VEz0SE/uMEAx7uWfGPucfzEwwe/xH0iVeZibQmANYE/hp9T2+UUZT5m+BKyrDp3Ew==}
-    engines: {node: '>=12'}
     dev: false
 
   /p-try/2.2.0:
@@ -4340,6 +4314,11 @@ packages:
     dependencies:
       lowercase-keys: 1.0.1
     dev: true
+
+  /retry/0.13.1:
+    resolution: {integrity: sha512-XQBQ3I8W1Cge0Seh+6gjj03LbmRFWuoszgK9ooCpwYIrhhoO80pfq4cUkU5DkknwfOfFteRwlZ56PYOGYyFWdg==}
+    engines: {node: '>= 4'}
+    dev: false
 
   /reusify/1.0.4:
     resolution: {integrity: sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==}

@@ -198,3 +198,11 @@ model Integration {
   creatorId String
   agents    Agent[]
 }
+
+model Document {
+  id      String                 @id @default(cuid())
+  content String
+  source  String
+  type    String
+  vector  Unsupported("vector")?
+}

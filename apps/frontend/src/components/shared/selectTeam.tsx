@@ -1,7 +1,7 @@
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid';
 import clsx from 'clsx';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { api } from '~/utils/api';
 
 export default function SelectTeam() {

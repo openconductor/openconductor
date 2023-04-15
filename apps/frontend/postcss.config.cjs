@@ -1,1 +1,1 @@
-module.exports = require("@openconductor/tailwind-config/postcss");
+module.exports = require("@openconductor/config-tailwind/postcss");
