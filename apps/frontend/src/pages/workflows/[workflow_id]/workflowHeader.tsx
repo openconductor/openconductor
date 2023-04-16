@@ -103,7 +103,7 @@ export default function WorkflowHeader() {
           onClick={(e) => {
             e.preventDefault();
             toast('Running workflow...');
-            createRun({ workflowId: workflow.id });
+            createRun({ workflowId: workflow.id, input: workflow.name });
           }}
         >
           Run

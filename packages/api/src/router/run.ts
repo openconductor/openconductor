@@ -1,6 +1,6 @@
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 import { taskQueue } from '@openconductor/config-temporal';
-import { test } from '@openconductor/workflows';
+import { executor } from '@openconductor/workflows';
 import { z } from 'zod';
 
 export const runRouter = createTRPCRouter({
@@ -46,13 +46,15 @@ export const runRouter = createTRPCRouter({
       },
     });
   }),
-  create: protectedProcedure.input(z.object({ workflowId: z.string() })).mutation(async ({ input, ctx }) => {
-    return await ctx.temporal.workflow.start(test, {
-      workflowId: `${input.workflowId}-createRun-${new Date()}`,
-      args: [{ workflowId: input.workflowId, userId: ctx.session?.user.id }],
-      taskQueue,
-    });
-  }),
+  create: protectedProcedure
+    .input(z.object({ workflowId: z.string(), input: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      return await ctx.temporal.workflow.start(executor, {
+        workflowId: `${input.workflowId}-executor-${new Date()}`,
+        args: [{ workflowId: input.workflowId, input: input.input, userId: ctx.session?.user.id }],
+        taskQueue,
+      });
+    }),
   update: protectedProcedure.input(z.object({ id: z.string(), status: z.string() })).mutation(({ ctx, input }) => {
     return ctx.prisma.run.update({
       where: { id: input.id },

@@ -7,20 +7,23 @@ const { langchainVectorstoreCreate } = proxyActivities<typeof activities>(nonRet
 
 const { langchainLoaderGithub } = proxyActivities<typeof activities>(longPolicy);
 
-// tctl workflow run --taskqueue openconductor --workflow_type vectorCreateGithub --input='{"repoUrl":"https://github.com/airbytehq/airbyte/tree/master/docs"}'
+// tctl workflow run --taskqueue openconductor --workflow_type vectorCreateGithub --input='{"repoUrl":"https://github.com/hwchase17/langchainjs/tree/main/docs/docs", "branch":"main"}'
 
 export async function vectorCreateGithub({
   repoUrl,
+  branch,
   accessToken,
-  recursive = false,
+  recursive = true,
 }: {
   repoUrl: string;
+  branch: string;
   accessToken?: string;
   recursive?: boolean;
-}): Promise<any> {
+}): Promise<boolean> {
   const loadedDocuments = await langchainLoaderGithub({
     repoUrl,
     options: {
+      branch,
       accessToken,
       recursive,
     },

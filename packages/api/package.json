@@ -9,8 +9,8 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@trpc/client": "^10.19.1",
-    "@trpc/server": "^10.19.1",
+    "@trpc/client": "^10.20.0",
+    "@trpc/server": "^10.20.0",
     "@openconductor/auth": "*",
     "@openconductor/db": "*",
     "@openconductor/workflows": "*",

@@ -1,9 +1,9 @@
 import { prisma } from '@openconductor/db';
 
-export async function getDbWorkflow(id: string) {
+export async function getDbWorkflow({ workflowId }: { workflowId: string }) {
   return prisma.workflow.findUniqueOrThrow({
     where: {
-      id,
+      id: workflowId,
     },
     include: {
       blocks: {

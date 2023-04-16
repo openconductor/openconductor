@@ -1,8 +1,8 @@
 import { prisma } from '@openconductor/db';
 import { Document, Prisma } from '@openconductor/db/types';
 import { Document as LangchainDocument } from 'langchain/document';
-import { OpenAIEmbeddings } from 'langchain/embeddings';
-import { PrismaVectorStore } from 'langchain/vectorstores';
+import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+import { PrismaVectorStore } from 'langchain/vectorstores/prisma';
 
 export async function langchainVectorstoreCreate({
   openAIApiKey = process.env.OPENAI_API_KEY,
@@ -10,21 +10,18 @@ export async function langchainVectorstoreCreate({
 }: {
   openAIApiKey?: string;
   documents: LangchainDocument[];
-}): Promise<boolean> {
-  const vectorStore = PrismaVectorStore.withModel<Document>(prisma).create(
-    new OpenAIEmbeddings({
-      openAIApiKey,
-    }),
-    {
-      prisma: Prisma,
-      tableName: 'Document',
-      vectorColumnName: 'vector',
-      columns: {
-        id: PrismaVectorStore.IdColumn,
-        content: PrismaVectorStore.ContentColumn,
-      },
+}): Promise<number> {
+  const embeddings = new OpenAIEmbeddings({ openAIApiKey });
+
+  const vectorStore = PrismaVectorStore.withModel<Document>(prisma).create(embeddings, {
+    prisma: Prisma,
+    tableName: 'Document',
+    vectorColumnName: 'vector',
+    columns: {
+      id: PrismaVectorStore.IdColumn,
+      content: PrismaVectorStore.ContentColumn,
     },
-  );
+  });
 
   await vectorStore.addModels(
     await prisma.$transaction(
@@ -38,5 +35,7 @@ export async function langchainVectorstoreCreate({
     ),
   );
 
-  return true;
+  const addedDocuments = documents.filter((document) => document.pageContent).length;
+
+  return addedDocuments;
 }

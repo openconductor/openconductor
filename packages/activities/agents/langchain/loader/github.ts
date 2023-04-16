@@ -8,7 +8,14 @@ export async function langchainLoaderGithub({
   repoUrl: string;
   options?: GithubRepoLoaderParams;
 }): Promise<Document[]> {
-  const loader = new GithubRepoLoader(repoUrl, options);
+  const defaultOptions: GithubRepoLoaderParams = {
+    accessToken: process.env.GITHUB_API_TOKEN,
+  };
+
+  const loader = new GithubRepoLoader(repoUrl, {
+    ...defaultOptions,
+    ...options,
+  });
   const docs = await loader.load();
   return docs;
 }

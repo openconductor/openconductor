@@ -1,5 +1,6 @@
-import { appRouter, createTRPCContext } from "@openconductor/api";
-import { createNextApiHandler } from "@trpc/server/adapters/next";
+import { createNextApiHandler } from '@trpc/server/adapters/next';
+
+import { appRouter, createTRPCContext } from '@openconductor/api';
 
 // export API handler
 export default createNextApiHandler({

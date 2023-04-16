@@ -8,7 +8,8 @@
   },
   "dependencies": {
     "@temporalio/workflow": "^1.6.0",
-    "@openconductor/db": "*"
+    "@openconductor/db": "*",
+    "langchain": "^0.0.56"
   },
   "devDependencies": {
     "@openconductor/activities": "*"

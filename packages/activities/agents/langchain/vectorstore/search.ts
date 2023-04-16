@@ -1,13 +1,15 @@
-import { OpenAIEmbeddings } from 'langchain/embeddings';
-import { PrismaVectorStore } from 'langchain/vectorstores';
+import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+import { PrismaVectorStore } from 'langchain/vectorstores/prisma';
 import { prisma } from '@openconductor/db';
 import { Prisma } from '@openconductor/db/types';
 
 export async function langchainVectorStoreSearch({
   query,
+  k = 4,
   openAIApiKey = process.env.OPENAI_API_KEY,
 }: {
   query: string;
+  k?: number;
   openAIApiKey?: string;
 }) {
   const embeddings = new OpenAIEmbeddings({ openAIApiKey });
@@ -23,7 +25,7 @@ export async function langchainVectorStoreSearch({
     },
   });
 
-  const results = vectorStore.similaritySearch(query, 2);
+  const results = vectorStore.similaritySearch(query, k);
 
   return results;
 }

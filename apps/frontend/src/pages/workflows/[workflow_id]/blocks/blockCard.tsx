@@ -65,8 +65,9 @@ export default function BlockCard({
           </div>
         </div>
         <div className="py-4">
-          {block.agent?.name}
-          <ReactMarkdown className="text-neutral-600">{JSON.stringify(block.input) || 'No prompt'}</ReactMarkdown>
+          <ReactMarkdown className="text-neutral-600 whitespace-pre-line">
+            {block.events[0]?.output || 'No output'}
+          </ReactMarkdown>
         </div>
       </div>
     </div>

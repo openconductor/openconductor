@@ -1,25 +1,31 @@
 import { prisma } from '@openconductor/db';
 
-export async function createDbRun({
+export async function createDbBlock({
   workflowId,
-  temporalId,
   userId,
+  name,
+  order,
+  input,
 }: {
   workflowId: string;
-  temporalId: string;
   userId: string;
+  name: string;
+  order: number;
+  input: string;
 }) {
-  return prisma.run.create({
+  return prisma.block.create({
     data: {
-      startedAt: new Date(),
-      endedAt: new Date(),
       workflow: {
         connect: { id: workflowId },
       },
-      status: 'pending',
-      temporalId,
+      name,
+      order,
+      input,
       creator: {
         connect: { id: userId },
+      },
+      agent: {
+        connect: { id: 'clgi388yh000gqh0btfawl75t' },
       },
     },
   });
