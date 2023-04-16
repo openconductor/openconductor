@@ -30,7 +30,6 @@
     "next": "^13.2.4",
     "next-auth": "^4.20.1",
     "next-themes": "^0.2.1",
-    "nextjs-monorepo-workaround-plugin": "link:@types/prisma/nextjs-monorepo-workaround-plugin",
     "openai": "^3.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",

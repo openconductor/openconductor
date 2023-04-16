@@ -136,10 +136,8 @@ importers:
       '@openconductor/workflows': '*'
       '@trpc/client': ^10.20.0
       '@trpc/server': ^10.20.0
-      langchain: ^0.0.56
-      openai: ^3.1.0
-      superjson: 1.12.2
-      zod: ^3.20.2
+      superjson: 1.9.1
+      zod: ^3.21.4
     dependencies:
       '@openconductor/auth': link:../auth
       '@openconductor/config-temporal': link:../config/temporal
@@ -147,10 +145,8 @@ importers:
       '@openconductor/workflows': link:../workflows
       '@trpc/client': 10.20.0_@trpc+server@10.20.0
       '@trpc/server': 10.20.0
-      langchain: 0.0.56
-      openai: 3.1.0
-      superjson: 1.12.2
-      zod: 3.20.2
+      superjson: 1.9.1
+      zod: 3.21.4
 
   packages/auth:
     specifiers:
@@ -3854,15 +3850,6 @@ packages:
       wrappy: 1.0.2
     dev: true
 
-  /openai/3.1.0:
-    resolution: {integrity: sha512-v5kKFH5o+8ld+t0arudj833Mgm3GcgBnbyN9946bj6u7bvel4Yg6YFz2A4HLIYDzmMjIo0s6vSG9x73kOwvdCg==}
-    dependencies:
-      axios: 0.26.1
-      form-data: 4.0.0
-    transitivePeerDependencies:
-      - debug
-    dev: false
-
   /openai/3.2.1:
     resolution: {integrity: sha512-762C9BNlJPbjjlWZi4WYK9iM2tAVAv0uUp1UmI34vb0CN5T2mjB/qM6RYBmNKMh/dN9fC+bxqPwWJZUTWW052A==}
     dependencies:
@@ -4719,8 +4706,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /superjson/1.12.2:
-    resolution: {integrity: sha512-ugvUo9/WmvWOjstornQhsN/sR9mnGtWGYeTxFuqLb4AiT4QdUavjGFRALCPKWWnAiUJ4HTpytj5e0t5HoMRkXg==}
+  /superjson/1.9.1:
+    resolution: {integrity: sha512-oT3HA2nPKlU1+5taFgz/HDy+GEaY+CWEbLzaRJVD4gZ7zMVVC4GDNFdgvAZt6/VuIk6D2R7RtPAiCHwmdzlMmg==}
     engines: {node: '>=10'}
     dependencies:
       copy-anything: 3.0.3
@@ -5287,10 +5274,6 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
-
-  /zod/3.20.2:
-    resolution: {integrity: sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==}
-    dev: false
 
   /zod/3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}

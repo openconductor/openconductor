@@ -11,7 +11,7 @@ const {
   createDbEvent,
   updateDbEvent,
   langchainToolCall,
-  langchainZeroShotAgent,
+  langchainAgentCustom,
 } = proxyActivities<typeof activities>(nonRetryPolicy);
 
 // tctl workflow run --taskqueue openconductor --workflow_type executor --input='{"input":"make an article about airbyte with 2 sections. Can you make a list of sections with a title and a prompt of maximum 200 characters for chatgpt mentioning airbyte. I want the result with only an array with object title and prompt."}'
@@ -52,59 +52,59 @@ export async function executor({
 
   let blockIndex = 0;
 
+  const startBlock = await createDbBlock({
+    workflowId,
+    userId,
+    input: input,
+    name: 'start',
+    order: blockIndex,
+  });
+
   while (iterations < maxIterations) {
-    const block = await createDbBlock({
-      workflowId,
-      userId,
-      input: input,
-      name: 'chatgpt',
-      order: blockIndex,
-    });
+    try {
+      const stepOutput = await langchainAgentCustom({ input, steps });
 
-    blockIndex += 1;
-
-    const event = await createDbEvent({ blockId: block.id, runId: run.id });
-
-    const stepOutput = await langchainZeroShotAgent({ input, steps });
-
-    await updateDbEvent({ eventId: event.id, status: 'success', output: stepOutput.log });
-
-    if (isAgentFinish(stepOutput)) {
-      output = stepOutput;
-      return output;
-    }
-
-    let actions: AgentAction[];
-    if (Array.isArray(stepOutput)) {
-      actions = stepOutput as AgentAction[];
-    } else {
-      actions = [stepOutput as AgentAction];
-    }
-
-    const newSteps = await Promise.all(
-      actions.map(async (action) => {
-        blockIndex += 1;
-        const block = await createDbBlock({
+      if (isAgentFinish(stepOutput)) {
+        const endBlock = await createDbBlock({
           workflowId,
           userId,
-          input: action.toolInput,
-          name: action.tool,
+          input: input,
+          name: 'end',
           order: blockIndex,
         });
 
-        const event = await createDbEvent({ blockId: block.id, runId: run.id });
+        const endEvent = await createDbEvent({ blockId: endBlock.id, runId: run.id });
 
-        const observation = await langchainToolCall({ action });
+        await updateDbEvent({ eventId: endEvent.id, status: 'success', output: stepOutput.log });
+        output = stepOutput;
+        return output;
+      }
 
-        await updateDbEvent({ eventId: event.id, status: 'success', output: observation.observation });
+      blockIndex += 1;
+      const blockTool = await createDbBlock({
+        workflowId,
+        userId,
+        input: stepOutput.toolInput,
+        name: stepOutput.tool,
+        order: blockIndex,
+      });
 
-        return observation;
-      }),
-    );
+      const eventTool = await createDbEvent({ blockId: blockTool.id, runId: run.id });
 
-    steps.push(...newSteps);
+      try {
+        const observation = await langchainToolCall({ action: stepOutput });
 
-    iterations += 1;
+        await updateDbEvent({ eventId: eventTool.id, status: 'success', output: observation.observation });
+
+        steps.push(observation);
+
+        iterations += 1;
+      } catch (error: any) {
+        await createDbEvent({ blockId: blockTool.id, runId: run.id, status: 'error', output: error.message });
+      }
+    } catch (error: any) {
+      await createDbEvent({ blockId: startBlock.id, runId: run.id, status: 'error', output: error.message });
+    }
   }
 
   return output;

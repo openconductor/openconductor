@@ -1,7 +1,7 @@
 import { Context } from '@temporalio/activity';
 import { LLMChain, OpenAI } from 'langchain';
 import { AgentExecutor, ZeroShotAgent } from 'langchain/agents';
-import { ChatOpenAI } from 'langchain/chat_models';
+import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { ChainValues } from 'langchain/dist/schema';
 import {
   BasePromptTemplate,
