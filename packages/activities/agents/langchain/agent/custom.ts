@@ -1,5 +1,5 @@
-import { BasePromptTemplate, LLMChain, OpenAI } from 'langchain';
-import { AgentActionOutputParser, LLMSingleActionAgent, Tool } from 'langchain/agents';
+import { BasePromptTemplate, LLMChain } from 'langchain';
+import { AgentActionOutputParser, LLMSingleActionAgent } from 'langchain/agents';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 
 import { BaseChatPromptTemplate, SerializedBasePromptTemplate, renderTemplate } from 'langchain/prompts';
@@ -13,8 +13,8 @@ import {
   PartialValues,
 } from 'langchain/schema';
 
-import { Calculator } from 'langchain/tools/calculator';
-import { SerpAPI } from 'langchain/tools';
+import { langchainToolRegistry } from '../tool/registry';
+import { Tool } from 'langchain/tools';
 
 export async function langchainAgentCustom({
   input,
@@ -109,14 +109,8 @@ Thought:{agent_scratchpad}`;
   }
 
   const model = new ChatOpenAI({ temperature: 0, openAIApiKey });
-  const tools = [
-    // new SerpAPI(process.env.SERPAPI_API_KEY, {
-    //   location: 'Austin,Texas,United States',
-    //   hl: 'en',
-    //   gl: 'us',
-    // }),
-    new Calculator(),
-  ];
+
+  const tools = await langchainToolRegistry();
 
   const llmChain = new LLMChain({
     prompt: new CustomPromptTemplate({

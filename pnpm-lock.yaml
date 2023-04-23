@@ -54,7 +54,6 @@ importers:
       next: ^13.2.4
       next-auth: ^4.20.1
       next-themes: ^0.2.1
-      nextjs-monorepo-workaround-plugin: link:@types/prisma/nextjs-monorepo-workaround-plugin
       openai: ^3.1.0
       react: 18.2.0
       react-dom: 18.2.0
@@ -80,7 +79,6 @@ importers:
       next: 13.2.4_biqbaboplfbrettd7655fr4n2y
       next-auth: 4.20.1_ld2jel3hspngo3u5lti2kgl2sq
       next-themes: 0.2.1_ld2jel3hspngo3u5lti2kgl2sq
-      nextjs-monorepo-workaround-plugin: link:@types/prisma/nextjs-monorepo-workaround-plugin
       openai: 3.2.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -117,7 +115,7 @@ importers:
       '@sanity/client': ^5.4.2
       '@sanity/uuid': ^3.0.1
       '@temporalio/activity': ^1.6.0
-      langchain: ^0.0.56
+      langchain: ^0.0.62
       marked: ^4.3.0
     dependencies:
       '@dqbd/tiktoken': 1.0.4
@@ -125,7 +123,7 @@ importers:
       '@sanity/client': 5.4.2
       '@sanity/uuid': 3.0.1
       '@temporalio/activity': 1.7.0
-      langchain: 0.0.56
+      langchain: 0.0.62
       marked: 4.3.0
 
   packages/api:
@@ -208,11 +206,11 @@ importers:
       '@openconductor/activities': '*'
       '@openconductor/db': '*'
       '@temporalio/workflow': ^1.6.0
-      langchain: ^0.0.56
+      langchain: ^0.0.62
     dependencies:
       '@openconductor/db': link:../db
       '@temporalio/workflow': 1.7.0
-      langchain: 0.0.56
+      langchain: 0.0.62
     devDependencies:
       '@openconductor/activities': link:../activities
 
@@ -3118,8 +3116,8 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
-  /langchain/0.0.56:
-    resolution: {integrity: sha512-5+UCYhKwg//fm2Gb32EpKQiuNlJqt2YdKIFyZRCEyqMSmTd1Cu4QcdRMjFfl7IVwyY3xrUC7dQIMsJ6k+TsRrA==}
+  /langchain/0.0.62:
+    resolution: {integrity: sha512-OgcMHb4qKkG2OnSGI4gpdEF7FFCG6XOx9DJWrbmadHkQWabqchFqB5ItfyqMumqv3yUjA1C3XxsU+DPuXzp89g==}
     engines: {node: '>=18'}
     peerDependencies:
       '@aws-sdk/client-lambda': ^3.310.0
@@ -3140,7 +3138,7 @@ packages:
       html-to-text: ^9.0.5
       mammoth: '*'
       mongodb: ^5.2.0
-      pdfjs-dist: ^3.4.120
+      pdf-parse: 1.1.1
       playwright: ^1.32.1
       puppeteer: ^19.7.2
       redis: ^4.6.4
@@ -3185,7 +3183,7 @@ packages:
         optional: true
       mongodb:
         optional: true
-      pdfjs-dist:
+      pdf-parse:
         optional: true
       playwright:
         optional: true
@@ -3217,6 +3215,7 @@ packages:
       uuid: 9.0.0
       yaml: 2.2.1
       zod: 3.21.4
+      zod-to-json-schema: 3.20.4_zod@3.21.4
     transitivePeerDependencies:
       - debug
       - encoding
@@ -5274,6 +5273,14 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+  /zod-to-json-schema/3.20.4_zod@3.21.4:
+    resolution: {integrity: sha512-Un9+kInJ2Zt63n6Z7mLqBifzzPcOyX+b+Exuzf7L1+xqck9Q2EPByyTRduV3kmSPaXaRer1JCsucubpgL1fipg==}
+    peerDependencies:
+      zod: ^3.20.0
+    dependencies:
+      zod: 3.21.4
+    dev: false
 
   /zod/3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}

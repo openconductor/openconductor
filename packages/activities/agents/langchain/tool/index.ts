@@ -1,2 +1,2 @@
 export * from './call';
-export * from './getTools';
+export * from './registry';

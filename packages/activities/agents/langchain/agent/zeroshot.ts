@@ -4,8 +4,7 @@ import { ChatOpenAI } from 'langchain/chat_models/openai';
 
 import { ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate } from 'langchain/prompts';
 import { AgentAction, AgentFinish, AgentStep } from 'langchain/schema';
-import { langchainTool } from '../tool';
-import { ConditionalPromptSelector, isChatModel } from 'langchain/dist/chains/prompt_selector';
+import { langchainToolRegistry } from '../tool/registry';
 
 export async function langchainZeroShotAgent({
   input,
@@ -20,7 +19,7 @@ export async function langchainZeroShotAgent({
   suffix?: string;
   openAIApiKey?: string;
 }): Promise<AgentAction | AgentFinish> {
-  const tools = await langchainTool();
+  const tools = await langchainToolRegistry();
 
   const prompt = ZeroShotAgent.createPrompt(tools, {
     prefix,
@@ -34,10 +33,10 @@ This was your previous work (but I haven't seen any of it! I only see what you r
 {agent_scratchpad}`),
   ]);
 
-  const model = new OpenAI({
-    temperature: 0,
-    openAIApiKey,
-  });
+  // const model = new OpenAI({
+  //   temperature: 0,
+  //   openAIApiKey,
+  // });
 
   const chat = new ChatOpenAI({
     temperature: 0,
