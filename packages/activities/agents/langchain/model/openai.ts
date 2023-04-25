@@ -1,4 +1,5 @@
-import { OpenAI, BaseLLM } from 'langchain/llms';
+import { BaseLLM } from 'langchain/llms/base';
+import { OpenAI } from 'langchain/llms/openai';
 
 export async function langchainModelsOpenai({
   openAIApiKey = process.env.OPENAI_API_KEY,

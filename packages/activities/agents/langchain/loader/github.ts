@@ -1,5 +1,5 @@
 import { Document } from 'langchain/document';
-import { GithubRepoLoaderParams, GithubRepoLoader } from 'langchain/document_loaders';
+import { GithubRepoLoaderParams, GithubRepoLoader } from 'langchain/document_loaders/web/github';
 
 export async function langchainLoaderGithub({
   repoUrl,

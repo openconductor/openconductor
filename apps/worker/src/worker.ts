@@ -1,6 +1,10 @@
 import * as activities from '@openconductor/activities';
 import { getConnectionOptions, namespace, taskQueue } from '@openconductor/config-temporal';
 import { NativeConnection, Worker } from '@temporalio/worker';
+if (process.env.ENVIRONMENT === 'local') {
+  // fake import for workflow files, so locally tsx restarts on file changes
+  await import('@openconductor/workflows');
+}
 
 const workflowsPath = new URL('../node_modules/@openconductor/workflows', import.meta.url).pathname;
 

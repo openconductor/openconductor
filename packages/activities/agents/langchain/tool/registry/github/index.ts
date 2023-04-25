@@ -140,18 +140,6 @@ export class GitCloneRepository extends Tool {
   }
 }
 
-export class ProcessChDir extends Tool {
-  name = 'Change Current Directory';
-  description = `Switch your current working directory. Please format your input as the path to the directory relative your current working directory.`;
-  constructor() {
-    super();
-  }
-  async _call(input: string) {
-    process.chdir(input);
-    return `Changed current directory into ${input}.`;
-  }
-}
-
 export class GitCheckoutNewBranch extends Tool {
   name = 'Git Checkout New Branch';
   description = `Create a new branch in a local repository. Please format your input as a JSON object with the following parameters:

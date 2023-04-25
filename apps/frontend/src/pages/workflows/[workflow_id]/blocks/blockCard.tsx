@@ -28,9 +28,22 @@ export default function BlockCard({
         </div>
 
         <div className="py-4">
-          <ReactMarkdown className="text-neutral-600 whitespace-pre-line text-xs truncate h-8">
+          {block.events &&
+            block.events.map((event, index) => {
+              return (
+                <>
+                  {/* <p>
+                    {index}:{JSON.stringify(event)}
+                  </p> */}
+                  <ReactMarkdown className="text-neutral-600 whitespace-pre-line text-xs truncate h-8">
+                    {event?.output || 'No output'}
+                  </ReactMarkdown>
+                </>
+              );
+            })}
+          {/* <ReactMarkdown className="text-neutral-600 whitespace-pre-line text-xs truncate h-8">
             {lastEvent?.output || 'No output'}
-          </ReactMarkdown>
+          </ReactMarkdown> */}
         </div>
       </div>
     </div>

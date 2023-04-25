@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
+import Logo from '../shared/logo';
 
 const navigation = [
   { name: 'Workflows', href: '/workflows' },
@@ -17,7 +18,7 @@ const navigation = [
 export default function Navigation() {
   const router = useRouter();
   return (
-    <Disclosure as="nav" className=" dark:bg-gray-800 shadow">
+    <Disclosure as="nav" className=" dark:bg-neutral-800 shadow">
       {({ open }) => (
         <>
           <div className="px-4 sm:px-6 lg:px-8">
@@ -34,11 +35,12 @@ export default function Navigation() {
                     )}
                   </Disclosure.Button>
                 </div>
-                <div className="flex flex-shrink-0 items-center">
-                  <a href="/">
+                <a href="/">
+                  <div className="flex flex-shrink-0 items-center mt-5">
+                    <Logo className="h-6 w-6 mr-2" />
                     <h3 className="text-lg font-bold leading-6 ">OpenConductor</h3>
-                  </a>
-                </div>
+                  </div>
+                </a>
                 <div className="hidden md:ml-6 md:flex md:space-x-8">
                   {/* <div className="mt-3">
                     <SelectTeam />

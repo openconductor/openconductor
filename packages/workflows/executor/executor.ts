@@ -73,9 +73,8 @@ export async function executor({
           order: blockIndex,
         });
 
-        const endEvent = await createDbEvent({ blockId: endBlock.id, runId: run.id });
+        await createDbEvent({ blockId: endBlock.id, runId: run.id, status: 'success', output: stepOutput.log });
 
-        await updateDbEvent({ eventId: endEvent.id, status: 'success', output: stepOutput.log });
         output = stepOutput;
         return output;
       }
@@ -89,12 +88,12 @@ export async function executor({
         order: blockIndex,
       });
 
-      const eventTool = await createDbEvent({ blockId: blockTool.id, runId: run.id });
+      await createDbEvent({ blockId: blockTool.id, runId: run.id, output: stepOutput.log });
 
       try {
         const observation = await langchainToolCall({ action: stepOutput });
 
-        await updateDbEvent({ eventId: eventTool.id, status: 'success', output: observation.observation });
+        await createDbEvent({ blockId: blockTool.id, runId: run.id, output: observation.observation });
 
         steps.push(observation);
 
