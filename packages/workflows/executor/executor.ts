@@ -93,7 +93,12 @@ export async function executor({
       try {
         const observation = await langchainToolCall({ action: stepOutput });
 
-        await createDbEvent({ blockId: blockTool.id, runId: run.id, output: observation.observation });
+        await createDbEvent({
+          blockId: blockTool.id,
+          runId: run.id,
+          output: observation.observation,
+          status: 'success',
+        });
 
         steps.push(observation);
 

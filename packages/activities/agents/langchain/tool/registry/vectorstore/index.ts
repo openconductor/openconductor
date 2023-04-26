@@ -32,7 +32,7 @@ export function langchainVectorTool({ openAIApiKey = process.env.OPENAI_API_KEY 
   const chain = VectorDBQAChain.fromLLM(model, vectorStore);
 
   const databaseTool: Tool = new ChainTool({
-    name: 'Database',
+    name: 'database-Search',
     description: 'useful for when you need to answer questions about tools that can be found on github',
     chain: chain,
   });

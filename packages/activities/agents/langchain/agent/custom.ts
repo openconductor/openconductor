@@ -31,20 +31,20 @@ export async function langchainAgentCustom({
   steps: AgentStep[];
   openAIApiKey?: string;
 }): Promise<AgentAction | AgentFinish> {
-  const PREFIX = `Answer the following questions as best you can. You have access to the following tools:`;
+  const PREFIX = `Execute the following task as best you can. You have access to the following tools:`;
   const formatInstructions = (toolNames: string) => `Use the following format:
 
-Question: the input question you must answer
+Task: the input task you must finish
 Thought: you should always think about what to do
 Action: the action to take, should be one of [${toolNames}]
 Action Input: the input to the action
 Observation: the result of the action
 ... (this Thought/Action/Action Input/Observation can repeat N times)
-Thought: I now know the final answer
-Final Answer: the final answer to the original input question`;
+Thought: I have finished the task
+End: the result of the original input task`;
   const SUFFIX = `Begin!
 
-Question: {input}
+Task: {input}
 Thought:{agent_scratchpad}`;
 
   class CustomPromptTemplate extends BaseChatPromptTemplate {
@@ -89,14 +89,14 @@ Thought:{agent_scratchpad}`;
 
   class CustomOutputParser extends AgentActionOutputParser {
     async parse(text: string): Promise<AgentAction | AgentFinish> {
-      if (text.includes('Final Answer:')) {
-        const parts = text.split('Final Answer:');
+      if (text.includes('End:')) {
+        const parts = text.split('End:');
         const input = parts[parts.length - 1]!.trim();
         const finalAnswers = { output: input };
         return { log: text, returnValues: finalAnswers };
       }
 
-      const match = /Action: (.*)\nAction Input: (.*)/s.exec(text);
+      const match = /Action\s*\d*:\s*(.*)\nAction Input\s*\d*:\s*([\s\S]*)/i.exec(text);
       if (!match) {
         throw new Error(`Could not parse LLM output: ${text}`);
       }
