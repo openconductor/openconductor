@@ -2,18 +2,12 @@ import type * as activities from '@openconductor/activities';
 import { proxyActivities, uuid4 } from '@temporalio/workflow';
 import { AgentAction, AgentFinish, AgentStep } from 'langchain/schema';
 
-import { nonRetryPolicy } from '../policies';
+import { longNonRetryPolicy, nonRetryPolicy } from '../policies';
 
-const {
-  getDbAgent,
-  createDbRun,
-  createDbBlock,
-  createDbEvent,
-  updateDbEvent,
-  langchainToolCall,
-  langchainAgentCustom,
-  langchainPromptTemplate,
-} = proxyActivities<typeof activities>(nonRetryPolicy);
+const { getDbAgent, createDbRun, createDbBlock, createDbEvent, updateDbEvent, langchainPromptTemplate } =
+  proxyActivities<typeof activities>(nonRetryPolicy);
+
+const { langchainToolCall, langchainAgentCustom } = proxyActivities<typeof activities>(longNonRetryPolicy);
 
 export async function runAgent({
   agentId,

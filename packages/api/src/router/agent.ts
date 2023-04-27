@@ -28,11 +28,6 @@ export const agentRouter = createTRPCRouter({
           orderBy: {
             order: 'asc',
           },
-          include: {
-            events: {
-              orderBy: { startedAt: 'asc' },
-            },
-          },
         },
         runs: {
           orderBy: {

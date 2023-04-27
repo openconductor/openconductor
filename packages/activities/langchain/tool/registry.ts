@@ -23,7 +23,7 @@ export async function langchainToolRegistry(): Promise<Tool[]> {
 
     // new githubTool.GithubCreatePullRequestTool({ githubApiKey }),
     // new githubTool.GithubGetBranchTool({ githubApiKey }),
-    // new githubTool.GithubGetIssueTool({ githubApiKey }),
+    new githubTool.GithubGetIssueTool({ githubApiKey }),
 
     // new gitTool.GitAddFile(),
     // new gitTool.GitCheckoutBranch(),
