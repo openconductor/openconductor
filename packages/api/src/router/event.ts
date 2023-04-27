@@ -11,7 +11,7 @@ export const eventRouter = createTRPCRouter({
       where: {
         block: {
           id: input.blockId,
-          workflow: {
+          agent: {
             team: {
               members: {
                 some: {
@@ -28,7 +28,7 @@ export const eventRouter = createTRPCRouter({
     return ctx.prisma.event.findFirst({
       where: {
         block: {
-          workflow: {
+          agent: {
             team: {
               members: {
                 some: {

@@ -1,11 +1,11 @@
 import { NextPage } from 'next';
 import AppLayout from '~/components/layouts/appLayout';
-import WorkflowTable from '~/pages/workflows/workflowTable';
+import AgentTable from '~/pages/agents/agentTable';
 
 const Dashboard: NextPage = () => {
   return (
     <AppLayout>
-      <WorkflowTable />
+      <AgentTable />
     </AppLayout>
   );
 };

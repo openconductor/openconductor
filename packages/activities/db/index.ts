@@ -1,4 +1,4 @@
-export * from './getWorkflow';
+export * from './getAgent';
 export * from './createRun';
 export * from './createBlock';
 export * from './createEvent';

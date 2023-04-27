@@ -1,13 +1,13 @@
 import { prisma } from '@openconductor/db';
 
 export async function createDbBlock({
-  workflowId,
+  agentId,
   userId,
   name,
   order,
   input,
 }: {
-  workflowId: string;
+  agentId: string;
   userId: string;
   name: string;
   order: number;
@@ -15,8 +15,8 @@ export async function createDbBlock({
 }) {
   return prisma.block.create({
     data: {
-      workflow: {
-        connect: { id: workflowId },
+      agent: {
+        connect: { id: agentId },
       },
       name,
       order,

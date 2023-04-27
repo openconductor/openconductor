@@ -1,11 +1,11 @@
 import { prisma } from '@openconductor/db';
 
 export async function createDbRun({
-  workflowId,
+  agentId,
   temporalId,
   userId,
 }: {
-  workflowId: string;
+  agentId: string;
   temporalId: string;
   userId: string;
 }) {
@@ -13,8 +13,8 @@ export async function createDbRun({
     data: {
       startedAt: new Date(),
       endedAt: new Date(),
-      workflow: {
-        connect: { id: workflowId },
+      agent: {
+        connect: { id: agentId },
       },
       status: 'pending',
       temporalId,
