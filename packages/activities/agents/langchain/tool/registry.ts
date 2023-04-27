@@ -55,7 +55,7 @@ export async function langchainToolRegistry(): Promise<Tool[]> {
     // new GitAddFile(),
     // new GitCommit(),
     // new GitPushBranch(),
-    new ProcessChangeDirectoryTool(),
+    // new ProcessChangeDirectoryTool(),
     new FilesystemCreateFileTool(),
     new FilesystemReadFileTool(),
     new FilesystemInsertTextTool(),

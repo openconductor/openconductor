@@ -6,11 +6,7 @@ export const workflowRouter = createTRPCRouter({
     return ctx.prisma.workflow.findMany({
       orderBy: { id: 'desc' },
       include: {
-        blocks: {
-          include: {
-            agent: true,
-          },
-        },
+        blocks: true,
         runs: true,
       },
       where: {
@@ -36,7 +32,6 @@ export const workflowRouter = createTRPCRouter({
             events: {
               orderBy: { startedAt: 'asc' },
             },
-            agent: true,
           },
         },
         runs: {
@@ -60,12 +55,21 @@ export const workflowRouter = createTRPCRouter({
       },
     });
   }),
-  update: protectedProcedure.input(z.object({ id: z.string(), name: z.string() })).mutation(({ ctx, input }) => {
-    return ctx.prisma.workflow.update({
-      where: { id: input.id },
-      data: { name: input.name },
-    });
-  }),
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string().optional(),
+        prompt: z.string().optional(),
+        input: z.record(z.string(), z.any()).optional(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.workflow.update({
+        where: { id: input.id },
+        data: { name: input.name, prompt: input.prompt, input: input.input },
+      });
+    }),
   delete: protectedProcedure.input(z.string()).mutation(({ ctx, input }) => {
     return ctx.prisma.workflow.delete({ where: { id: input } });
   }),

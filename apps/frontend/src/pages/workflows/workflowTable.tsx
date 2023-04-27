@@ -32,7 +32,7 @@ export default function WorkflowTable() {
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <h1 className="text-base font-semibold leading-6 ">Workflows</h1>
-          <p className="mt-2 text-sm text-neutral-700">All your AI-powered workflows.</p>
+          <p className="mt-2 text-sm  ">All your AI-powered workflows.</p>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
           <button
@@ -50,7 +50,7 @@ export default function WorkflowTable() {
       <div className="mt-8 flow-root">
         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <table className="min-w-full divide-y divide-neutral-300">
+            <table className="min-w-full divide-y divide-neutral-300 dark:divide-neutral-600">
               <thead>
                 <tr>
                   <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold sm:pl-0">
@@ -67,7 +67,7 @@ export default function WorkflowTable() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-200">
+              <tbody className="divide-y divide-neutral-200 dark:divide-neutral-700">
                 {workflows.map((workflow) => (
                   <tr key={workflow.id}>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-0">

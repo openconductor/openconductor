@@ -47,11 +47,13 @@ export const runRouter = createTRPCRouter({
     });
   }),
   create: protectedProcedure
-    .input(z.object({ workflowId: z.string(), input: z.string() }))
+    .input(z.object({ workflowId: z.string(), prompt: z.string(), input: z.record(z.string(), z.any()) }))
     .mutation(async ({ input, ctx }) => {
       return await ctx.temporal.workflow.start(executor, {
         workflowId: `${input.workflowId}-executor-${new Date()}`,
-        args: [{ workflowId: input.workflowId, input: input.input, userId: ctx.session?.user.id }],
+        args: [
+          { workflowId: input.workflowId, prompt: input.prompt, input: input.input, userId: ctx.session?.user.id },
+        ],
         taskQueue,
       });
     }),

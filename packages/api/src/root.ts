@@ -1,4 +1,3 @@
-import { agentRouter } from './router/agent';
 import { authRouter } from './router/auth';
 import { blockRouter } from './router/block';
 import { eventRouter } from './router/event';
@@ -9,7 +8,6 @@ import { workflowRouter } from './router/workflow';
 import { createTRPCRouter } from './trpc';
 
 export const appRouter = createTRPCRouter({
-  agent: agentRouter,
   auth: authRouter,
   block: blockRouter,
   event: eventRouter,

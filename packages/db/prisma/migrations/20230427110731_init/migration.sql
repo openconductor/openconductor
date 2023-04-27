@@ -1,10 +1,11 @@
-CREATE EXTENSION IF NOT EXISTS vector;
+-- CreateExtension
+CREATE EXTENSION IF NOT EXISTS "vector" WITH SCHEMA "extensions";
 
 -- CreateEnum
-CREATE TYPE "Agents" AS ENUM ('EXTRACT', 'TRANSFORM', 'LOAD', 'SCHEDULE');
+CREATE TYPE "Integrations" AS ENUM ('GITHUB', 'SERP');
 
 -- CreateEnum
-CREATE TYPE "Integrations" AS ENUM ('OPENCONDUCTOR', 'OPENAI', 'GITHUB', 'SUPABASE', 'S3');
+CREATE TYPE "DocumentTypes" AS ENUM ('GITHUB', 'MEMORY');
 
 -- CreateTable
 CREATE TABLE "Account" (
@@ -35,6 +36,13 @@ CREATE TABLE "Session" (
 );
 
 -- CreateTable
+CREATE TABLE "VerificationToken" (
+    "identifier" TEXT NOT NULL,
+    "token" TEXT NOT NULL,
+    "expires" TIMESTAMP(3) NOT NULL
+);
+
+-- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "name" TEXT,
@@ -48,13 +56,6 @@ CREATE TABLE "User" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "VerificationToken" (
-    "identifier" TEXT NOT NULL,
-    "token" TEXT NOT NULL,
-    "expires" TIMESTAMP(3) NOT NULL
 );
 
 -- CreateTable
@@ -84,6 +85,7 @@ CREATE TABLE "TeamMember" (
 CREATE TABLE "Workflow" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "prompt" TEXT,
     "input" JSONB,
     "output" JSONB,
     "teamId" TEXT NOT NULL,
@@ -99,7 +101,6 @@ CREATE TABLE "Block" (
     "order" INTEGER NOT NULL,
     "input" TEXT NOT NULL,
     "workflowId" TEXT NOT NULL,
-    "agentId" TEXT NOT NULL,
     "creatorId" TEXT NOT NULL,
 
     CONSTRAINT "Block_pkey" PRIMARY KEY ("id")
@@ -135,27 +136,9 @@ CREATE TABLE "Event" (
 );
 
 -- CreateTable
-CREATE TABLE "Agent" (
-    "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "description" TEXT,
-    "type" "Agents" NOT NULL DEFAULT 'TRANSFORM',
-    "input" TEXT,
-    "output" TEXT,
-    "systemTemplate" TEXT,
-    "promptTemplate" TEXT,
-    "isPublic" BOOLEAN NOT NULL,
-    "integrationId" TEXT NOT NULL,
-    "teamId" TEXT NOT NULL,
-    "creatorId" TEXT NOT NULL,
-
-    CONSTRAINT "Agent_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "Integration" (
     "id" TEXT NOT NULL,
-    "type" "Integrations" NOT NULL DEFAULT 'OPENCONDUCTOR',
+    "type" "Integrations" NOT NULL DEFAULT 'GITHUB',
     "authId" TEXT,
     "authToken" TEXT,
     "teamId" TEXT NOT NULL,
@@ -168,9 +151,11 @@ CREATE TABLE "Integration" (
 CREATE TABLE "Document" (
     "id" TEXT NOT NULL,
     "content" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
     "source" TEXT NOT NULL,
-    "vector" vector,
+    "type" "DocumentTypes" NOT NULL DEFAULT 'GITHUB',
+    "embedding" vector,
+    "teamId" TEXT NOT NULL,
+    "creatorId" TEXT NOT NULL,
 
     CONSTRAINT "Document_pkey" PRIMARY KEY ("id")
 );
@@ -182,16 +167,16 @@ CREATE UNIQUE INDEX "Account_provider_providerAccountId_key" ON "Account"("provi
 CREATE UNIQUE INDEX "Session_sessionToken_key" ON "Session"("sessionToken");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
--- CreateIndex
 CREATE UNIQUE INDEX "VerificationToken_token_key" ON "VerificationToken"("token");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "VerificationToken_identifier_token_key" ON "VerificationToken"("identifier", "token");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -218,9 +203,6 @@ ALTER TABLE "Workflow" ADD CONSTRAINT "Workflow_creatorId_fkey" FOREIGN KEY ("cr
 ALTER TABLE "Block" ADD CONSTRAINT "Block_workflowId_fkey" FOREIGN KEY ("workflowId") REFERENCES "Workflow"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Block" ADD CONSTRAINT "Block_agentId_fkey" FOREIGN KEY ("agentId") REFERENCES "Agent"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Block" ADD CONSTRAINT "Block_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -236,16 +218,13 @@ ALTER TABLE "Event" ADD CONSTRAINT "Event_runId_fkey" FOREIGN KEY ("runId") REFE
 ALTER TABLE "Event" ADD CONSTRAINT "Event_blockId_fkey" FOREIGN KEY ("blockId") REFERENCES "Block"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Agent" ADD CONSTRAINT "Agent_integrationId_fkey" FOREIGN KEY ("integrationId") REFERENCES "Integration"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Agent" ADD CONSTRAINT "Agent_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Agent" ADD CONSTRAINT "Agent_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Integration" ADD CONSTRAINT "Integration_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Integration" ADD CONSTRAINT "Integration_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Document" ADD CONSTRAINT "Document_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Document" ADD CONSTRAINT "Document_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -35,7 +35,7 @@ export default function BlockCard({
         className={clsx(
           'border-green-200' && lastEvent?.status === 'success',
           'border-red-200' && lastEvent?.status === 'error',
-          'hover:shadow-lg rounded-xl border-2 border-neutral-200 hover:border-indigo-500 bg-white cursor-pointer',
+          'hover:shadow-lg rounded-xl border-2 border-neutral-200 dark:border-neutral-700 hover:border-indigo-500 bg-white dark:bg-neutral-900 cursor-pointer',
         )}
       >
         <div className="px-4 py-5 sm:px-6">
@@ -51,7 +51,7 @@ export default function BlockCard({
                     {/* <p>
                     {index}:{JSON.stringify(event)}
                   </p> */}
-                    <ReactMarkdown className="text-neutral-600 whitespace-pre-line text-xs truncate h-8">
+                    <ReactMarkdown className="whitespace-pre-line text-xs truncate h-8">
                       {event?.output || 'No output'}
                     </ReactMarkdown>
                   </>

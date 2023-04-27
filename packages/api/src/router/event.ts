@@ -2,33 +2,28 @@ import { createTRPCRouter, protectedProcedure } from '../trpc';
 import { z } from 'zod';
 
 export const eventRouter = createTRPCRouter({
-  all: protectedProcedure
-    .input(z.object({ blockId: z.string().optional(), agentId: z.string().optional() }))
-    .query(({ ctx, input }) => {
-      return ctx.prisma.event.findMany({
-        orderBy: { id: 'desc' },
-        include: {
-          block: true,
-        },
-        where: {
-          block: {
-            id: input.blockId,
-            agent: {
-              id: input.agentId,
-            },
-            workflow: {
-              team: {
-                members: {
-                  some: {
-                    userId: ctx.session.user.id,
-                  },
+  all: protectedProcedure.input(z.object({ blockId: z.string().optional() })).query(({ ctx, input }) => {
+    return ctx.prisma.event.findMany({
+      orderBy: { id: 'desc' },
+      include: {
+        block: true,
+      },
+      where: {
+        block: {
+          id: input.blockId,
+          workflow: {
+            team: {
+              members: {
+                some: {
+                  userId: ctx.session.user.id,
                 },
               },
             },
           },
         },
-      });
-    }),
+      },
+    });
+  }),
   activeEvent: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.event.findFirst({
       where: {
