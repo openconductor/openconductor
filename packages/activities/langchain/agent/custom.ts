@@ -24,11 +24,12 @@ import { LLMChain } from 'langchain/chains';
 export async function langchainAgentCustom({
   input,
   steps = [],
-
+  enabledPlugins,
   openAIApiKey = process.env.OPENAI_API_KEY,
 }: {
   input?: string;
   steps: AgentStep[];
+  enabledPlugins?: string[];
   openAIApiKey?: string;
 }): Promise<AgentAction | AgentFinish> {
   const PREFIX = `Execute the following task as best you can. You have access to the following tools:`;
@@ -115,7 +116,7 @@ Thought:{agent_scratchpad}`;
 
   const model = new ChatOpenAI({ temperature: 0, openAIApiKey });
 
-  const tools = await langchainToolRegistry();
+  const tools = await langchainToolRegistry(enabledPlugins);
 
   const llmChain = new LLMChain({
     prompt: new CustomPromptTemplate({

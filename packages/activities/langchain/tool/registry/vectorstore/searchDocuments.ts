@@ -36,7 +36,7 @@ export function vectorstoreSearchDocuments({
   const chain = VectorDBQAChain.fromLLM(model, vectorStore);
 
   const documentSearchTool: Tool = new ChainTool({
-    name: 'document-Search',
+    name: 'documents-Search',
     description: 'useful for when you need to answer questions about tools that can be found in documents',
     chain: chain,
   });

@@ -14,12 +14,15 @@ export async function runAgent({
   userId,
   prompt,
   input,
+  enabledPlugins = ['documents', 'filesystem'],
+  // enabledPlugins = ['documents', 'github', 'git', 'filesystem', 'calculator', 'serp'],
   maxIterations = 15,
 }: {
   agentId: string;
   userId: string;
   prompt: string;
   input: Record<string, any>;
+  enabledPlugins?: string[];
   maxIterations?: number;
 }): Promise<any> {
   const agent = await getDbAgent({ agentId });
@@ -58,7 +61,7 @@ export async function runAgent({
 
   while (iterations < maxIterations) {
     try {
-      const stepOutput = await langchainAgentCustom({ input: renderedPrompt, steps });
+      const stepOutput = await langchainAgentCustom({ input: renderedPrompt, enabledPlugins, steps });
 
       if (isAgentFinish(stepOutput)) {
         const endBlock = await createDbBlock({
