@@ -15,9 +15,9 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@temporalio/activity": "^1.6.0",
-    "@temporalio/worker": "^1.6.0",
-    "@temporalio/workflow": "^1.6.0",
+    "@temporalio/activity": "^1.7.4",
+    "@temporalio/worker": "^1.7.4",
+    "@temporalio/workflow": "^1.7.4",
     "@openconductor/config-temporal": "*",
     "@openconductor/workflows": "*",
     "@openconductor/activities": "*"

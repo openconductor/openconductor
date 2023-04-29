@@ -14,7 +14,7 @@ export default function EventTable({ blockId, agentId }: { blockId?: string; age
       <div className="mt-8 flow-root">
         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <table className="min-w-full divide-y divide-neutral-300">
+            <table className="min-w-full divide-y divide-neutral-300 dark:divide-neutral-600">
               <thead>
                 <tr>
                   <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold sm:pl-0">
@@ -34,7 +34,7 @@ export default function EventTable({ blockId, agentId }: { blockId?: string; age
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-200">
+              <tbody className="divide-y divide-neutral-200 dark:divide-neutral-600">
                 {events.map((event: Event) => (
                   <tr key={event.id}>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-0">

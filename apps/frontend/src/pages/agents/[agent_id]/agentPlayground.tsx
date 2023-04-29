@@ -12,17 +12,29 @@ export default function AgentPlayground({ agentId }: { agentId: string }) {
 
   const [blockId, setBlockId] = useState<string | undefined>(block_id?.toString());
   const { data: agent, status: agentStatus } = api.agent.byId.useQuery({ id: agentId });
-  const { data: blocks, status: blockStatus } = api.block.byAgentId.useQuery({ agentId });
+
+  const [blocks] = api.useQueries((t) => [t.block.byAgentId({ agentId })]);
+
+  useEffect(() => {
+    const refetchBlocks = async () => {
+      blocks.refetch();
+    };
+    console.log('blocks', blocks);
+    // if (blocks.status === 'success') {
+    const intervalId = setInterval(refetchBlocks, 500); // Poll every 500ms}
+    return () => clearInterval(intervalId); // Clean up the interval on component unmount
+    // }
+  }, [agentId, blocks]);
 
   useEffect(() => {
     setBlockId(block_id?.toString());
   }, [block_id]);
 
-  if (!agentId || agentStatus === 'loading' || blockStatus === 'loading') {
+  if (!agentId || agentStatus === 'loading') {
     return <></>;
   }
 
-  if (agentStatus === 'error' || blockStatus === 'error' || !agent) {
+  if (agentStatus === 'error' || !agent) {
     return <div>Error!</div>;
   }
 
@@ -30,7 +42,7 @@ export default function AgentPlayground({ agentId }: { agentId: string }) {
     <section>
       <ul className={clsx(blockId ? 'max-w-sm' : ' mx-auto max-w-sm', 'flex flex-col gap-y-6 mt-8')}>
         <AgentInstructions agentId={agentId} />
-        {blocks?.map((block) => (
+        {blocks?.data?.map((block) => (
           <div
             key={block.id}
             onClick={(event) => {

@@ -1,6 +1,7 @@
 import { Agent, Block, Event } from '@openconductor/db/types';
 import clsx from 'clsx';
 import ReactMarkdown from 'react-markdown';
+import Button, { ButtonVariant } from '~/components/shared/button';
 
 export default function BlockCard({
   block,
@@ -11,7 +12,7 @@ export default function BlockCard({
   };
 }) {
   const lastEvent = block.events[block.events.length - 1];
-  console.log('block', block);
+
   const parseChat = function (output?: string, status?: string) {
     return `${output?.split('Action:')[0]}`;
   };
@@ -37,7 +38,13 @@ export default function BlockCard({
         </div>
       ) : (
         <div className="space-y-2">
-          <div
+          <div>
+            <Button variant={ButtonVariant.Primary} loading={lastEvent?.status === 'started'}>
+              {statusPlugin(lastEvent?.status)}
+              <span className="ml-1 font-bold"> {parsePlugin(block.name)}</span>
+            </Button>
+          </div>
+          {/* <div
             className={clsx(
               '!border-neutral-200 !dark:bg-neutral-800' && lastEvent?.status === 'started',
               '!border-green-200' && lastEvent?.status === 'success',
@@ -49,11 +56,13 @@ export default function BlockCard({
               'Finished'
             ) : (
               <>
-                {statusPlugin(lastEvent?.status)}
-                <span className="ml-1 font-bold">{parsePlugin(block.name)}</span>
+                <Button variant={ButtonVariant.Primary} loading={lastEvent?.status === 'started'}>
+                  {statusPlugin(lastEvent?.status)}
+                  <span className="ml-1 font-bold">{parsePlugin(block.name)}</span>
+                </Button>
               </>
             )}
-          </div>
+          </div> */}
           <div className="space-y-5">
             {block.events &&
               block.events.map((event, index) => {

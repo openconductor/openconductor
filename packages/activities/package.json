@@ -14,7 +14,7 @@
     "@openconductor/db": "*",
     "@sanity/client": "^5.4.2",
     "@sanity/uuid": "^3.0.1",
-    "@temporalio/activity": "^1.6.0",
+    "@temporalio/activity": "^1.7.4",
     "langchain": "^0.0.62",
     "marked": "^4.3.0"
   }

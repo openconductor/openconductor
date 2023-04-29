@@ -22,7 +22,7 @@ export default function Tabs({ tabs }: { tabs: TabsType[] }) {
         <select
           id="tabs"
           name="tabs"
-          className="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+          className="block w-full rounded-md border-neutral-300 dark:border-neutral-600 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
           defaultValue={tabs.find((tab: TabsType) => currentNav === tab.nav)?.name}
         >
           {tabs.map((tab) => (
@@ -31,7 +31,7 @@ export default function Tabs({ tabs }: { tabs: TabsType[] }) {
         </select>
       </div>
       <div className="hidden sm:block">
-        <div className="border-b border-gray-200">
+        <div className="border-b border-neutral-300 dark:border-neutral-600">
           <nav className="-mb-px flex space-x-8" aria-label="Tabs">
             {tabs.map((tab) => (
               <a
@@ -43,7 +43,7 @@ export default function Tabs({ tabs }: { tabs: TabsType[] }) {
                 className={clsx(
                   currentNav === tab.nav
                     ? 'border-indigo-500 text-indigo-600'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+                    : 'border-transparent text-neutral-500 hover:border-neutral-300 hover:text-neutral-700',
                   'whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium cursor-pointer',
                 )}
                 aria-current={currentNav === tab.nav ? 'page' : undefined}
