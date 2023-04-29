@@ -9,6 +9,7 @@ import Logo from '../shared/logo';
 import { useTheme } from 'next-themes';
 
 const navigation = [
+  { name: 'Playground', href: '/playground' },
   { name: 'Agents', href: '/agents' },
   { name: 'Runs', href: '/runs' },
   { name: 'Plugins', href: '/plugins' },

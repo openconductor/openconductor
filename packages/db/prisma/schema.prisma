@@ -105,18 +105,19 @@ model TeamMember {
 // Orchestration
 
 model Agent {
-  id        String   @id @default(cuid())
-  name      String
-  prompt    String?
-  input     Json?
-  output    Json?
-  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  teamId    String
-  creator   User     @relation(fields: [creatorId], references: [id])
-  creatorId String
-  blocks    Block[]
-  runs      Run[]
-  plugins   Plugin[]
+  id         String   @id @default(cuid())
+  name       String
+  prompt     String?
+  input      Json?
+  output     Json?
+  playground Boolean  @default(false)
+  team       Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId     String
+  creator    User     @relation(fields: [creatorId], references: [id])
+  creatorId  String
+  blocks     Block[]
+  runs       Run[]
+  plugins    Plugin[]
 }
 
 model Block {

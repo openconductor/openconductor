@@ -4,8 +4,15 @@ import { AgentAction, AgentFinish, AgentStep } from 'langchain/schema';
 
 import { longNonRetryPolicy, nonRetryPolicy } from '../policies';
 
-const { getDbAgent, createDbRun, createDbBlock, createDbEvent, updateDbEvent, langchainPromptTemplate } =
-  proxyActivities<typeof activities>(nonRetryPolicy);
+const {
+  getDbAgent,
+  createDbRun,
+  deleteDbBlocks,
+  createDbBlock,
+  createDbEvent,
+  updateDbEvent,
+  langchainPromptTemplate,
+} = proxyActivities<typeof activities>(nonRetryPolicy);
 
 const { langchainToolCall, langchainAgentCustom } = proxyActivities<typeof activities>(longNonRetryPolicy);
 
@@ -32,6 +39,8 @@ export async function runAgent({
     temporalId,
     userId,
   });
+
+  if (agent.playground) await deleteDbBlocks({ agentId: agent.id });
 
   const renderedPrompt = await langchainPromptTemplate({ prompt, input });
 

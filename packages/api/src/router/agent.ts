@@ -10,6 +10,7 @@ export const agentRouter = createTRPCRouter({
         runs: true,
       },
       where: {
+        playground: false,
         team: {
           members: {
             some: {
@@ -37,9 +38,24 @@ export const agentRouter = createTRPCRouter({
       },
     });
   }),
+  playground: protectedProcedure.input(z.object({})).query(({ ctx }) => {
+    return ctx.prisma.agent.findFirst({
+      where: {
+        playground: true,
+        team: {
+          members: {
+            some: {
+              userId: ctx.session.user.id,
+            },
+          },
+        },
+      },
+    });
+  }),
   create: protectedProcedure.input(z.object({ name: z.string(), teamId: z.string() })).mutation(({ ctx, input }) => {
     return ctx.prisma.agent.create({
       data: {
+        playground: false,
         name: input.name || 'Untitled agent',
         team: {
           connect: { id: input.teamId },
