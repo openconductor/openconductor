@@ -15,8 +15,8 @@
     "@sanity/client": "^5.4.2",
     "@sanity/uuid": "^3.0.1",
     "@temporalio/activity": "^1.7.4",
-    "langchain": "^0.0.62",
-    "marked": "^4.3.0",
-    "googleapis": "^117.0.0"
+    "googleapis": "^117.0.0",
+    "langchain": "^0.0.66",
+    "marked": "^4.3.0"
   }
 }

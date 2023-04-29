@@ -1,23 +1,10 @@
 import { langchainToolRegistry } from '../tool/registry';
-import { AgentActionOutputParser, LLMSingleActionAgent } from 'langchain/agents';
+import { CustomOutputParser } from './parser';
+import { CustomPromptTemplate } from './template';
+import { LLMSingleActionAgent } from 'langchain/agents';
 import { LLMChain } from 'langchain/chains';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
-import {
-  BaseChatPromptTemplate,
-  BasePromptTemplate,
-  SerializedBasePromptTemplate,
-  renderTemplate,
-} from 'langchain/prompts';
-import {
-  AgentAction,
-  AgentFinish,
-  AgentStep,
-  BaseChatMessage,
-  HumanChatMessage,
-  InputValues,
-  PartialValues,
-} from 'langchain/schema';
-import { Tool } from 'langchain/tools';
+import { AgentAction, AgentFinish, AgentStep } from 'langchain/schema';
 
 export async function langchainAgentCustom({
   input,
@@ -30,97 +17,17 @@ export async function langchainAgentCustom({
   enabledPlugins?: string[];
   openAIApiKey?: string;
 }): Promise<AgentAction | AgentFinish> {
-  const PREFIX = `Execute the following task as best you can. You have access to the following tools:`;
-  const formatInstructions = (toolNames: string) => `Use the following format:
-
-Task: the input task you must finish
-Thought: you should always think about what to do
-Action: the action to take, should be one of [${toolNames}]
-Action Input: the input to the action
-Observation: the result of the action
-... (this Thought/Action/Action Input/Observation can repeat N times)
-Thought: I have finished the task
-End: the result of the original input task`;
-  const SUFFIX = `Begin!
-
-Task: {input}
-Thought:{agent_scratchpad}`;
-
-  class CustomPromptTemplate extends BaseChatPromptTemplate {
-    tools: Tool[];
-
-    constructor(args: { tools: Tool[]; inputVariables: string[] }) {
-      super({ inputVariables: args.inputVariables });
-      this.tools = args.tools;
-    }
-
-    _getPromptType(): string {
-      throw new Error('Not implemented');
-    }
-
-    async formatMessages(values: InputValues): Promise<BaseChatMessage[]> {
-      /** Construct the final template */
-      const toolStrings = this.tools.map((tool) => `${tool.name}: ${tool.description}`).join('\n');
-      const toolNames = this.tools.map((tool) => tool.name).join('\n');
-      const instructions = formatInstructions(toolNames);
-      const template = [PREFIX, toolStrings, instructions, SUFFIX].join('\n\n');
-      /** Construct the agent_scratchpad */
-      const intermediateSteps = values.intermediate_steps as AgentStep[];
-      const agentScratchpad = intermediateSteps.reduce(
-        (thoughts, { action, observation }) =>
-          thoughts + [action.log, `\nObservation: ${observation}`, 'Thought:'].join('\n'),
-        '',
-      );
-      const newInput = { agent_scratchpad: agentScratchpad, ...values };
-      /** Format the template. */
-      const formatted = renderTemplate(template, 'f-string', newInput);
-      return [new HumanChatMessage(formatted)];
-    }
-
-    partial(_values: PartialValues): Promise<BasePromptTemplate> {
-      throw new Error('Not implemented');
-    }
-
-    serialize(): SerializedBasePromptTemplate {
-      throw new Error('Not implemented');
-    }
-  }
-
-  class CustomOutputParser extends AgentActionOutputParser {
-    async parse(text: string): Promise<AgentAction | AgentFinish> {
-      if (text.includes('End:')) {
-        const parts = text.split('End:');
-        const input = parts[parts.length - 1]!.trim();
-        const finalAnswers = { output: input };
-        return { log: text, returnValues: finalAnswers };
-      }
-
-      const match = /Action\s*\d*:\s*(.*)\n?Action Input\s*\d*:\s*([\s\S]*)/i.exec(text);
-      if (!match) {
-        throw new Error(`Could not parse LLM output: ${text}`);
-      }
-
-      return {
-        tool: match[1]!.trim(),
-        toolInput: match[2]!.trim().replace(/^"+|"+$/g, ''),
-        log: text,
-      };
-    }
-
-    getFormatInstructions(): string {
-      throw new Error('Not implemented');
-    }
-  }
-
   const model = new ChatOpenAI({ temperature: 0, openAIApiKey });
 
   const tools = await langchainToolRegistry(enabledPlugins);
 
+  const prompt = new CustomPromptTemplate({
+    tools,
+    inputVariables: ['input', 'agent_scratchpad'],
+  });
+
   const llmChain = new LLMChain({
-    prompt: new CustomPromptTemplate({
-      tools,
-      inputVariables: ['input', 'agent_scratchpad'],
-    }),
+    prompt,
     llm: model,
   });
 

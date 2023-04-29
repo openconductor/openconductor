@@ -52,20 +52,31 @@ export const agentRouter = createTRPCRouter({
       },
     });
   }),
-  create: protectedProcedure.input(z.object({ name: z.string(), teamId: z.string() })).mutation(({ ctx, input }) => {
-    return ctx.prisma.agent.create({
-      data: {
-        playground: false,
-        name: input.name || 'Untitled agent',
-        team: {
-          connect: { id: input.teamId },
+  create: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        teamId: z.string(),
+        prompt: z.string().optional(),
+        input: z.record(z.string(), z.any()).optional(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.agent.create({
+        data: {
+          playground: false,
+          name: input.name,
+          prompt: input.prompt,
+          input: input.input || {},
+          team: {
+            connect: { id: input.teamId },
+          },
+          creator: {
+            connect: { id: ctx.session?.user.id },
+          },
         },
-        creator: {
-          connect: { id: ctx.session?.user.id },
-        },
-      },
-    });
-  }),
+      });
+    }),
   update: protectedProcedure
     .input(
       z.object({

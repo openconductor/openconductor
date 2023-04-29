@@ -2,6 +2,7 @@ import * as filesystemTool from './registry/filesystem';
 import * as gitTool from './registry/git';
 import * as githubTool from './registry/github';
 import * as googleTool from './registry/google';
+import * as openaiTool from './registry/openai';
 import * as vectorTool from './registry/vectorstore';
 import { SerpAPI, StructuredTool, Tool } from 'langchain/tools';
 import { Calculator } from 'langchain/tools/calculator';
@@ -39,10 +40,12 @@ export async function langchainToolRegistry(enabledPlugins?: string[]): Promise<
 
     new filesystemTool.FilesystemChangeDirectoryTool(),
     new filesystemTool.FilesystemCreateFileTool(),
-    new filesystemTool.FilesystemInsertTextTool(),
+    new filesystemTool.FilesystemInsertContentTool(),
     new filesystemTool.FilesystemListFilesTool(),
     new filesystemTool.FilesystemReadFileTool(),
-    new filesystemTool.FilesystemRemoveTextTool(),
+    new filesystemTool.FilesystemRemoveContentTool(),
+
+    new openaiTool.OpenaiPromptGpt({ openAIApiKey }),
   ];
 
   const toolNameToInstance: Record<string, Tool | StructuredTool> = {};
@@ -54,15 +57,16 @@ export async function langchainToolRegistry(enabledPlugins?: string[]): Promise<
   if (!enabledPlugins) {
     return availableTools as Tool[];
   }
-  const filteredTools = enabledPlugins?.map((plugin) => {
-    const toolKey = Object.keys(toolNameToInstance).find((key) => key.startsWith(plugin));
 
-    if (!toolKey) {
-      throw new Error(`Tool for plugin '${plugin}' not found`);
+  const filteredTools = enabledPlugins.flatMap((plugin) => {
+    const toolKeys = Object.keys(toolNameToInstance).filter((key) => key.startsWith(plugin));
+
+    if (toolKeys.length === 0) {
+      throw new Error(`Tools for plugin '${plugin}' not found`);
     }
 
-    const tool = toolNameToInstance[toolKey];
-    return tool;
+    const tools = toolKeys.map((toolKey) => toolNameToInstance[toolKey]);
+    return tools;
   });
 
   return filteredTools as Tool[];
