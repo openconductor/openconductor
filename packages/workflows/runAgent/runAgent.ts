@@ -21,8 +21,8 @@ export async function runAgent({
   userId,
   prompt,
   input,
-  enabledPlugins = ['openai', 'google', 'calculator'],
-  // enabledPlugins = ['filesystem', 'openai', 'google', 'git', 'documents', 'calculator'],
+  enabledPlugins = ['openai', 'google', 'calculator', 'openconductor'],
+  // enabledPlugins = ['filesystem', 'openai', 'google', 'git', 'documents', 'calculator', 'openconductor'],
   maxIterations = 15,
 }: {
   agentId: string;

@@ -54,7 +54,7 @@ Thought:{agent_scratchpad}`;
     /** Format the template. */
 
     const formatted = renderTemplate(template, 'f-string', newInput);
-    console.log('formatted', formatted);
+
     return [new HumanChatMessage(formatted)];
   }
 
