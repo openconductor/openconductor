@@ -2,7 +2,7 @@ import { NextPage } from 'next';
 import AppLayout from '~/components/layouts/appLayout';
 import ConductorTable from '~/pages/conductors/conductorTable';
 
-const Dashboard: NextPage = () => {
+const Conductors: NextPage = () => {
   return (
     <AppLayout>
       <ConductorTable />
@@ -10,4 +10,4 @@ const Dashboard: NextPage = () => {
   );
 };
 
-export default Dashboard;
+export default Conductors;

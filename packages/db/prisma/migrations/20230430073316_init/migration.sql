@@ -89,6 +89,7 @@ CREATE TABLE "Agent" (
     "input" JSONB,
     "output" JSONB,
     "playground" BOOLEAN NOT NULL DEFAULT false,
+    "conductor" BOOLEAN NOT NULL DEFAULT false,
     "teamId" TEXT NOT NULL,
     "creatorId" TEXT NOT NULL,
 

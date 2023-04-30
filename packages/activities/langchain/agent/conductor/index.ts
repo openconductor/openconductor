@@ -1,14 +1,14 @@
-import { langchainToolRegistry } from '../tool/registry';
-import { CustomOutputParser } from './parser';
-import { CustomPromptTemplate } from './template';
+import { langchainToolRegistry } from '../../tool/registry';
+import { CustomOutputParser } from '../parser';
+import { ConductorPromptTemplate } from './template';
 import { LLMSingleActionAgent } from 'langchain/agents';
 import { LLMChain } from 'langchain/chains';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { AgentAction, AgentFinish, AgentStep } from 'langchain/schema';
 
-export async function langchainAgentCustom({
+export async function langchainAgentConductor({
   input,
-  steps = [],
+  steps,
   enabledPlugins,
   openAIApiKey = process.env.OPENAI_API_KEY,
 }: {
@@ -21,7 +21,7 @@ export async function langchainAgentCustom({
 
   const tools = await langchainToolRegistry(enabledPlugins);
 
-  const prompt = new CustomPromptTemplate({
+  const prompt = new ConductorPromptTemplate({
     tools,
     inputVariables: ['input', 'agent_scratchpad'],
   });

@@ -14,6 +14,7 @@ export const blockRouter = createTRPCRouter({
         agentId: input.agentId,
       },
       include: {
+        agent: true,
         events: {
           orderBy: { startedAt: 'asc' },
         },

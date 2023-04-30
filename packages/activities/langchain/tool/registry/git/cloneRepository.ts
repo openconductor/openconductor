@@ -1,5 +1,7 @@
+import { execSync } from 'child_process';
+import * as fs from 'fs';
 import { Tool } from 'langchain/tools';
-import { execSync, ChildProcess } from 'child_process';
+import * as path from 'path';
 
 export class GitCloneRepository extends Tool {
   name = 'git-CloneRepository';
@@ -14,19 +16,23 @@ export class GitCloneRepository extends Tool {
         .split('/')
         .slice(-1)[0]
         .replace(/\.git$/, '');
+    const currentDir = process.cwd();
+    const tmpDir = path.join(currentDir, 'tmp', dir);
+
+    if (!fs.existsSync(path.join(currentDir, 'tmp'))) {
+      fs.mkdirSync(path.join(currentDir, 'tmp'));
+    }
+
     try {
-      execSync(`git clone ${input}`);
-      process.chdir(input);
-      return `Cloned repository and changed current directory into ${dir}.`;
-    } catch (e) {
-      if (e instanceof ChildProcess && e.stderr) {
-        const err = e.stderr.toString();
-        if (/^fatal: destination path '[^']+' already exists and is not an empty directory/.test(err)) {
-          return `Directory ${dir} already exists. This is probably your cloned repository, change your current directory to it.`;
+      execSync(`git clone ${input} ${tmpDir}`);
+      process.chdir(tmpDir);
+      return `Cloned repository ${input} and changed current directory to ${tmpDir}.`;
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message.includes('already exists')) {
+          return `Directory ${tmpDir} already exists. This is probably your cloned repository, change your current directory to it.`;
         }
-        return err;
-      } else if (e instanceof Error) {
-        return e.message;
+        return error.message;
       }
       return 'Unknown error occurred.';
     }

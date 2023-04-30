@@ -1,7 +1,7 @@
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 import { taskQueue } from '@openconductor/config-temporal';
 import { connectToTemporal } from '@openconductor/config-temporal/temporal-client';
-import { runAgent } from '@openconductor/workflows';
+import { runAgent, runConductor } from '@openconductor/workflows';
 import { z } from 'zod';
 
 export const runRouter = createTRPCRouter({
@@ -53,10 +53,18 @@ export const runRouter = createTRPCRouter({
         agentId: z.string(),
         prompt: z.string(),
         input: z.record(z.string(), z.any()),
+        conductor: z.boolean().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
       const temporal = await connectToTemporal();
+      if (input.conductor) {
+        return temporal.workflow.start(runConductor, {
+          workflowId: `${input.agentId}-executor-${new Date()}`,
+          args: [{ agentId: input.agentId, prompt: input.prompt, input: input.input, userId: ctx.session?.user.id }],
+          taskQueue,
+        });
+      }
       return temporal.workflow.start(runAgent, {
         workflowId: `${input.agentId}-executor-${new Date()}`,
         args: [{ agentId: input.agentId, prompt: input.prompt, input: input.input, userId: ctx.session?.user.id }],

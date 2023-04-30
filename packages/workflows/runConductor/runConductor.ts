@@ -4,7 +4,6 @@ import { proxyActivities, uuid4 } from '@temporalio/workflow';
 import { AgentAction, AgentFinish, AgentStep } from 'langchain/schema';
 
 const {
-  langchainToolRegistry,
   getDbAgent,
   createDbRun,
   deleteDbBlocks,
@@ -14,15 +13,16 @@ const {
   langchainPromptTemplate,
 } = proxyActivities<typeof activities>(nonRetryPolicy);
 
-const { langchainToolCall, langchainAgent } = proxyActivities<typeof activities>(longNonRetryPolicy);
+const { langchainToolCall, langchainAgentConductor } = proxyActivities<typeof activities>(longNonRetryPolicy);
 
-export async function runAgent({
+// tctl workflow run --taskqueue openconductor --workflow_type runConductor
+
+export async function runConductor({
   agentId,
   userId,
   prompt,
   input,
-  enabledPlugins = ['openai', 'google', 'calculator', 'openconductor', 'github', 'git', 'filesystem'],
-  // enabledPlugins = ['filesystem', 'openai', 'google', 'git', 'documents', 'calculator', 'openconductor'],
+  enabledPlugins = ['openai', 'google', 'calculator', 'openconductor', 'github', 'git'],
   maxIterations = 15,
 }: {
   agentId: string;
@@ -70,7 +70,7 @@ export async function runAgent({
 
   while (iterations < maxIterations) {
     try {
-      const stepOutput = await langchainAgent({ input: renderedPrompt, enabledPlugins, steps });
+      const stepOutput = await langchainAgentConductor({ input: renderedPrompt, enabledPlugins, steps });
 
       if (isAgentFinish(stepOutput)) {
         const endBlock = await createDbBlock({

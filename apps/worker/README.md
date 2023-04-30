@@ -1,1 +1,0 @@
-This is a sandbox repository for the output of autonomous agents, orchestrated with OpenConductor.

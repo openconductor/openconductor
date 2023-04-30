@@ -1,10 +1,10 @@
+import AgentInstructions from './agentInstructions';
 import Block from './blocks/[id]';
 import BlockCard from './blocks/blockCard';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
 import { api } from '~/utils/api';
-import AgentInstructions from './agentInstructions';
 
 export default function AgentPlayground({ agentId }: { agentId: string }) {
   const router = useRouter();

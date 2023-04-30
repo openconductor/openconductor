@@ -111,6 +111,7 @@ model Agent {
   input      Json?
   output     Json?
   playground Boolean  @default(false)
+  conductor  Boolean  @default(false)
   team       Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId     String
   creator    User     @relation(fields: [creatorId], references: [id])

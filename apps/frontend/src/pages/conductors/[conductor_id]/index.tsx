@@ -3,7 +3,7 @@ import AgentLayout from '~/components/layouts/agentLayout';
 import AgentHeader from '~/pages/agents/[agent_id]/agentHeader';
 import AgentPlayground from '~/pages/agents/[agent_id]/agentPlayground';
 
-const AgentPage: React.FC = () => {
+const ConductorPage: React.FC = () => {
   const router = useRouter();
   const { agent_id } = router.query;
 
@@ -21,4 +21,4 @@ const AgentPage: React.FC = () => {
   );
 };
 
-export default AgentPage;
+export default ConductorPage;
