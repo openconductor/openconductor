@@ -14,7 +14,7 @@ export default function AuthLayout({
 }) {
   return (
     <div className="h-screen bg-neutral-100 dark:bg-neutral-900">
-      <div className="flex min-h-full flex-col justify-center sm:mx-auto sm:w-full sm:max-w-md space-y-8">
+      <div className="flex min-h-full flex-col justify-center mx-auto max-w-xs space-y-8">
         <div className="text-center justify-center items-center space-y-8">
           <div className="w-20 mx-auto">
             <Logo />
@@ -32,7 +32,7 @@ export default function AuthLayout({
             }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-              <g>
+              <g fill="currentColor">
                 <path d="M23.507,9.818H12.052v4.909h6.492C17.507,18,14.944,19.091,12,19.091a7.091,7.091,0,1,1,4.553-12.52l3.567-3.4A12,12,0,1,0,12,24C18.617,24,24.6,19.636,23.507,9.818Z"></path>
               </g>
             </svg>
@@ -46,7 +46,7 @@ export default function AuthLayout({
             }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-              <g>
+              <g fill="currentColor">
                 <path
                   fill-rule="evenodd"
                   clip-rule="evenodd"
@@ -64,7 +64,7 @@ export default function AuthLayout({
             }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-              <g>
+              <g fill="currentColor">
                 <path d="M9.328,10.068a1.337,1.337,0,0,0,0,2.664A1.278,1.278,0,0,0,10.552,11.4,1.271,1.271,0,0,0,9.328,10.068Zm4.38,0A1.337,1.337,0,1,0,14.932,11.4,1.278,1.278,0,0,0,13.708,10.068Z"></path>{' '}
                 <path d="M19.54,0H3.46A2.466,2.466,0,0,0,1,2.472V18.7a2.466,2.466,0,0,0,2.46,2.472H17.068l-.636-2.22,1.536,1.428L19.42,21.72,22,24V2.472A2.466,2.466,0,0,0,19.54,0ZM14.908,15.672s-.432-.516-.792-.972a3.787,3.787,0,0,0,2.172-1.428,6.867,6.867,0,0,1-1.38.708,7.9,7.9,0,0,1-1.74.516,8.406,8.406,0,0,1-3.108-.012A10.073,10.073,0,0,1,8.3,13.968a6.846,6.846,0,0,1-1.368-.708,3.732,3.732,0,0,0,2.1,1.416c-.36.456-.8,1-.8,1a4.351,4.351,0,0,1-3.66-1.824,16.07,16.07,0,0,1,1.728-7,5.934,5.934,0,0,1,3.372-1.26l.12.144A8.1,8.1,0,0,0,6.628,7.308s.264-.144.708-.348A9.012,9.012,0,0,1,10.06,6.2a1.182,1.182,0,0,1,.2-.024,10.153,10.153,0,0,1,2.424-.024A9.782,9.782,0,0,1,16.3,7.308a7.986,7.986,0,0,0-2.988-1.524l.168-.192a5.934,5.934,0,0,1,3.372,1.26,16.07,16.07,0,0,1,1.728,7A4.386,4.386,0,0,1,14.908,15.672Z"></path>
               </g>

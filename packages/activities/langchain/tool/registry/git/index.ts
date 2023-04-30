@@ -6,4 +6,5 @@ export * from './initRepository';
 export * from './commit';
 export * from './listBranches';
 export * from './pushBranch';
+export * from './pullBranch';
 export * from './status';

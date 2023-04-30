@@ -40,6 +40,7 @@ export async function langchainToolRegistry(enabledPlugins?: string[]): Promise<
     new gitTool.GitCommit(),
     new gitTool.GitListBranches(),
     new gitTool.GitPushBranch(),
+    new gitTool.GitPullBranch(),
     new gitTool.GitStatus(),
 
     new filesystemTool.FilesystemChangeDirectoryTool(),
