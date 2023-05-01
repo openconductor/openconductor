@@ -1,18 +1,10 @@
 import { longNonRetryPolicy, nonRetryPolicy } from '../policies';
 import type * as activities from '@openconductor/activities';
-import { proxyActivities, uuid4 } from '@temporalio/workflow';
-import { AgentAction, AgentFinish, AgentStep } from 'langchain/schema';
+import { ApplicationFailure, proxyActivities, uuid4 } from '@temporalio/workflow';
+import { AgentFinish, AgentStep } from 'langchain/schema';
 
-const {
-  langchainToolRegistry,
-  getDbAgent,
-  createDbRun,
-  deleteDbBlocks,
-  createDbBlock,
-  createDbEvent,
-  updateDbEvent,
-  langchainPromptTemplate,
-} = proxyActivities<typeof activities>(nonRetryPolicy);
+const { getDbAgent, createDbRun, deleteDbBlocks, createDbBlock, createDbEvent, langchainPromptTemplate } =
+  proxyActivities<typeof activities>(nonRetryPolicy);
 
 const { langchainToolCall, langchainAgent } = proxyActivities<typeof activities>(longNonRetryPolicy);
 
@@ -23,7 +15,7 @@ export async function runAgent({
   input,
   enabledPlugins = ['openai', 'google', 'calculator', 'openconductor', 'github', 'git', 'filesystem'],
   // enabledPlugins = ['filesystem', 'openai', 'google', 'git', 'documents', 'calculator', 'openconductor'],
-  maxIterations = 15,
+  maxIterations = 50,
 }: {
   agentId: string;
   userId: string;
@@ -116,6 +108,7 @@ export async function runAgent({
       }
     } catch (error: any) {
       await createDbEvent({ blockId: startBlock.id, runId: run.id, status: 'error', output: error.message });
+      throw ApplicationFailure.nonRetryable(error.message);
     }
   }
 
