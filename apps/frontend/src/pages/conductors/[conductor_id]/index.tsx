@@ -5,9 +5,9 @@ import AgentPlayground from '~/pages/agents/[agent_id]/agentPlayground';
 
 const ConductorPage: React.FC = () => {
   const router = useRouter();
-  const { agent_id } = router.query;
+  const { conductor_id } = router.query;
 
-  if (!agent_id) {
+  if (!conductor_id) {
     return <></>;
   }
 
@@ -15,7 +15,7 @@ const ConductorPage: React.FC = () => {
     <AgentLayout>
       <main>
         <AgentHeader />
-        <AgentPlayground agentId={agent_id.toString()} />
+        <AgentPlayground agentId={conductor_id.toString()} />
       </main>
     </AgentLayout>
   );

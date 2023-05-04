@@ -32,7 +32,7 @@ export async function embedGithub({
     },
   });
 
-  await vectorstoreCreateDocuments({ documents: loadedDocuments, userId, teamId });
+  await vectorstoreCreateDocuments({ documents: loadedDocuments, userId, teamId, repoUrl });
 
   return true;
 }

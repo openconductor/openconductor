@@ -7,11 +7,13 @@ import { PrismaVectorStore } from 'langchain/vectorstores/prisma';
 export async function vectorstoreCreateDocuments({
   openAIApiKey = process.env.OPENAI_API_KEY,
   documents,
+  repoUrl,
   userId,
   teamId,
 }: {
   openAIApiKey?: string;
   documents: LangchainDocument[];
+  repoUrl: string;
   userId: string;
   teamId: string;
 }): Promise<number> {
@@ -36,7 +38,7 @@ export async function vectorstoreCreateDocuments({
             data: {
               content: document.pageContent,
               type: DocumentTypes.GITHUB,
-              source: document.metadata.source,
+              source: `${repoUrl}/${document.metadata.source}`,
               creator: {
                 connect: { id: userId },
               },
