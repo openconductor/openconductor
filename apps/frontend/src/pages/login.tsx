@@ -30,6 +30,7 @@ export default function LoginPage() {
       onGoogleSignIn={onGoogleSignIn}
       onDiscordSignIn={onDiscordSignIn}
       onGithubSignIn={onGithubSignIn}
+      onTwitterSignIn={onTwitterSignIn}
     />
   );
 
@@ -49,6 +50,13 @@ export default function LoginPage() {
 
   function onGithubSignIn() {
     signIn('github').catch((error) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      toast.error(error.message);
+    });
+  }
+
+  function onTwitterSignIn() {
+    signIn('twitter').catch((error) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       toast.error(error.message);
     });

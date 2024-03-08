@@ -1,4 +1,4 @@
-import { langchainToolRegistry } from '../tool/registry';
+import { RegistryTool, langchainToolRegistry } from '../tool/registry';
 import { CustomOutputParser } from './parser';
 import { CustomPromptTemplate } from './template';
 import { LLMSingleActionAgent } from 'langchain/agents';
@@ -9,19 +9,17 @@ import { AgentAction, AgentFinish, AgentStep } from 'langchain/schema';
 export async function langchainAgent({
   input,
   steps = [],
-  enabledPlugins,
+  tools,
   openAIApiKey = process.env.OPENAI_API_KEY,
   userId,
 }: {
   input?: string;
   steps: AgentStep[];
-  enabledPlugins?: string[];
+  tools: RegistryTool[];
   openAIApiKey?: string;
   userId: string;
 }): Promise<AgentAction | AgentFinish> {
   const model = new ChatOpenAI({ temperature: 0, openAIApiKey });
-
-  const tools = await langchainToolRegistry({ userId, enabledPlugins });
 
   const prompt = new CustomPromptTemplate({
     tools,

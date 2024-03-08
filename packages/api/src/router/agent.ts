@@ -22,23 +22,25 @@ export const agentRouter = createTRPCRouter({
       },
     });
   }),
-  byId: protectedProcedure.input(z.object({ id: z.string() })).query(({ ctx, input }) => {
-    return ctx.prisma.agent.findFirst({
-      where: { id: input.id },
-      include: {
-        blocks: {
-          orderBy: {
-            order: 'asc',
+  byId: protectedProcedure
+    .input(z.object({ id: z.string(), conductor: z.boolean().optional() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.agent.findFirst({
+        where: { id: input.id, conductor: input.conductor },
+        include: {
+          blocks: {
+            orderBy: {
+              order: 'asc',
+            },
+          },
+          runs: {
+            orderBy: {
+              startedAt: 'desc',
+            },
           },
         },
-        runs: {
-          orderBy: {
-            startedAt: 'desc',
-          },
-        },
-      },
-    });
-  }),
+      });
+    }),
   playground: protectedProcedure.input(z.object({ conductor: z.boolean().optional() })).query(({ ctx, input }) => {
     return ctx.prisma.agent.findFirst({
       where: {

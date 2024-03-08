@@ -6,11 +6,13 @@ export default function AuthLayout({
   onGoogleSignIn,
   onDiscordSignIn,
   onGithubSignIn,
+  onTwitterSignIn,
 }: {
   mode: 'login' | 'signup';
   onGoogleSignIn: () => void;
   onDiscordSignIn: () => void;
   onGithubSignIn: () => void;
+  onTwitterSignIn: () => void;
 }) {
   return (
     <div className="h-screen bg-neutral-100 dark:bg-neutral-900">
@@ -70,6 +72,20 @@ export default function AuthLayout({
               </g>
             </svg>
             <p className="ml-2">Continue with Discord</p>
+          </Button>
+          <Button
+            variant={ButtonVariant.Secondary}
+            onClick={(e) => {
+              e.preventDefault();
+              onTwitterSignIn();
+            }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+              <g fill="currentColor">
+                <path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.896.922-2.958 1.13-.85-.906-2.06-1.473-3.4-1.473-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.872-.195-7.304-2.05-9.6-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.024-1.482-.233-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.233-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.56 0 13.25-7.09 13.25-13.25 0-.2 0-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"></path>
+              </g>
+            </svg>
+            <p className="ml-2">Continue with Twitter</p>
           </Button>
         </div>
       </div>

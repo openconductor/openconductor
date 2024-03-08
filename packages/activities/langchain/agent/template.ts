@@ -1,3 +1,4 @@
+import { RegistryTool } from '../tool/registry';
 import { Instructions } from './instructions';
 import {
   BaseChatPromptTemplate,
@@ -6,12 +7,11 @@ import {
   renderTemplate,
 } from 'langchain/prompts';
 import { AgentStep, BaseChatMessage, HumanChatMessage, InputValues, PartialValues } from 'langchain/schema';
-import { Tool } from 'langchain/tools';
 
 export class CustomPromptTemplate extends BaseChatPromptTemplate {
-  tools: Tool[];
+  tools: RegistryTool[];
 
-  constructor(args: { tools: Tool[]; inputVariables: string[] }) {
+  constructor(args: { tools: RegistryTool[]; inputVariables: string[] }) {
     super({ inputVariables: args.inputVariables });
     this.tools = args.tools;
   }

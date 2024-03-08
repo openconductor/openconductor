@@ -15,7 +15,7 @@ const Playground: NextPage = () => {
   }
   return (
     <AgentLayout>
-      <PageHeading title="Playground" description="Test your instructions and save them as agents."></PageHeading>
+      <PageHeading title="Playground" description="Test instructions and save your conductor."></PageHeading>
       <AgentPlayground agentId={agent.id} />
     </AgentLayout>
   );

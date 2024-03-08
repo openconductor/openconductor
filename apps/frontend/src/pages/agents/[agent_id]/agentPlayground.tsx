@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
 import { api } from '~/utils/api';
 
-export default function AgentPlayground({ agentId }: { agentId: string }) {
+export default function AgentPlayground({ agentId, conductor }: { agentId: string, conductor?:boolean }) {
   const router = useRouter();
   const { block_id } = router.query;
 
@@ -41,7 +41,7 @@ export default function AgentPlayground({ agentId }: { agentId: string }) {
   return (
     <section>
       <ul className={clsx(blockId ? 'max-w-sm' : ' mx-auto max-w-sm', 'flex flex-col gap-y-6 mt-8')}>
-        <AgentInstructions agentId={agentId} />
+        <AgentInstructions agentId={agentId} conductor={conductor} />
         {blocks?.data?.map((block) => (
           <div
             key={block.id}
