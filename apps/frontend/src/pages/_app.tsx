@@ -1,4 +1,4 @@
-import { Inter } from '@next/font/google';
+import { Inter } from 'next/font/google';
 import clsx from 'clsx';
 import type { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';

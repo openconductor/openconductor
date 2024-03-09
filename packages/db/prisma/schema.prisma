@@ -73,6 +73,7 @@ model User {
   runs          Run[]
   plugins       Plugin[]
   documents     Document[]
+  Message       Message[]
 }
 
 // Teams
@@ -89,6 +90,7 @@ model Team {
   agents    Agent[]
   plugins   Plugin[]
   documents Document[]
+  Message   Message[]
 }
 
 model TeamMember {
@@ -197,4 +199,22 @@ model Document {
   teamId    String
   creator   User                   @relation(fields: [creatorId], references: [id])
   creatorId String
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  source    String
+  sourceId  String
+  key       String
+  title     String
+  body      String
+  url       String?
+  createdAt DateTime
+
+  team      Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId    String
+  creator   User   @relation(fields: [creatorId], references: [id])
+  creatorId String
+
+  @@unique([source, sourceId])
 }

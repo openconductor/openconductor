@@ -7,6 +7,7 @@ import { pluginRouter } from './router/plugin';
 import { runRouter } from './router/run';
 import { teamRouter } from './router/team';
 import { agentRouter } from './router/agent';
+import { messageRouter } from './router/message';
 import { createTRPCRouter } from './trpc';
 
 export const appRouter = createTRPCRouter({
@@ -18,6 +19,7 @@ export const appRouter = createTRPCRouter({
   plugin: pluginRouter,
   run: runRouter,
   team: teamRouter,
+  message: messageRouter,
 });
 
 // export type definition of API
