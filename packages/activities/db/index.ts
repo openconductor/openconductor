@@ -6,3 +6,5 @@ export * from './updateEvent';
 export * from './deleteBlocks';
 export * from './getAccount';
 export * from './createMessage';
+export * from './getMessage';
+export * from './createAiItem';

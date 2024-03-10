@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { taskQueue } from '@openconductor/config-temporal/temporal-connection';
 import { refreshMessages } from '@openconductor/workflows/messages/refreshMessages';
 import { MessageType } from '@openconductor/db';
+import { aiMessage } from '@openconductor/workflows';
 
 export const messageRouter = createTRPCRouter({
   all: protectedProcedure.input(z.object({ type: z.string() })).query(({ ctx, input }) => {
@@ -35,8 +36,14 @@ export const messageRouter = createTRPCRouter({
     return ctx.prisma.message.findFirst({
       where: { id: input.id },
       include: {
-        children: true,
+        author: true,
+        children: {
+          include: {
+            author: true,
+          },
+        },
         labels: true,
+        aiItems: true,
       },
     });
   }),
@@ -45,6 +52,14 @@ export const messageRouter = createTRPCRouter({
     return temporal.workflow.execute(refreshMessages, {
       workflowId: `${new Date()}-refreshMessages`,
       args: [{ userId: ctx.session?.user.id, teamId: input.teamId }],
+      taskQueue,
+    });
+  }),
+  ai: protectedProcedure.input(z.object({ messageId: z.string() })).mutation(async ({ input, ctx }) => {
+    const temporal = await connectToTemporal();
+    return temporal.workflow.execute(aiMessage, {
+      workflowId: `${new Date()}-aiMessage`,
+      args: [{ messageId: input.messageId }],
       taskQueue,
     });
   }),
