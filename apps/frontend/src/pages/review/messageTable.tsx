@@ -5,49 +5,10 @@ import PageHeading from '~/components/shared/pageHeading';
 import { Table } from '~/components/shared/table';
 import { api } from '~/utils/api';
 import { SideDrawer } from '~/components/shared/drawer';
-import Link from 'next/link';
-import Markdown from 'react-markdown';
 import { MessageType } from '@openconductor/db';
 import Label from '~/components/shared/label';
 import clsx from 'clsx';
-
-export function Message({ messageId }: { messageId: string }) {
-  const {
-    data: message,
-    status: messageStatus,
-    refetch,
-  } = api.message.byId.useQuery(
-    {
-      id: messageId,
-    },
-    {
-      enabled: true,
-    },
-  );
-
-  return (
-    messageStatus === 'success' && (
-      <div className="p-5">
-        <div>
-          <Link href={message?.url!} target="_blank">
-            {message?.key}
-          </Link>
-          - {message?.state}
-        </div>
-        <div className="pre">
-          <Markdown className="text-base space-y-4">{message?.body}</Markdown>
-        </div>
-        ---
-        {message?.children.map((comment) => (
-          <div className="pre" key={comment.id}>
-            <Markdown className="text-base space-y-4">{comment?.body}</Markdown>
-            ---
-          </div>
-        ))}
-      </div>
-    )
-  );
-}
+import { Message } from './message';
 
 export default function MessageTable({ type }: { type: MessageType }) {
   const { data: teamData, status: teamStatus } = api.team.activeTeam.useQuery();

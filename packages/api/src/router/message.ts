@@ -36,6 +36,7 @@ export const messageRouter = createTRPCRouter({
       where: { id: input.id },
       include: {
         children: true,
+        labels: true,
       },
     });
   }),
