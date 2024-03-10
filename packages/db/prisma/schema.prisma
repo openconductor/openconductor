@@ -209,7 +209,15 @@ model Message {
   title     String
   body      String
   url       String?
+  state     String?
   createdAt DateTime
+
+  author   Author @relation(fields: [authorId], references: [id])
+  authorId String
+
+  parentId String?   @map("parent_id")
+  children Message[] @relation("MessageToMessage")
+  parent   Message?  @relation("MessageToMessage", fields: [parentId], references: [id])
 
   team      Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId    String
@@ -217,4 +225,21 @@ model Message {
   creatorId String
 
   @@unique([source, sourceId])
+}
+
+enum AuthorType {
+  GITHUB_BOT
+  GITHUB_USER
+}
+
+model Author {
+  id       String     @id @default(cuid())
+  type     AuthorType
+  typeId   String
+  imageUrl String?
+  handle   String
+  url      String?
+  Message  Message[]
+
+  @@unique([type, typeId])
 }

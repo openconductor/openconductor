@@ -1,11 +1,53 @@
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Button, { ButtonVariant } from '~/components/shared/button';
 import PageHeading from '~/components/shared/pageHeading';
 import { Table } from '~/components/shared/table';
 import { api } from '~/utils/api';
+import { SideDrawer } from '~/components/shared/Drawer';
+import Link from 'next/link';
+import Markdown from 'react-markdown';
+
+export function Message({ messageId }: { messageId: string }) {
+  const {
+    data: message,
+    status: messageStatus,
+    refetch,
+  } = api.message.byId.useQuery(
+    {
+      id: messageId,
+    },
+    {
+      enabled: true,
+    },
+  );
+
+  return (
+    messageStatus === 'success' && (
+      <div className="p-5">
+        <div>
+          <Link href={message?.url!} target="_blank">
+            {message?.key}
+          </Link>
+          - {message?.state}
+        </div>
+        <div className="pre">
+          <Markdown className="text-base space-y-4">{message?.body}</Markdown>
+        </div>
+        ---
+        {message?.children.map((comment) => (
+          <div className="pre" key={comment.id}>
+            <Markdown className="text-base space-y-4">{comment?.body}</Markdown>
+            ---
+          </div>
+        ))}
+      </div>
+    )
+  );
+}
 
 export default function MessageTable() {
   const { data: teamData, status: teamStatus } = api.team.activeTeam.useQuery();
-
   const {
     data: messages,
     status: messagesStatus,
@@ -15,10 +57,43 @@ export default function MessageTable() {
   });
   const { mutateAsync: refreshMessages, isLoading: isRefreshing } = api.message.refresh.useMutation();
 
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [selectedMessageId, setSelectedMessageId] = useState('');
+
   const handleRefreshMessages = async () => {
     await refreshMessages({ teamId: teamData?.id ?? '' });
     refetch();
   };
+
+  const handleRowClick = (row: { original: { id: string } }) => {
+    setSelectedMessageId(row.original.id);
+    setDrawerOpen(true);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.key === 'ArrowUp' || event.key === 'ArrowDown') && messages && messages.length > 0) {
+        event.preventDefault();
+        const currentIndex = messages.findIndex((message) => message.id === selectedMessageId);
+        let newIndex = currentIndex;
+
+        if (event.key === 'ArrowUp') {
+          newIndex = currentIndex > 0 ? currentIndex - 1 : messages.length - 1;
+        } else if (event.key === 'ArrowDown') {
+          newIndex = currentIndex < messages.length - 1 ? currentIndex + 1 : 0;
+        }
+
+        const newSelectedMessageId = messages[newIndex]?.id;
+        if (newSelectedMessageId) {
+          setSelectedMessageId(newSelectedMessageId);
+          setDrawerOpen(true);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [messages, selectedMessageId]);
 
   if (teamStatus !== 'success' || messagesStatus !== 'success') {
     return <></>;
@@ -30,6 +105,22 @@ export default function MessageTable() {
       accessor: 'key',
     },
     {
+      Header: 'Author',
+      accessor: 'author.handle',
+      Cell: ({ row }: { row: { original: { author: { imageUrl: string; handle: string } } } }) => (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Image
+            src={row.original.author.imageUrl}
+            alt={row.original.author.handle}
+            width={20}
+            height={20}
+            className="h-5 w-5 rounded-full mr-2"
+          />
+          {row.original.author.handle}
+        </div>
+      ),
+    },
+    {
       Header: 'Title',
       accessor: 'title',
     },
@@ -38,8 +129,8 @@ export default function MessageTable() {
       accessor: 'source',
     },
     {
-      Header: 'Url',
-      accessor: 'url',
+      Header: 'Status',
+      accessor: 'status',
     },
     {
       Header: 'Created',
@@ -49,12 +140,17 @@ export default function MessageTable() {
 
   const dataTable =
     messages.map((message) => ({
+      id: message.id,
       key: message.key,
       source: message.source,
       title: message.title,
       body: message.body,
       url: message.url,
       createdAt: message.createdAt.toLocaleDateString(),
+      author: {
+        ...message.author,
+      },
+      status: message.state,
     })) ?? [];
 
   return (
@@ -71,7 +167,14 @@ export default function MessageTable() {
           {isRefreshing ? 'Refreshing' : 'Refresh'}
         </Button>
       </PageHeading>
-      <Table columns={columns} data={dataTable} onRowClick={async (row) => window.open(row.original.url, '_ blank')} />
+      <Table columns={columns} data={dataTable} onRowClick={handleRowClick} />
+      {selectedMessageId && (
+        <SideDrawer
+          isOpen={isDrawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          children={<Message messageId={selectedMessageId} />}
+        />
+      )}
     </div>
   );
 }

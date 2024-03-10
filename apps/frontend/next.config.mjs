@@ -5,6 +5,7 @@
  */
 !process.env.SKIP_ENV_VALIDATION && (await import("./src/env.mjs"));
 
+//@ts-ignore
 import { PrismaPlugin } from '@prisma/nextjs-monorepo-workaround-plugin'
 
 
@@ -29,6 +30,7 @@ const config = {
       "localhost:3000",
       "lh3.googleusercontent.com",
       "ui-avatars.com",
+      "avatars.githubusercontent.com"
     ],
   },
 };

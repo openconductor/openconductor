@@ -12,8 +12,8 @@ export async function githubRepoPullRequests({
 }) {
   // https://docs.github.com/en/graphql/overview/explorer
   const query = `
-      query repositoryStargazers($owner: String!, $repo: String!) {
-        repository(owner: $owner, name: $repo) {
+      query repositoryActivity($owner: String!, $name: String!) {
+        repository(owner: $owner, name: $name) {
           issues(last:20) {
             nodes {
               id
@@ -22,6 +22,38 @@ export async function githubRepoPullRequests({
               body
               url
               number
+              state
+              author {
+                avatarUrl
+                login
+                url
+                ... on Bot {
+                  id
+                }
+                ... on User {
+                  id
+                }
+              }
+              comments(last:100) {
+                nodes {
+                  author {
+                    avatarUrl
+                    login
+                    url
+                    ... on Bot {
+                      id
+                    }
+                    ... on User {
+                      id
+                    }
+                  }
+                  body
+                  databaseId
+                  id
+                  publishedAt
+                  url
+                }
+              }
             }
           }
           pullRequests(last:20) {
@@ -32,6 +64,38 @@ export async function githubRepoPullRequests({
               body
               url
               number
+              state
+              author {
+                avatarUrl
+                login
+                url
+                ... on Bot {
+                  id
+                }
+                ... on User {
+                  id
+                }
+              }
+              comments(last:100) {
+                nodes {
+                  author {
+                    avatarUrl
+                    login
+                    url
+                    ... on Bot {
+                      id
+                    }
+                    ... on User {
+                      id
+                    }
+                  }
+                  body
+                  databaseId
+                  id
+                  publishedAt
+                  url
+                }
+              }
             }
           }
         }
@@ -46,7 +110,7 @@ export async function githubRepoPullRequests({
 
   const repository = await graphqlWithAuth<{ repository: Repository }>(query, {
     owner: repoOwner,
-    repo: repoName,
+    name: repoName,
   });
 
   return repository;
