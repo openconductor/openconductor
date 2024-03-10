@@ -78,43 +78,51 @@ export function Message({ messageId }: { messageId: string }) {
             ))}
           </div>
         </div>
-        <div className="my-5 p-5 bg-neutral-800 rounded-lg">
+        <div className="my-5 p-5 bg-gradient-to-br from-indigo-950/50 to-blue-950/50 rounded-lg">
           {message.aiItems &&
             message.aiItems.map((aiItem, index) => {
               if (aiItem.type === AiItemType.SUMMARY) {
                 const response = aiItem.response as unknown as ResponseSummary;
                 return (
                   <div key={index} className="space-y-5">
-                    <p onClick={() => setAreBulletsVisible(!areBulletsVisible)}>AI Summary: {response.summary}</p>
-                    {areBulletsVisible && (
-                      <ul className="list-disc text-neutral-300 space-y-1 p-4">
-                        {response.bullets.map((bullet, bulletIndex) => (
-                          <li key={bulletIndex}>{bullet}</li>
-                        ))}
-                      </ul>
-                    )}
-                    <div> AI Priority: {response.priority}</div>
-                    <div> AI Suggestions</div>
-                    <div className="space-y-5">
-                      {response.suggestions?.map((suggestion, suggestionIndex) => {
-                        return (
-                          <>
-                            <div key={suggestionIndex} className="flex">
-                              <Button
-                                variant={ButtonVariant.Secondary}
-                                onClick={() =>
-                                  setVisibleSuggestionIndex(
-                                    visibleSuggestionIndex === suggestionIndex ? null : suggestionIndex,
-                                  )
-                                }
-                              >
-                                {suggestion.cta}
-                              </Button>
-                            </div>
-                            <div>{visibleSuggestionIndex === suggestionIndex && <div>{suggestion.body}</div>}</div>
-                          </>
-                        );
-                      })}
+                    <div className="space-y-2">
+                      <p className="text-xs font-medium uppercase text-neutral-400/50">AI Summary</p>
+                      <p onClick={() => setAreBulletsVisible(!areBulletsVisible)}>{response.summary}</p>
+                      {areBulletsVisible && (
+                        <ul className="list-disc text-neutral-300 space-y-1 p-4">
+                          {response.bullets.map((bullet, bulletIndex) => (
+                            <li key={bulletIndex}>{bullet}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-xs font-medium uppercase text-neutral-400/50">AI Priority</p>
+                      <p>{response.priority}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-xs font-medium uppercase text-neutral-400/50">AI Suggestions</p>
+                      <div className="space-y-2">
+                        {response.suggestions?.map((suggestion, suggestionIndex) => {
+                          return (
+                            <>
+                              <div key={suggestionIndex} className="flex">
+                                <Button
+                                  variant={ButtonVariant.Secondary}
+                                  onClick={() =>
+                                    setVisibleSuggestionIndex(
+                                      visibleSuggestionIndex === suggestionIndex ? null : suggestionIndex,
+                                    )
+                                  }
+                                >
+                                  {suggestion.cta}
+                                </Button>
+                              </div>
+                              <div>{visibleSuggestionIndex === suggestionIndex && <div>{suggestion.body}</div>}</div>
+                            </>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 );
@@ -123,7 +131,7 @@ export function Message({ messageId }: { messageId: string }) {
             })}
         </div>
         <div className="p-5 bg-neutral-900 rounded-lg space-y-5">
-          <p>Context</p>
+          <p className="text-xs font-medium uppercase text-neutral-400/50">Context</p>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Image
               src={message.author?.imageUrl ?? ''}
@@ -142,7 +150,7 @@ export function Message({ messageId }: { messageId: string }) {
           </Button>
         </div>
         <div className="p-5 bg-neutral-900 rounded-lg space-y-5">
-          <p>Activity</p>
+          <p className="text-xs font-medium uppercase text-neutral-400/50">Activity</p>
           <div className="space-y-5">
             {message?.children.map((comment) => (
               <div className="p-5 bg-neutral-800">
