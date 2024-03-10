@@ -8,7 +8,7 @@ import PageHeading from '~/components/shared/pageHeading';
 import { AiItemType } from '@openconductor/db';
 import Image from 'next/image';
 
-type ResponseSummary = {
+export type ResponseSummary = {
   summary: string;
   bullets: String[];
   priority: string;

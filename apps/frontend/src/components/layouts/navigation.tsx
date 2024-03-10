@@ -11,18 +11,18 @@ import { Fragment } from 'react';
 const navigation = [
   { name: 'Triage', href: '/triage', root: true },
   { name: 'Review', href: '/review' },
-  { name: 'Conductors', href: '/conductors' },
-  { name: 'Agents', href: '/agents' },
-  { name: 'Documents', href: '/documents' },
+  // { name: 'Conductors', href: '/conductors' },
+  // { name: 'Agents', href: '/agents' },
+  // { name: 'Documents', href: '/documents' },
 ];
 
 const sideNavigation = [
-  { name: 'Playground', href: '/playground' },
-  { name: 'Usage', href: '/runs' },
+  // { name: 'Playground', href: '/playground' },
+  // { name: 'Usage', href: '/runs' },
 ];
 
 const settingsNavigation = [
-  { name: 'Plugins', href: '/plugins' },
+  // { name: 'Plugins', href: '/plugins' },
   { name: 'Account', href: '/settings' },
 ];
 

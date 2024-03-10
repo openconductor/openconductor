@@ -8,7 +8,8 @@ import { SideDrawer } from '~/components/shared/drawer';
 import { MessageType } from '@openconductor/db';
 import Label from '~/components/shared/label';
 import clsx from 'clsx';
-import { Message } from './message';
+import { Message, ResponseSummary } from './message';
+import { SparklesIcon } from '@heroicons/react/20/solid';
 
 export default function MessageTable({ type }: { type: MessageType }) {
   const { data: teamData, status: teamStatus } = api.team.activeTeam.useQuery();
@@ -102,7 +103,15 @@ export default function MessageTable({ type }: { type: MessageType }) {
     },
     {
       Header: 'Title',
-      accessor: 'title',
+      accessor: 'summary',
+      Cell: ({ row }: { row: { original: { summary: string; title: string } } }) => (
+        <div>
+          <p>{row.original.title}</p>
+          <p className="flex text-xs text-blue-600 items-center">
+            <SparklesIcon className="h-2 w-2 mr-1" aria-hidden="true" /> {row.original.summary}
+          </p>
+        </div>
+      ),
     },
     {
       Header: 'Labels',
@@ -124,6 +133,14 @@ export default function MessageTable({ type }: { type: MessageType }) {
     {
       Header: 'Status',
       accessor: 'status',
+      Cell: ({ row }: { row: { original: { priority: string; status: string } } }) => (
+        <div>
+          <p>{row.original.status}</p>
+          <p className="flex text-xs text-blue-600 items-center">
+            <SparklesIcon className="h-2 w-2 mr-1" aria-hidden="true" /> {row.original.priority}
+          </p>
+        </div>
+      ),
     },
     {
       Header: 'Created',
@@ -145,11 +162,16 @@ export default function MessageTable({ type }: { type: MessageType }) {
       },
       status: message.state,
       labels: message.labels,
+      summary: (message.aiItems?.[0]?.response as unknown as ResponseSummary)?.summary,
+      priority: (message.aiItems?.[0]?.response as unknown as ResponseSummary)?.priority,
     })) ?? [];
 
   return (
     <div>
-      <PageHeading title="Messages" description="All your AI-powered messages.">
+      <PageHeading
+        title={type === MessageType.TRIAGE ? 'Triage' : 'Review'}
+        description="All your AI-powered messages."
+      >
         <Button
           variant={ButtonVariant.Secondary}
           onClick={(event) => {
