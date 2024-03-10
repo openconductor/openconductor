@@ -226,6 +226,8 @@ model Message {
   children Message[] @relation("MessageToMessage")
   parent   Message?  @relation("MessageToMessage", fields: [parentId], references: [id])
 
+  labels Label[]
+
   team      Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId    String
   creator   User   @relation(fields: [creatorId], references: [id])
@@ -246,7 +248,19 @@ model Author {
   imageUrl String?
   handle   String
   url      String?
-  Message  Message[]
+  messages Message[]
 
   @@unique([type, typeId])
+}
+
+model Label {
+  id          String    @id @default(cuid())
+  source      String
+  name        String
+  description String?
+  createdAt   DateTime
+  color       String?
+  messages    Message[]
+
+  @@unique([source, name])
 }

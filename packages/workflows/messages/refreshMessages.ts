@@ -28,6 +28,24 @@ export async function refreshMessages({ userId, teamId }: { userId: string; team
     const messageType = item.__typename === 'Issue' ? MessageType.TRIAGE : MessageType.REVIEW;
     const authorType = item.author?.__typename === 'Bot' ? AuthorType.GITHUB_BOT : AuthorType.GITHUB_USER;
 
+    const labels = item.labels?.nodes
+      ? item.labels.nodes.map((label) => ({
+          where: {
+            source_name: {
+              source: `${repoOwner}/${repoName}`,
+              name: label?.name ?? '',
+            },
+          },
+          create: {
+            source: `${repoOwner}/${repoName}`,
+            name: label?.name ?? '',
+            description: label?.description ?? '',
+            color: label?.color ?? '',
+            createdAt: label?.createdAt,
+          },
+        }))
+      : undefined;
+
     // Create a message for the issue or pull request
     const parentMessage = await createDbMessage({
       type: messageType,
@@ -61,6 +79,9 @@ export async function refreshMessages({ userId, teamId }: { userId: string; team
       },
       team: {
         connect: { id: teamId },
+      },
+      labels: {
+        connectOrCreate: [...(labels ?? [])],
       },
     });
 
