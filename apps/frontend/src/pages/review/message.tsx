@@ -22,6 +22,7 @@ export function Message({ messageId }: { messageId: string }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [areBulletsVisible, setAreBulletsVisible] = useState(false);
   const [visibleSuggestionIndex, setVisibleSuggestionIndex] = useState<number | null>(null);
+  const [loadingMessageId, setLoadingMessageId] = useState<string | null>(null);
 
   const {
     data: message,
@@ -36,14 +37,17 @@ export function Message({ messageId }: { messageId: string }) {
     },
   );
 
-  const { mutateAsync: aiMessage, isLoading } = api.message.ai.useMutation();
+  const { mutateAsync: aiMessage } = api.message.ai.useMutation();
 
   const handleAiMessage = async () => {
+    setLoadingMessageId(messageId);
     await aiMessage({ messageId });
     refetch();
+    setLoadingMessageId(null);
   };
 
-  console.log('message', message);
+  const isLoading = loadingMessageId === messageId;
+
   return (
     messageStatus === 'success' &&
     message && (
