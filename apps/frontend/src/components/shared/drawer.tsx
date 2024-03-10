@@ -37,7 +37,7 @@ export const SideDrawer = ({
           tabIndex={0}
           role="button"
         />
-        <Drawer.Content className="border-2 border-l border-gray-600 bg-gray-800 flex flex-col overflow-auto h-full w-[1024px] mt-24 fixed bottom-0 right-0 focus:outline-none">
+        <Drawer.Content className="border-l-2 border-neutral-800 bg-neutral-950 flex flex-col overflow-auto h-full w-[1024px] mt-24 fixed bottom-0 right-0 focus:outline-none">
           {/* Ensure the div is focusable and has a role. Add onKeyDown to handle keyboard events. */}
           <div onClick={(e) => e.stopPropagation()} onKeyDown={handleKeyDown} tabIndex={-1} role="presentation">
             {children}

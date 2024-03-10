@@ -4,7 +4,7 @@ import Button, { ButtonVariant } from '~/components/shared/button';
 import PageHeading from '~/components/shared/pageHeading';
 import { Table } from '~/components/shared/table';
 import { api } from '~/utils/api';
-import { SideDrawer } from '~/components/shared/Drawer';
+import { SideDrawer } from '~/components/shared/drawer';
 import Link from 'next/link';
 import Markdown from 'react-markdown';
 import { MessageType } from '@openconductor/db';
