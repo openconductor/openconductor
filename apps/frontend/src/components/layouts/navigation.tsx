@@ -9,7 +9,8 @@ import { useRouter } from 'next/router';
 import { Fragment } from 'react';
 
 const navigation = [
-  { name: 'Inbox', href: '/inbox', root: true },
+  { name: 'Triage', href: '/triage', root: true },
+  { name: 'Review', href: '/review' },
   { name: 'Conductors', href: '/conductors' },
   { name: 'Agents', href: '/agents' },
   { name: 'Documents', href: '/documents' },

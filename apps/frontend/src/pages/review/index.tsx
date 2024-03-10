@@ -1,14 +1,14 @@
-import { MessageType } from '@openconductor/db';
+import { MessageType } from '@openconductor/db/types';
 import { NextPage } from 'next';
 import AppLayout from '~/components/layouts/appLayout';
 import MessageTable from '~/pages/review/messageTable';
 
-const Dashboard: NextPage = () => {
+const Review: NextPage = () => {
   return (
     <AppLayout>
-      <MessageTable type={MessageType.TRIAGE} />
+      <MessageTable type={MessageType.REVIEW} />
     </AppLayout>
   );
 };
 
-export default Dashboard;
+export default Review;

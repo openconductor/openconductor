@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import AppLayout from '~/components/layouts/appLayout';
 import MessageTable from '~/pages/review/messageTable';
 
-const Dashboard: NextPage = () => {
+const Triage: NextPage = () => {
   return (
     <AppLayout>
       <MessageTable type={MessageType.TRIAGE} />
@@ -11,4 +11,4 @@ const Dashboard: NextPage = () => {
   );
 };
 
-export default Dashboard;
+export default Triage;

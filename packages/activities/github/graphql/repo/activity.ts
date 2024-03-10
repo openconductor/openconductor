@@ -1,7 +1,7 @@
 import { graphql } from '@octokit/graphql';
 import { Repository } from '@octokit/graphql-schema';
 
-export async function githubRepoPullRequests({
+export async function githubRepoActivity({
   accessToken,
   repoOwner,
   repoName,
@@ -16,6 +16,7 @@ export async function githubRepoPullRequests({
         repository(owner: $owner, name: $name) {
           issues(last:20) {
             nodes {
+              __typename
               id
               createdAt
               title
@@ -24,6 +25,7 @@ export async function githubRepoPullRequests({
               number
               state
               author {
+                __typename
                 avatarUrl
                 login
                 url
@@ -37,6 +39,7 @@ export async function githubRepoPullRequests({
               comments(last:100) {
                 nodes {
                   author {
+                    __typename
                     avatarUrl
                     login
                     url
@@ -58,6 +61,7 @@ export async function githubRepoPullRequests({
           }
           pullRequests(last:20) {
             nodes {
+              __typename
               id
               createdAt
               title
@@ -66,6 +70,7 @@ export async function githubRepoPullRequests({
               number
               state
               author {
+                __typename
                 avatarUrl
                 login
                 url
@@ -78,7 +83,9 @@ export async function githubRepoPullRequests({
               }
               comments(last:100) {
                 nodes {
+                  __typename
                   author {
+                    __typename
                     avatarUrl
                     login
                     url
