@@ -10,19 +10,21 @@ export async function embedMessage({ messageId }: { messageId?: string }) {
 
   const generateEmbedding = await pipeline('feature-extraction', 'Supabase/gte-small');
 
-  // Generate a vector using Transformers.js
   const output = await generateEmbedding(message.body, {
     pooling: 'mean',
     normalize: true,
   });
 
-  // Extract the embedding output
   const embedding = Array.from(output.data);
 
-  // Store the vector in Postgres
-  await prisma.$executeRawUnsafe(
+  const updatedMessage = await prisma.$executeRawUnsafe(
     `UPDATE "Message" SET embedding = $1 WHERE id = $2;`,
-    embedding, // Make sure this is formatted as expected by your database
+    embedding,
     messageId,
   );
+
+  return {
+    updatedMessage,
+    embedding,
+  };
 }

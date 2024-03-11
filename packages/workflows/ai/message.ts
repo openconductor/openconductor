@@ -3,7 +3,7 @@ import type * as activities from '@openconductor/activities';
 import { ApplicationFailure, proxyActivities } from '@temporalio/workflow';
 import { AiItemType } from '@openconductor/db';
 
-const { getDbMessage, embedMessage, openaiAugmentMessage, createAiItem } =
+const { getDbMessage, embedMessage, openaiAugmentMessage, createAiItem, searchByEmbedding } =
   proxyActivities<typeof activities>(nonRetryPolicy);
 
 export async function aiMessage({ messageId }: { messageId: string }): Promise<boolean> {
@@ -14,8 +14,6 @@ export async function aiMessage({ messageId }: { messageId: string }): Promise<b
   if (!message) {
     throw new ApplicationFailure(`No message for messageId ${messageId}`);
   }
-
-  // Summary short and long like Superhuman
 
   const aiSummary = await openaiAugmentMessage({ message });
 
@@ -33,23 +31,14 @@ export async function aiMessage({ messageId }: { messageId: string }): Promise<b
     },
   });
 
-  await embedMessage({ messageId });
+  const { embedding } = await embedMessage({ messageId });
 
-  // Triage
-  // priority non urgent/hight/medium/low
+  await searchByEmbedding({ embedding });
 
-  // similar
   // difficulty -> first contribution
   // assignement / specialist
-
-  // Vector for similar issues like Linear
   // Issues -> context switch prompt
-
   // Suggestion of labels
-
-  // Reply suggestion
-
-  // Action / Specs suggestion
 
   return true;
 }

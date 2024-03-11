@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { api } from '~/utils/api';
 import Link from 'next/link';
 import Markdown from 'react-markdown';
@@ -37,6 +37,15 @@ export function Message({ messageId }: { messageId: string }) {
     },
   );
 
+  const { data: similarMessages } = api.message.similar.useQuery(
+    {
+      messageId: messageId,
+    },
+    {
+      enabled: true,
+    },
+  );
+
   const { mutateAsync: aiMessage } = api.message.ai.useMutation();
 
   const handleAiMessage = async () => {
@@ -47,6 +56,23 @@ export function Message({ messageId }: { messageId: string }) {
   };
 
   const isLoading = loadingMessageId === messageId;
+
+  console.log('similarMessages', similarMessages?.length, similarMessages);
+
+  useEffect(() => {
+    const toggleBulletsVisibility = (event: KeyboardEvent) => {
+      if (event.key === 'm' || event.key === 'M') {
+        setAreBulletsVisible((prev) => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', toggleBulletsVisibility);
+
+    // Cleanup function to remove the event listener
+    return () => {
+      window.removeEventListener('keydown', toggleBulletsVisibility);
+    };
+  }, []); // Empty dependency array means this effect runs once on mount and cleanup on unmount
 
   return (
     messageStatus === 'success' &&
@@ -78,7 +104,7 @@ export function Message({ messageId }: { messageId: string }) {
             ))}
           </div>
         </div>
-        <div className="my-5 p-5 bg-gradient-to-br from-blue-900/50 to-blue-950/50 rounded-lg">
+        <div className="my-5 p-5 bg-gradient-to-br from-blue-900/50 to-blue-950/50 rounded-lg space-y-5">
           {message.aiItems &&
             message.aiItems.map((aiItem, index) => {
               if (aiItem.type === AiItemType.SUMMARY) {
@@ -87,7 +113,12 @@ export function Message({ messageId }: { messageId: string }) {
                   <div key={index} className="space-y-5">
                     <div className="space-y-2">
                       <p className="text-xs font-medium uppercase text-blue-400/50">AI Summary</p>
-                      <p onClick={() => setAreBulletsVisible(!areBulletsVisible)}>{response.summary}</p>
+                      <p onClick={() => setAreBulletsVisible(!areBulletsVisible)}>
+                        {response.summary}{' '}
+                        <Button variant={ButtonVariant.Secondary}>
+                          M - {areBulletsVisible ? 'Collapse' : 'Expand'}
+                        </Button>
+                      </p>
                       {areBulletsVisible && (
                         <ul className="text-sm list-disc text-neutral-300 space-y-1 px-4">
                           {response.bullets.map((bullet, bulletIndex) => (
@@ -127,8 +158,18 @@ export function Message({ messageId }: { messageId: string }) {
                   </div>
                 );
               }
-              return null; // Or any other fallback for non-summary items
+              return null;
             })}
+          {similarMessages && similarMessages.length > 1 && (
+            <div className="space-y-2">
+              <p className="text-xs font-medium uppercase text-blue-400/50">AI Similar</p>
+              <ul className="text-sm list-disc text-neutral-300 space-y-1 px-4">
+                {similarMessages.map((similarMessage, similarMessageIndex) => (
+                  <li key={similarMessageIndex}>{similarMessage.title}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
         <div className="p-5 bg-neutral-900 rounded-lg space-y-5">
           <p className="text-xs font-medium uppercase text-neutral-400/50">Context</p>

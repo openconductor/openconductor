@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { taskQueue } from '@openconductor/config-temporal/temporal-connection';
 import { refreshMessages } from '@openconductor/workflows/messages/refreshMessages';
 import { MessageType } from '@openconductor/db';
-import { aiMessage } from '@openconductor/workflows';
+import { aiMessage, embedSimilarMessages } from '@openconductor/workflows';
 
 export const messageRouter = createTRPCRouter({
   all: protectedProcedure.input(z.object({ type: z.string() })).query(({ ctx, input }) => {
@@ -61,6 +61,14 @@ export const messageRouter = createTRPCRouter({
     return temporal.workflow.execute(aiMessage, {
       workflowId: `${new Date()}-aiMessage`,
       args: [{ messageId: input.messageId }],
+      taskQueue,
+    });
+  }),
+  similar: protectedProcedure.input(z.object({ messageId: z.string() })).query(async ({ input, ctx }) => {
+    const temporal = await connectToTemporal();
+    return temporal.workflow.execute(embedSimilarMessages, {
+      workflowId: `${new Date()}-embedSimilarMessages`,
+      args: [{ userId: ctx.session?.user.id, messageId: input.messageId }],
       taskQueue,
     });
   }),
