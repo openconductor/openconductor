@@ -1,16 +1,23 @@
-import { Metadata } from 'next';
+'use client';
+
 import Link from 'next/link';
 
 import { cn } from '@/lib/utils';
-import { buttonVariants } from '@/components/ui/button';
-import { UserAuthForm } from '@/app/examples/authentication/components/user-auth-form';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { UserAuthForm } from '@/app/login/components/user-auth-form';
+import { signIn } from 'next-auth/react';
+import { toast } from '@/components/ui/use-toast';
 
-export const metadata: Metadata = {
-  title: 'Authentication',
-  description: 'Authentication forms built using the components.',
-};
+export default function Login() {
+  function onGithubSignIn() {
+    console.log('click github');
+    signIn('github').catch((error) => {
+      toast({
+        title: error.message,
+      });
+    });
+  }
 
-export default function AuthenticationPage() {
   return (
     <>
       <div className="md:hidden"></div>
@@ -55,6 +62,9 @@ export default function AuthenticationPage() {
               <p className="text-sm text-muted-foreground">Enter your email below to create your account</p>
             </div>
             <UserAuthForm />
+            {/* <Button variant="outline" onClick={onGithubSignIn}>
+              GITHUB LOGIN
+            </Button> */}
             <p className="px-8 text-center text-sm text-muted-foreground">
               By clicking continue, you agree to our{' '}
               <Link href="/terms" className="underline underline-offset-4 hover:text-primary">
