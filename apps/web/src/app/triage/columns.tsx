@@ -5,12 +5,14 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 
-import { labels, priorities, statuses } from '../data/data';
-import { Task } from '../data/schema';
-import { DataTableColumnHeader } from './data-table-column-header';
-import { DataTableRowActions } from './data-table-row-actions';
-
-export const columns: ColumnDef<Task>[] = [
+import { labels, priorities, statuses } from '../examples/tasks/data/data';
+import { Message } from './schema';
+import { DataTableColumnHeader } from '../examples/tasks/components/data-table-column-header';
+import { DataTableRowActions } from '../examples/tasks/components/data-table-row-actions';
+import Image from 'next/image';
+import { SparklesIcon } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+export const columns: ColumnDef<Message>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -33,22 +35,40 @@ export const columns: ColumnDef<Task>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'id',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Task" />,
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue('id')}</div>,
+    accessorKey: 'key',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Id" />,
+    cell: ({ row }) => <div className="w-[80px]">{row.getValue('key')}</div>,
     enableSorting: false,
     enableHiding: false,
+  },
+  {
+    accessorKey: 'author.handle',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Author" />,
+    cell: ({ row }) => {
+      return (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Image
+            src={row.original.author.imageUrl}
+            alt={row.original.author.handle}
+            width={20}
+            height={20}
+            className="h-5 w-5 rounded-full mr-2"
+          />
+          {row.original.author.handle}
+        </div>
+      );
+    },
   },
   {
     accessorKey: 'title',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Title" />,
     cell: ({ row }) => {
-      const label = labels.find((label) => label.value === row.original.label);
-
       return (
-        <div className="flex space-x-2">
-          {label && <Badge variant="outline">{label.label}</Badge>}
-          <span className="max-w-[500px] truncate font-medium">{row.getValue('title')}</span>
+        <div>
+          <p>{row.original.title}</p>
+          <p className="flex text-xs text-blue-600 items-center">
+            <SparklesIcon className="h-2 w-2 mr-1" aria-hidden="true" /> {row.original.summary}
+          </p>
         </div>
       );
     },
@@ -75,6 +95,27 @@ export const columns: ColumnDef<Task>[] = [
     },
   },
   {
+    accessorKey: 'labels',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Labels" />,
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center gap-2">
+          {row.original.labels.map((label, index) => (
+            <div key={index}>
+              <div className="flex p-1 border border-gray-700 rounded-lg text-xs items-center">
+                <div
+                  className={`inline-block h-2 w-2 rounded-full mr-1`}
+                  style={{ backgroundColor: `#${label.color ? label.color.toLowerCase() : '000'}` }}
+                ></div>
+                <span>{label.name}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    },
+  },
+  {
     accessorKey: 'priority',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Priority" />,
     cell: ({ row }) => {
@@ -95,8 +136,8 @@ export const columns: ColumnDef<Task>[] = [
       return value.includes(row.getValue(id));
     },
   },
-  {
-    id: 'actions',
-    cell: ({ row }) => <DataTableRowActions row={row} />,
-  },
+  // {
+  //   id: 'actions',
+  //   cell: ({ row }) => <DataTableRowActions row={row} />,
+  // },
 ];
