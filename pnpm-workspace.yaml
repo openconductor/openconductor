@@ -1,5 +1,6 @@
 packages:
-  - apps/frontend
+  # - apps/frontend
+  - apps/web
   - apps/worker
   - packages/activities
   - packages/api

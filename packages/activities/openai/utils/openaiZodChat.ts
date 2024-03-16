@@ -28,7 +28,7 @@ export const openaiZodChat = async ({
     temperature: 0,
   });
 
-  const assistantAnswer = completion.choices[0].message.content;
+  const assistantAnswer = completion.choices[0]?.message.content;
 
   try {
     const parsedAnswer = JSON.parse(assistantAnswer!);

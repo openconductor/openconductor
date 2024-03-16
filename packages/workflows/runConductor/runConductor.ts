@@ -1,19 +1,12 @@
 import { longNonRetryPolicy, nonRetryPolicy } from '../policies';
 import type * as activities from '@openconductor/activities';
 import { proxyActivities, uuid4 } from '@temporalio/workflow';
-import { AgentAction, AgentFinish, AgentStep } from 'langchain/schema';
+import { AgentFinish, AgentStep } from 'langchain/schema';
 
-const {
-  getDbAgent,
-  createDbRun,
-  deleteDbBlocks,
-  createDbBlock,
-  createDbEvent,
-  updateDbEvent,
-  langchainPromptTemplate,
-} = proxyActivities<typeof activities>(nonRetryPolicy);
+const { getDbAgent, createDbRun, deleteDbBlocks, createDbBlock, createDbEvent, langchainPromptTemplate } =
+  proxyActivities<typeof activities>(nonRetryPolicy);
 
-const { langchainToolCall, langchainAgentConductor } = proxyActivities<typeof activities>(longNonRetryPolicy);
+const { langchainTools, langchainToolCall, langchainAgent } = proxyActivities<typeof activities>(longNonRetryPolicy);
 
 // tctl workflow run --taskqueue openconductor --workflow_type runConductor
 
@@ -68,9 +61,11 @@ export async function runConductor({
     order: blockIndex,
   });
 
+  const tools = await langchainTools({ enabledPlugins, userId });
+
   while (iterations < maxIterations) {
     try {
-      const stepOutput = await langchainAgentConductor({ input: renderedPrompt, enabledPlugins, steps, userId });
+      const stepOutput = await langchainAgent({ input: renderedPrompt, tools, steps, userId });
 
       if (isAgentFinish(stepOutput)) {
         const endBlock = await createDbBlock({

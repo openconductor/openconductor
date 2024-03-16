@@ -6,7 +6,7 @@ import { AgentFinish, AgentStep } from 'langchain/schema';
 const { getDbAgent, createDbRun, deleteDbBlocks, createDbBlock, createDbEvent, langchainPromptTemplate } =
   proxyActivities<typeof activities>(nonRetryPolicy);
 
-const { langchainToolCall, langchainAgent } = proxyActivities<typeof activities>(longNonRetryPolicy);
+const { langchainTools, langchainToolCall, langchainAgent } = proxyActivities<typeof activities>(longNonRetryPolicy);
 
 export async function runAgent({
   agentId,
@@ -60,9 +60,11 @@ export async function runAgent({
     order: blockIndex,
   });
 
+  const tools = await langchainTools({ enabledPlugins, userId });
+
   while (iterations < maxIterations) {
     try {
-      const stepOutput = await langchainAgent({ input: renderedPrompt, enabledPlugins, steps, userId });
+      const stepOutput = await langchainAgent({ input: renderedPrompt, tools, steps, userId });
 
       if (isAgentFinish(stepOutput)) {
         const endBlock = await createDbBlock({
