@@ -18,6 +18,10 @@ const examples = [
     href: '/review',
   },
   {
+    name: 'Sources',
+    href: '/sources',
+  },
+  {
     name: 'Mail',
     href: '/examples/mail',
   },

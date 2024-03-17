@@ -87,7 +87,7 @@ export function Message({ messageId }: { messageId: string }) {
         {/* <PageHeading title={message.key} description={message.state ?? ''}> */}
         <div className="flex items-center gap-5">
           <Link href={message.url!} target="_blank">
-            View on {message.source}
+            View on {message.source.sourceId}
           </Link>
           <Button
             variant="default"

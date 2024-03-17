@@ -5,3 +5,4 @@ export * from './runConductor/runConductorTool';
 export * from './messages/refreshMessages';
 export * from './ai';
 export * from './embed';
+export * from './source/createSource';

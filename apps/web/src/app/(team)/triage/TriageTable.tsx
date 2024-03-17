@@ -84,7 +84,7 @@ export default function TriageTable({ type }: { type: MessageType }) {
     messages.map((message) => ({
       id: message.id,
       key: message.key,
-      source: message.source,
+      repo: message.source.sourceId,
       title: message.title,
       body: message.body,
       url: message.url,

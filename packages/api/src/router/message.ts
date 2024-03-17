@@ -30,6 +30,7 @@ export const messageRouter = createTRPCRouter({
         author: true,
         labels: true,
         aiItems: true,
+        source: true,
       },
     });
   }),
@@ -45,6 +46,7 @@ export const messageRouter = createTRPCRouter({
         },
         labels: true,
         aiItems: true,
+        source: true,
       },
     });
   }),
