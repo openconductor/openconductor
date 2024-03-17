@@ -10,6 +10,10 @@ import { UserNav } from './user-nav';
 
 const examples = [
   {
+    name: 'Contribute',
+    href: '/contribute',
+  },
+  {
     name: 'Triage',
     href: '/triage',
   },
@@ -21,30 +25,30 @@ const examples = [
     name: 'Sources',
     href: '/sources',
   },
-  {
-    name: 'Mail',
-    href: '/examples/mail',
-  },
-  {
-    name: 'Dashboard',
-    href: '/examples/dashboard',
-  },
-  {
-    name: 'Cards',
-    href: '/examples/cards',
-  },
-  {
-    name: 'Playground',
-    href: '/examples/playground',
-  },
-  {
-    name: 'Forms',
-    href: '/examples/forms',
-  },
-  {
-    name: 'Music',
-    href: '/examples/music',
-  },
+  // {
+  //   name: 'Mail',
+  //   href: '/examples/mail',
+  // },
+  // {
+  //   name: 'Dashboard',
+  //   href: '/examples/dashboard',
+  // },
+  // {
+  //   name: 'Cards',
+  //   href: '/examples/cards',
+  // },
+  // {
+  //   name: 'Playground',
+  //   href: '/examples/playground',
+  // },
+  // {
+  //   name: 'Forms',
+  //   href: '/examples/forms',
+  // },
+  // {
+  //   name: 'Music',
+  //   href: '/examples/music',
+  // },
 ];
 
 interface NavProps extends React.HTMLAttributes<HTMLDivElement> {}

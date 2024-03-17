@@ -4,14 +4,17 @@ import { columns } from './columns';
 import { DataTable } from './components/data-table';
 import { api } from '@/lib/api';
 import { Button } from '@/components/ui/button';
-import { MessageType } from '@openconductor/db';
+import { Message as MessageDb, MessageType } from '@openconductor/db';
 import { useEffect, useState } from 'react';
 import { SideDrawer } from '@/components/drawer';
-import { Message } from './[messageId]/message';
+import { Message } from './@message/Message';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
+import { useMessage } from './use-message';
 
 export type ResponseSummary = {
   summary: string;
-  bullets: String[];
+  bullets: string[];
   priority: string;
   suggestions: {
     cta: string;
@@ -19,7 +22,9 @@ export type ResponseSummary = {
   }[];
 };
 
-export default function TriageTable({ type }: { type: MessageType }) {
+export default function TriageTable({ type, contribute }: { type: MessageType; contribute?: boolean }) {
+  const { selectedMessage, selectMessage } = useMessage();
+
   const { data: teamData, status: teamStatus } = api.team.activeTeam.useQuery();
 
   const {
@@ -35,9 +40,6 @@ export default function TriageTable({ type }: { type: MessageType }) {
 
   const { mutateAsync: refreshMessages, isLoading: isRefreshing } = api.message.refresh.useMutation();
 
-  const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [selectedMessageId, setSelectedMessageId] = useState('');
-
   const handleRefreshMessages = async () => {
     await refreshMessages({ teamId: teamData?.id ?? '' });
     refetch();
@@ -45,36 +47,44 @@ export default function TriageTable({ type }: { type: MessageType }) {
 
   const handleRowClick = (row: { original: { id: string } }) => {
     console.log('row', row.original.id);
-    setSelectedMessageId(row.original.id);
-    setDrawerOpen(true);
+    const message = messages?.find((message) => message.id === row.original.id);
+    if (message) {
+      console.log('message', message);
+      selectMessage(message);
+    }
   };
 
   useEffect(() => {
+    console.log('selectedMessage', selectedMessage);
+    if (!selectedMessage && messages?.[0]) {
+      selectMessage(messages[0]);
+    }
     const handleKeyDown = (event: KeyboardEvent) => {
       if ((event.key === 'ArrowUp' || event.key === 'ArrowDown') && messages && messages.length > 0) {
         event.preventDefault();
-        const currentIndex = messages.findIndex((message) => message.id === selectedMessageId);
+        const currentIndex = messages.findIndex((message: MessageDb) => message.id === selectedMessage?.id);
         let newIndex = currentIndex;
 
         if (event.key === 'ArrowUp') {
           newIndex = currentIndex > 0 ? currentIndex - 1 : messages.length - 1;
         } else if (event.key === 'ArrowDown') {
+          console.log('ArrowDown');
           newIndex = currentIndex < messages.length - 1 ? currentIndex + 1 : 0;
         }
 
         const newSelectedMessageId = messages[newIndex]?.id;
         if (newSelectedMessageId) {
-          setSelectedMessageId(newSelectedMessageId);
-          setDrawerOpen(true);
+          const message = messages?.find((message: MessageDb) => message.id === newSelectedMessageId);
+          if (message) {
+            selectMessage(message);
+          }
         }
-      } else if (event.key === 'Escape') {
-        setSelectedMessageId('');
-        setDrawerOpen(false);
       }
     };
+
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [messages, selectedMessageId]);
+  }, [messages, selectedMessage]);
 
   if (teamStatus !== 'success' || messagesStatus !== 'success') {
     return <></>;
@@ -102,58 +112,31 @@ export default function TriageTable({ type }: { type: MessageType }) {
 
   return (
     <>
-      <div className="h-full flex-1 flex-col space-y-8 p-8 md:flex">
-        {type === MessageType.TRIAGE && (
-          <>
-            <div className="flex items-center justify-between space-y-2">
-              <div>
-                <h2 className="text-2xl font-bold tracking-tight">Good first issues</h2>
-                <p className="text-muted-foreground">Ideal for first time contributions.</p>
-              </div>
-            </div>
-            <DataTable
-              minimal={false}
-              data={filteredDataTable}
-              columns={columns}
-              onRowClick={handleRowClick}
-              selectedRowId={selectedMessageId}
-            />
-          </>
-        )}
-
-        <div className="flex items-center justify-between space-y-2">
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight">
-              {type === MessageType.TRIAGE && 'Triage'}
-              {type === MessageType.REVIEW && 'Review'}
-            </h2>
-            <p className="text-muted-foreground">
-              Pick {type === MessageType.TRIAGE && 'an issue'} {type === MessageType.REVIEW && 'a PR'} to work on.
-            </p>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button
-              onClick={(event) => {
-                event.preventDefault();
-                void handleRefreshMessages();
-              }}
-              disabled={isRefreshing}
-            >
-              {isRefreshing ? 'Refreshing' : 'Refresh'}
-            </Button>
-          </div>
-        </div>
-        <DataTable data={dataTable} columns={columns} onRowClick={handleRowClick} selectedRowId={selectedMessageId} />
-        {selectedMessageId && (
-          <SideDrawer
-            isOpen={isDrawerOpen}
-            onClose={() => {
-              setDrawerOpen(false);
-              setSelectedMessageId('');
-            }}
-            children={<Message messageId={selectedMessageId} />}
-          />
-        )}
+      <div className="flex items-center px-4 h-[52px] justify-between ">
+        <h1 className="text-lg font-medium">
+          {type === MessageType.TRIAGE && !contribute && 'Triage'}
+          {type === MessageType.TRIAGE && contribute && 'Contribute'}
+          {type === MessageType.REVIEW && 'Review'}
+        </h1>
+        <Button
+          size="sm"
+          onClick={(event) => {
+            event.preventDefault();
+            void handleRefreshMessages();
+          }}
+          disabled={isRefreshing}
+        >
+          {isRefreshing ? 'Refreshing' : 'Refresh'}
+        </Button>
+      </div>
+      <Separator />
+      <div className="p-4">
+        <DataTable
+          data={contribute ? filteredDataTable : dataTable}
+          columns={columns}
+          onRowClick={handleRowClick}
+          selectedRowId={selectedMessage?.id}
+        />
       </div>
     </>
   );

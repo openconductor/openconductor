@@ -15,7 +15,7 @@ export default function Login() {
   const router = useRouter();
 
   if (status === 'authenticated') {
-    router.push('/triage');
+    router.push('/inbox');
   } else if (status === 'loading') {
     return <div>Loading...</div>;
   }

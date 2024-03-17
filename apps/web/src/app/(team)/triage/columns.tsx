@@ -144,7 +144,7 @@ export const columns: ColumnDef<Message>[] = [
   {
     accessorKey: 'createdAt',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Created" />,
-    cell: ({ row }) => <div className="w-[80px]">{format(row.getValue('createdAt'), 'd MMM')}</div>,
+    cell: ({ row }) => <div className="w-[90px]">{format(row.getValue('createdAt'), 'd MMM yyyy')}</div>,
   },
   {
     id: 'actions',
