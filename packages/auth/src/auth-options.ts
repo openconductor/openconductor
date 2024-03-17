@@ -92,10 +92,12 @@ export const authOptions: NextAuthOptions = {
           scope: 'openid https://www.googleapis.com/auth/webmasters.readonly',
         },
       },
+      allowDangerousEmailAccountLinking: true,
     }),
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID || '',
       clientSecret: process.env.DISCORD_CLIENT_SECRET || '',
+      allowDangerousEmailAccountLinking: true,
     }),
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID || '',
@@ -105,6 +107,7 @@ export const authOptions: NextAuthOptions = {
           scope: 'repo read:user user:email',
         },
       },
+      allowDangerousEmailAccountLinking: true,
     }),
     TwitterProvider({
       clientId: process.env.TWITTER_CLIENT_ID || '',
@@ -116,6 +119,7 @@ export const authOptions: NextAuthOptions = {
             'tweet.read tweet.write tweet.moderate.write users.read follows.read follows.write offline.access space.read mute.read mute.write like.read like.write list.read list.write block.read block.write bookmark.read bookmark.write',
         },
       },
+      allowDangerousEmailAccountLinking: true,
     }),
     /**
      * ...add more providers here

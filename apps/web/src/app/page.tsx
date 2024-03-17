@@ -1,5 +1,5 @@
-import MailPage from './examples/mail/page';
+import Login from './login/Login';
 
 export default function Home() {
-  return <MailPage />;
+  return <Login />;
 }

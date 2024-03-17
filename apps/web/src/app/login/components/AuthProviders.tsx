@@ -1,24 +1,13 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 
-import { useEffect } from 'react';
 import { toast } from '@/components/ui/use-toast';
+import { useRouter } from 'next/navigation';
+import Logo from '@/components/logo';
 
-export function UserAuthForm() {
-  const { status } = useSession();
-
-  if (status === 'authenticated') {
-    return (
-      <>
-        <button onClick={signOut}>Log out</button>
-      </>
-    );
-  } else if (status === 'loading') {
-    return <div>Loading...</div>;
-  }
-
+export function AuthProviders() {
   function onGoogleSignIn() {
     signIn('google').catch((error) => {
       toast({
@@ -27,57 +16,35 @@ export function UserAuthForm() {
     });
   }
 
-  function onDiscordSignIn() {
-    signIn('discord').catch((error) => {
-      toast({
-        title: error.message,
-      });
-    });
-  }
+  // function onDiscordSignIn() {
+  //   signIn('discord').catch((error) => {
+  //     toast({
+  //       title: error.message,
+  //     });
+  //   });
+  // }
 
   function onGithubSignIn() {
-    signIn('github').catch((error) => {
+    signIn('github', { callbackUrl: '/triage' }).catch((error) => {
       toast({
         title: error.message,
       });
     });
   }
 
-  function onTwitterSignIn() {
-    signIn('twitter').catch((error) => {
-      toast({
-        title: error.message,
-      });
-    });
-  }
+  // function onTwitterSignIn() {
+  //   signIn('twitter').catch((error) => {
+  //     toast({
+  //       title: error.message,
+  //     });
+  //   });
+  // }
 
   return (
     <div className="grid gap-6">
-      <div className="h-screen bg-neutral-100 dark:bg-neutral-900">
+      <div className="">
         <div className="flex min-h-full flex-col justify-center mx-auto max-w-xs space-y-8">
-          <div className="text-center justify-center items-center space-y-8">
-            {/* <div className="w-20 mx-auto">
-              <Logo />
-            </div>
-            <h2 className="text-2xl font-semibold tracking-tight ">
-              {mode === 'login' ? 'Log in to OpenConductor' : 'Create your OpenConductor account'}
-            </h2> */}
-          </div>
           <div className="grid grid-cols-1 gap-3">
-            <button
-              type="button"
-              onClick={() => {
-                signIn('github');
-              }}
-            >
-              Github
-            </button>
-            {/* <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-              <g fill="currentColor">
-                <path d="M23.507,9.818H12.052v4.909h6.492C17.507,18,14.944,19.091,12,19.091a7.091,7.091,0,1,1,4.553-12.52l3.567-3.4A12,12,0,1,0,12,24C18.617,24,24.6,19.636,23.507,9.818Z"></path>
-              </g>
-            </svg>
-            <p className="ml-2">Continue with Google</p> */}
             <Button
               variant="outline"
               onClick={(e) => {
@@ -96,7 +63,7 @@ export function UserAuthForm() {
               </svg>
               <p className="ml-2">Continue with Github</p>
             </Button>
-            <Button
+            {/* <Button
               variant="outline"
               onClick={(e) => {
                 e.preventDefault();
@@ -124,7 +91,7 @@ export function UserAuthForm() {
                 </g>
               </svg>
               <p className="ml-2">Continue with Twitter</p>
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>
