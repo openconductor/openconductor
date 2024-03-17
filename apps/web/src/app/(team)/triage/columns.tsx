@@ -58,8 +58,11 @@ export const columns: ColumnDef<Message>[] = [
     },
   },
   {
-    accessorKey: 'repo',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Repo" />,
+    accessorKey: 'source',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Source" />,
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   {
     accessorKey: 'status',

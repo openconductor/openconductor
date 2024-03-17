@@ -41,7 +41,7 @@ export async function createSource({
     return await createDbSource({
       sourceId,
       type,
-      name: repository.name,
+      name: repository.name.toLowerCase(),
       url: repository.url,
       imageUrl: repository.openGraphImageUrl,
       description: repository.description,

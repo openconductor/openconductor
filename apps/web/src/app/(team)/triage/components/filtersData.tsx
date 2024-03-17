@@ -1,3 +1,7 @@
+'use client';
+
+import { api } from '@/lib/api';
+import { Source, SourceType } from '@openconductor/db';
 import {
   ArrowDownIcon,
   ArrowRightIcon,
@@ -6,6 +10,7 @@ import {
   CircleIcon,
   CrossCircledIcon,
   ExclamationTriangleIcon,
+  GitHubLogoIcon,
   ShadowNoneIcon,
   StopwatchIcon,
 } from '@radix-ui/react-icons';
@@ -72,3 +77,18 @@ export const priorities = [
     icon: ArrowDownIcon,
   },
 ];
+
+export function sources() {
+  const { data: sources, status: sourcesStatus } = api.source.all.useQuery(undefined, {
+    enabled: true,
+  });
+
+  // if (sourcesStatus === 'success' && sources.length > 0) {
+  const filterSources = sources?.map((source: Source) => ({
+    label: source.name,
+    value: source.sourceId,
+    icon: source.type === SourceType.GITHUB_REPO ? GitHubLogoIcon : undefined,
+  }));
+  return filterSources;
+  // }
+}

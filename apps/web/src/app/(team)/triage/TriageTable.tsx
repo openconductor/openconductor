@@ -84,7 +84,7 @@ export default function TriageTable({ type }: { type: MessageType }) {
     messages.map((message) => ({
       id: message.id,
       key: message.key,
-      repo: message.source.sourceId,
+      source: message.source.sourceId,
       title: message.title,
       body: message.body,
       url: message.url,
@@ -112,7 +112,7 @@ export default function TriageTable({ type }: { type: MessageType }) {
               </div>
             </div>
             <DataTable
-              minimal={true}
+              minimal={false}
               data={filteredDataTable}
               columns={columns}
               onRowClick={handleRowClick}
