@@ -77,4 +77,24 @@ export const messageRouter = createTRPCRouter({
   delete: protectedProcedure.input(z.string()).mutation(({ ctx, input }) => {
     return ctx.prisma.message.delete({ where: { id: input } });
   }),
+  count: protectedProcedure.input(z.object({ type: z.string() })).query(({ ctx, input }) => {
+    return ctx.prisma.message.aggregate({
+      _count: true,
+      where: {
+        type: {
+          equals: input.type as MessageType,
+        },
+        state: {
+          not: 'CLOSED',
+        },
+        team: {
+          members: {
+            some: {
+              userId: ctx.session.user.id,
+            },
+          },
+        },
+      },
+    });
+  }),
 });

@@ -1,13 +1,18 @@
-import { ResizablePanel } from '@/components/ui/resizable';
+import { ResizableHandle, ResizablePanel } from '@/components/ui/resizable';
 
 interface LayoutProps {
   children: React.ReactNode;
+  message: React.ReactNode;
 }
 
-export default async function Layout({ children }: LayoutProps) {
+export default async function Layout({ children, message }: LayoutProps) {
   return (
-    <ResizablePanel defaultSize={85} minSize={85}>
-      {children}
-    </ResizablePanel>
+    <>
+      <ResizablePanel defaultSize={70} minSize={70}>
+        {children}
+      </ResizablePanel>
+      <ResizableHandle withHandle />
+      <ResizablePanel defaultSize={30}>{message}</ResizablePanel>
+    </>
   );
 }

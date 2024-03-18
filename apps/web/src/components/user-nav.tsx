@@ -14,14 +14,16 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { signOut } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
+import { useTheme } from 'next-themes';
 export function UserNav() {
   const { data: session } = useSession();
+  const { theme, setTheme } = useTheme();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8">
+        <Button variant="ghost" className="relative h-8 w-8 rounded-lg">
+          <Avatar className="h-6 w-6">
             <AvatarImage src={session?.user.image ?? ''} alt={session?.user.name ?? ''} />
             <AvatarFallback>{session?.user.name?.substring(0, 2)}</AvatarFallback>
           </Avatar>
@@ -40,9 +42,9 @@ export function UserNav() {
             Profile
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            Billing
-            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+          <DropdownMenuItem onClick={() => (theme === 'light' ? setTheme('dark') : setTheme('light'))}>
+            {theme === 'light' ? 'Dark mode' : 'Light mode'}
+            <DropdownMenuShortcut>⌘T</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
             Settings
