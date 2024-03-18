@@ -11,23 +11,31 @@ import { MessageType } from '@openconductor/db';
 
 export function Inbox() {
   const { data: messages, status: messagesStatus } = api.message.all.useQuery(
-    { type: MessageType.TRIAGE },
+    {
+      type: MessageType.TRIAGE,
+    },
     {
       enabled: true,
     },
   );
 
+  const filteredContribute = messages?.filter((message) =>
+    message.labels.some((label) => label.name === 'good first issue'),
+  );
+
+  const filteredFix = messages?.filter((message) => message.labels.some((label) => label.name === 'bug'));
+
   return (
     <>
-      <Tabs defaultValue="all">
+      <Tabs defaultValue="contribute">
         <div className="flex items-center px-4 py-2 h-[52px]">
           <h1 className="text-lg font-medium">Inbox</h1>
           <TabsList className="ml-auto">
-            <TabsTrigger value="all" className="text-neutral-600 dark:text-neutral-200">
-              One
+            <TabsTrigger value="contribute" className="text-neutral-600 dark:text-neutral-200">
+              Contribute
             </TabsTrigger>
-            <TabsTrigger value="unread" className="text-neutral-600 dark:text-neutral-200">
-              Two
+            <TabsTrigger value="fix" className="text-neutral-600 dark:text-neutral-200">
+              Fix bugs
             </TabsTrigger>
           </TabsList>
         </div>
@@ -40,8 +48,11 @@ export function Inbox() {
             </div>
           </form>
         </div>
-        <TabsContent value="all" className="m-0">
-          {messagesStatus === 'success' && <InboxList messages={messages} />}
+        <TabsContent value="contribute" className="m-0">
+          {messagesStatus === 'success' && <InboxList messages={filteredContribute} />}
+        </TabsContent>
+        <TabsContent value="fix" className="m-0">
+          {messagesStatus === 'success' && <InboxList messages={filteredFix} />}
         </TabsContent>
       </Tabs>
     </>

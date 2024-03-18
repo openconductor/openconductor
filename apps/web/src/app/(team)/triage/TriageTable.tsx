@@ -36,9 +36,15 @@ export default function TriageTable({ type, contribute }: { type: MessageType; c
   );
 
   const { mutateAsync: refreshMessages, isLoading: isRefreshing } = api.message.refresh.useMutation();
+  const { mutateAsync: recommendMessages, isLoading: isRecommending } = api.message.recommend.useMutation();
 
   const handleRefreshMessages = async () => {
     await refreshMessages({ teamId: teamData?.id ?? '' });
+    refetch();
+  };
+
+  const handleRecommendMessages = async () => {
+    await recommendMessages({ teamId: teamData?.id ?? '' });
     refetch();
   };
 
@@ -111,6 +117,17 @@ export default function TriageTable({ type, contribute }: { type: MessageType; c
           {type === MessageType.TRIAGE && contribute && 'Contribute'}
           {type === MessageType.REVIEW && 'Review'}
         </h1>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={(event) => {
+            event.preventDefault();
+            void handleRecommendMessages();
+          }}
+          disabled={isRecommending}
+        >
+          {isRecommending ? 'Recommending' : 'Recommend'}
+        </Button>
         <Button
           variant="secondary"
           size="sm"

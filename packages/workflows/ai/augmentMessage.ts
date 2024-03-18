@@ -6,7 +6,7 @@ import { AiItemType } from '@openconductor/db';
 const { getDbMessage, embedMessage, openaiAugmentMessage, createAiItem, searchByEmbedding } =
   proxyActivities<typeof activities>(nonRetryPolicy);
 
-export async function aiMessage({ messageId }: { messageId: string }): Promise<boolean> {
+export async function aiAugmentMessage({ messageId }: { messageId: string }): Promise<boolean> {
   const message = await getDbMessage({
     messageId,
   });
