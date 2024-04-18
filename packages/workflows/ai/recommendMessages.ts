@@ -1,8 +1,10 @@
-import { nonRetryPolicy } from '../policies';
+import { longPolicy, nonRetryPolicy } from '../policies';
 import type * as activities from '@openconductor/activities';
 import { ApplicationFailure, proxyActivities } from '@temporalio/workflow';
 
-const { getDbMessagesInclude, openaiRecommendMessages } = proxyActivities<typeof activities>(nonRetryPolicy);
+const { getDbMessagesInclude } = proxyActivities<typeof activities>(nonRetryPolicy);
+
+const { openaiRecommendMessages } = proxyActivities<typeof activities>(longPolicy);
 
 export async function aiRecommendMessages({ userId, teamId }: { userId: string; teamId: string }): Promise<boolean> {
   const messages = await getDbMessagesInclude({
