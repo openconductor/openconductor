@@ -3,6 +3,12 @@ import { Calculator } from 'langchain/tools/calculator';
 import { langchainVectorTool } from './registry/vectorstore';
 import { NodeFileStore } from 'langchain/stores/file/node';
 import {
+  GithubBranchGetTool,
+  GithubCodeSearchTool,
+  GithubIssueGetTool,
+  GithubPullRequestCreateTool,
+} from './registry/github';
+import {
   GitAddFile,
   GitCheckoutBranch,
   GitCheckoutNewBranch,
@@ -11,18 +17,21 @@ import {
   GitListBranches,
   GitPushBranch,
   GitStatus,
-  GithubBranchGetTool,
-  GithubCodeSearchTool,
-  GithubIssueGetTool,
-  GithubPullRequestCreateTool,
-} from './registry/github';
-import { FsCreateFile, FsInsertText, FsListFiles, FsReadFile, FsRemoveText, ProcessChDir } from './registry/filesystem';
+} from './registry/git';
+import {
+  FilesystemCreateFileTool,
+  FilesystemInsertTextTool,
+  FilesystemListFilesTool,
+  FilesystemReadFileTool,
+  FilesystemRemoveTextTool,
+  ProcessChangeDirectoryTool,
+} from './registry/filesystem';
 
 export async function langchainToolRegistry(): Promise<Tool[]> {
   const vectorTool = langchainVectorTool({});
 
   // const localStore = new NodeFileStore();
-  // const auth = process.env.GITHUB_API_TOKEN;
+  const auth = process.env.GITHUB_API_TOKEN;
 
   const tools = [
     // new SerpAPI(process.env.SERPAPI_API_KEY, {
@@ -46,12 +55,12 @@ export async function langchainToolRegistry(): Promise<Tool[]> {
     // new GitAddFile(),
     // new GitCommit(),
     // new GitPushBranch(),
-    new ProcessChDir(),
-    new FsCreateFile(),
-    new FsReadFile(),
-    new FsInsertText(),
-    new FsRemoveText(),
-    new FsListFiles(),
+    new ProcessChangeDirectoryTool(),
+    new FilesystemCreateFileTool(),
+    new FilesystemReadFileTool(),
+    new FilesystemInsertTextTool(),
+    new FilesystemRemoveTextTool(),
+    new FilesystemListFilesTool(),
   ];
   return tools as Tool[];
 }

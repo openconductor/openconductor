@@ -1,1 +1,1 @@
-temporal server start-dev
+temporal server start-dev --log-level=warn --log-format=pretty

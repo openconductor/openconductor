@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
 import Button, { ButtonVariant } from '~/components/shared/button';
 import { api } from '~/utils/api';
 
@@ -9,27 +8,13 @@ export default function WorkflowHeader() {
   const utils = api.useContext();
   const { workflow_id } = router.query;
 
-  const { data: workflow, refetch } = api.workflow.byId.useQuery({ id: workflow_id as string });
-  const { data: agentData } = api.agent.activeAgent.useQuery();
+  const { data: workflow } = api.workflow.byId.useQuery({ id: workflow_id as string });
 
   const [nameInput, setNameInput] = useState<string | undefined>(workflow?.name);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
-  const { mutate: createBlock } = api.block.create.useMutation({
-    async onSuccess() {
-      await refetch();
-    },
-  });
-
   const { mutate } = api.workflow.update.useMutation({
     async onSuccess() {
-      await utils.workflow.byId.invalidate();
-    },
-  });
-
-  const { mutate: createRun } = api.run.create.useMutation({
-    async onSuccess() {
-      toast.success('Triggered test successfully!');
       await utils.workflow.byId.invalidate();
     },
   });
@@ -62,21 +47,6 @@ export default function WorkflowHeader() {
         </div>
       </div>
       <div className="mt-3 flex sm:ml-4 sm:mt-0">
-        <div className="flex justify-center">
-          <Button
-            variant={ButtonVariant.Tertiary}
-            onClick={() => {
-              createBlock({
-                workflowId: workflow.id,
-                agentId: agentData!.id,
-                prevOrder: 0,
-              });
-              toast.success('Block created');
-            }}
-          >
-            + Add block
-          </Button>
-        </div>
         {isEditing ? (
           <Button
             variant={ButtonVariant.Primary}
@@ -97,17 +67,6 @@ export default function WorkflowHeader() {
             Edit
           </Button>
         )}
-        <Button
-          variant={ButtonVariant.Primary}
-          className="w-1/2 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-neutral-300 hover:bg-neutral-50"
-          onClick={(e) => {
-            e.preventDefault();
-            toast('Running workflow...');
-            createRun({ workflowId: workflow.id, input: workflow.name });
-          }}
-        >
-          Run
-        </Button>
       </div>
     </div>
   );

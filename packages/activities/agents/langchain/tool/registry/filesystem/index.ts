@@ -1,50 +1,74 @@
-import { Tool } from 'langchain/tools';
 import fs from 'fs';
-
+import path from 'path';
 import { StructuredTool } from 'langchain/tools';
 import { z } from 'zod';
 
-export class FsCreateFile extends StructuredTool {
-  name = 'Fs Create File';
+export class FilesystemCreateFileTool extends StructuredTool {
+  name = 'filesystem-CreateFile';
   description = `Create a file with the specified content. Please format your input as an object with the following parameters:
-- path: (string) [REQUIRED] The path to the file to create, relative to your current directory.
-- text: (string) [REQUIRED] The content of the file.`;
+- "path": (string) [REQUIRED] The path to the file to create, relative to your current directory.
+- "text": (string) [REQUIRED] The content of the file.`;
 
   schema = z.object({
     path: z.string(),
     text: z.string(),
   });
 
-  async _call({ path, text }: z.infer<typeof this.schema>) {
-    fs.writeFileSync(path, text);
-    return `Successfully created file ${path} with the given content.`;
+  async _call({ path: filePath, text }: z.infer<typeof this.schema>) {
+    // Check if the directory exists and create it if it doesn't
+    const directoryPath = path.dirname(filePath);
+    if (!fs.existsSync(directoryPath)) {
+      fs.mkdirSync(directoryPath, { recursive: true });
+    }
+
+    // Create the file with the specified content
+    fs.writeFileSync(filePath, text);
+    return `Successfully created file ${filePath} with the given content.`;
   }
 }
 
-export class FsReadFile extends Tool {
-  name = 'Fs Read File';
-  description = `Read a file from the filesystem. Please format your input as a path relative to your current directory.`;
-  async _call(input: string) {
+export class FilesystemReadFileTool extends StructuredTool {
+  name = 'filesystem-ReadFile';
+  description = `Read a file from the filesystem. Please format your input as an object with the following parameters:
+- "input": (string) [REQUIRED] The path to the file, relative to your current directory.`;
+
+  schema = z.object({
+    input: z.string(),
+  });
+
+  async _call({ input }: z.infer<typeof this.schema>) {
     return fs.readFileSync(input.trim(), 'utf8');
   }
 }
 
-export class FsListFiles extends Tool {
-  name = 'Fs List Files';
-  description = `List the files in a directory. Please format your input as a path relative to your current directory.`;
-  async _call(input: string) {
+export class FilesystemListFilesTool extends StructuredTool {
+  name = 'filesystem-ListFiles';
+  description = `List the files in a directory. Please format your input as an object with the following parameters:
+- "input": (string) [REQUIRED] The path to the directory, relative to your current directory.`;
+
+  schema = z.object({
+    input: z.string(),
+  });
+
+  async _call({ input }: z.infer<typeof this.schema>) {
     return `The files in the ${input} directory include: ${fs.readdirSync(input.trim(), 'utf8').join(', ')}`;
   }
 }
 
-export class FsInsertText extends Tool {
-  name = 'Fs Insert Text';
-  description = `Insert text to a file in the file system. Please format your input as a json object with the following parameters:
-- path: (string) [REQUIRED] The path to the file to insert text into, relative to your current directory.
-- text: (string) [REQUIRED] The text to insert into the file.
-- position: (number) [OPTIONAL] The position in the file to insert the text. If not provided, the text will be inserted at the end of the file.`;
-  async _call(input: string) {
-    const { path, text, position = text.length } = JSON.parse(input.trim().replace(/^```/, '').replace(/```$/, ''));
+export class FilesystemInsertTextTool extends StructuredTool {
+  name = 'filesystem-InsertText';
+  description = `Insert text to a file in the file system. Please format your input as an object with the following parameters:
+- "path": (string) [REQUIRED] The path to the file to insert text into, relative to your current directory.
+- "text": (string) [REQUIRED] The text to insert into the file.
+- "position": (number) [OPTIONAL] The position in the file to insert the text. If not provided, the text will be inserted at the end of the file.`;
+
+  schema = z.object({
+    path: z.string(),
+    text: z.string(),
+    position: z.number().optional(),
+  });
+
+  async _call({ path, text, position = text.length }: z.infer<typeof this.schema>) {
     const content = fs.readFileSync(path.trim(), 'utf8');
     const newContent = `${content.slice(0, position)}${text}${content.slice(position)}`;
     fs.writeFileSync(path, newContent);
@@ -52,29 +76,44 @@ export class FsInsertText extends Tool {
   }
 }
 
-export class FsRemoveText extends Tool {
-  name = 'Fs Remove Text';
-  description = `Remove text from a file in the file system. Please format your input as a json object with the following parameters:
-- path: (string) [REQUIRED] The path to the file to insert text into, relative to your current directory.
-- position: (number) [REQUIRED] The position in the file to insert the text. If not provided, the text will be inserted at the end of the file.
-- length: (number) [REQUIRED] The length of the text to remove from the file.`;
-  async _call(input: string) {
-    const { path, length, position } = JSON.parse(input.trim().replace(/^```/, '').replace(/```$/, ''));
-    const content = fs.readFileSync(input.trim(), 'utf8');
+export class FilesystemRemoveTextTool extends StructuredTool {
+  name = 'filesystem-RemoveText';
+  description = `Remove text from a file in the file system. Please format your input as an object with the following parameters:
+- "path": (string) [REQUIRED] The path to the file to remove text from, relative to your current directory.
+- "position": (number) [REQUIRED] The position in the file to remove the text.
+- "length": (number) [REQUIRED] The length of the text to remove from the file.`;
+
+  schema = z.object({
+    path: z.string(),
+    position: z.number(),
+    length: z.number(),
+  });
+
+  async _call({ path, position, length }: z.infer<typeof this.schema>) {
+    const content = fs.readFileSync(path.trim(), 'utf8');
     const newContent = `${content.slice(0, position)}${content.slice(position + length)}`;
     fs.writeFileSync(path, newContent);
-    return `Successfully inserted text into ${path}.`;
+    return `Successfully removed text from ${path}.`;
   }
 }
 
-export class ProcessChDir extends Tool {
-  name = 'Change Current Directory';
-  description = `Switch your current working directory. Please format your input as the path to the directory relative your current working directory.`;
-  constructor() {
-    super();
-  }
-  async _call(input: string) {
-    process.chdir(input);
-    return `Changed current directory into ${input}.`;
+export class ProcessChangeDirectoryTool extends StructuredTool {
+  name = 'process-ChangeDirectory';
+  description = `Change your current working directory. Please format your input as an object with the following parameters:
+- "path": (string) [REQUIRED] The path to the directory relative to your current working directory.`;
+
+  schema = z.object({
+    path: z.string(),
+  });
+
+  async _call({ path: filePath }: z.infer<typeof this.schema>) {
+    // Check if the directory exists and create it if it doesn't
+    const directoryPath = path.dirname(filePath);
+    if (!fs.existsSync(directoryPath)) {
+      fs.mkdirSync(directoryPath, { recursive: true });
+    }
+
+    process.chdir(filePath);
+    return `Changed current directory to ${filePath}.`;
   }
 }
