@@ -8,6 +8,18 @@ export const blockRouter = createTRPCRouter({
       where: { id: input },
     });
   }),
+  byAgentId: protectedProcedure.input(z.object({ agentId: z.string() })).query(({ ctx, input }) => {
+    return ctx.prisma.block.findMany({
+      where: {
+        agentId: input.agentId,
+      },
+      include: {
+        events: {
+          orderBy: { startedAt: 'asc' },
+        },
+      },
+    });
+  }),
   create: protectedProcedure
     .input(
       z.object({

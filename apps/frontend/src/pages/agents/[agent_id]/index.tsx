@@ -1,4 +1,5 @@
 import Block from './blocks/[id]';
+import { Agent, Block as BlockDb } from '@openconductor/db/types';
 import BlockCard from './blocks/blockCard';
 import AgentHeader from './agentHeader';
 import clsx from 'clsx';
@@ -16,11 +17,13 @@ const AgentPage: React.FC = () => {
   const [blockId, setBlockId] = useState<string | undefined>(block_id?.toString());
   const { data: agent, status: agentStatus } = api.agent.byId.useQuery({ id: agent_id as string });
   const [agentPrompt, setAgentPrompt] = useState<string | undefined>(agent?.prompt);
-  const [agentInput, setAgentInput] = useState<string | undefined>(agent?.input);
+  const [agentInput, setAgentInput] = useState<string | undefined>(JSON.stringify(agent?.input));
+
+  const { data: blocks, status: blockStatus } = api.block.byAgentId.useQuery({ agentId: agent_id as string });
 
   const { mutate } = api.agent.update.useMutation({
     async onSuccess() {
-      await utils.agent.byId.invalidate();
+      await utils.agent.byId.invalidate({ id: agent_id as string });
       toast.success('Agent saved');
     },
   });
@@ -28,7 +31,7 @@ const AgentPage: React.FC = () => {
   const { mutate: createRun } = api.run.create.useMutation({
     async onSuccess() {
       toast.success('Triggered run');
-      await utils.agent.byId.invalidate();
+      await utils.block.byAgentId.invalidate({ agentId: agent_id as string });
     },
   });
 
@@ -36,11 +39,11 @@ const AgentPage: React.FC = () => {
     setBlockId(block_id?.toString());
   }, [block_id]);
 
-  if (!agent_id || agentStatus === 'loading') {
+  if (!agent_id || agentStatus === 'loading' || blockStatus === 'loading') {
     return <></>;
   }
 
-  if (agentStatus === 'error' || !agent) {
+  if (agentStatus === 'error' || blockStatus === 'error' || !agent) {
     return <div>Error!</div>;
   }
 
@@ -50,47 +53,51 @@ const AgentPage: React.FC = () => {
         <AgentHeader />
         <ul className={clsx(blockId ? 'max-w-sm' : ' mx-auto max-w-sm', 'flex flex-col gap-y-6 mt-8')}>
           <Fragment>
-            Instructions:
-            <textarea
-              rows={4}
-              value={agentPrompt}
-              onChange={(e) => setAgentPrompt(e.target.value)}
-              className="lg:w-[25rem] dark:bg-black"
-            />
-            Input parameters
-            <textarea
-              rows={4}
-              value={agentInput}
-              onChange={(e) => setAgentInput(e.target.value)}
-              className="lg:w-[25rem] dark:bg-black"
-            />
-          </Fragment>
-          <Fragment>
-            <div className="">
-              <Button
-                variant={ButtonVariant.Secondary}
-                className="w-1/2 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-neutral-300 hover:bg-neutral-50"
-                onClick={(e) => {
-                  e.preventDefault();
-                  mutate({ id: agent.id, prompt: agentPrompt!, input: JSON.parse(agentInput!) });
-                }}
-              >
-                Save
-              </Button>
-              <Button
-                variant={ButtonVariant.Primary}
-                className="w-1/2 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-neutral-300 hover:bg-neutral-50"
-                onClick={(e) => {
-                  e.preventDefault();
-                  mutate({ id: agent.id, prompt: agentPrompt!, input: JSON.parse(agentInput!) });
-                  createRun({ agentId: agent.id, prompt: agentPrompt!, input: JSON.parse(agentInput!) });
-                }}
-              >
-                Run
-              </Button>
+            <div className="shadow-lg rounded-xl border-2 border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 p-4 space-y-2">
+              <div className="space-y-2">
+                <label className="text-neutral-500 text-sm">Instructions</label>
+                <textarea
+                  rows={4}
+                  value={agentPrompt ?? agent.prompt}
+                  onChange={(e) => setAgentPrompt(e.target.value)}
+                  className="lg:w-full bg-neutral-100 dark:bg-black/30 border-none rounded-lg"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-neutral-500 text-sm">Input parameters</label>
+                <textarea
+                  rows={4}
+                  value={agentInput ?? JSON.stringify(agent.input)}
+                  onChange={(e) => setAgentInput(e.target.value)}
+                  className="lg:w-full bg-neutral-100 dark:bg-black/30 border-none rounded-lg"
+                />
+              </div>
+              <div className="">
+                <Button
+                  variant={ButtonVariant.Secondary}
+                  className="w-1/2 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-neutral-300 hover:bg-neutral-50"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    mutate({ id: agent.id, prompt: agentPrompt!, input: JSON.parse(agentInput!) });
+                  }}
+                >
+                  Save
+                </Button>
+                <Button
+                  variant={ButtonVariant.Primary}
+                  className="w-1/2 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-neutral-300 hover:bg-neutral-50"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    mutate({ id: agent.id, prompt: agentPrompt!, input: JSON.parse(agentInput!) });
+                    createRun({ agentId: agent.id, prompt: agentPrompt!, input: JSON.parse(agentInput!) });
+                  }}
+                >
+                  Run
+                </Button>
+              </div>
             </div>
           </Fragment>
-          {agent?.blocks?.map((block) => (
+          {blocks?.map((block) => (
             <div
               key={block.id}
               onClick={(event) => {

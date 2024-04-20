@@ -32,7 +32,7 @@ export default function AgentHeader() {
               type="text"
               value={nameInput}
               onChange={(e) => setNameInput(e.target.value)}
-              className="text-2xl font-bold lg:w-[25rem]"
+              className="text-2xl font-bold lg:w-[25rem] dark:bg-neutral-900 rounded-lg"
             />
           ) : (
             <h1 className="text-2xl font-bold ">{agent.name}</h1>

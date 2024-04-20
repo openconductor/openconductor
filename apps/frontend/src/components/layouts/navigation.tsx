@@ -1,13 +1,12 @@
 import SelectTeam from '../shared/selectTeam';
-import ToggleTheme from '../shared/toggleTheme';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
-import { CogIcon } from '@heroicons/react/20/solid';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
 import Logo from '../shared/logo';
+import { useTheme } from 'next-themes';
 
 const navigation = [
   { name: 'Agents', href: '/agents' },
@@ -18,8 +17,10 @@ const navigation = [
 
 export default function Navigation() {
   const router = useRouter();
+  const { systemTheme, theme, setTheme } = useTheme();
+  const currentTheme = theme === 'system' ? systemTheme : theme;
   return (
-    <Disclosure as="nav" className=" dark:bg-neutral-900 shadow">
+    <Disclosure as="nav" className="bg-white dark:bg-neutral-900 shadow">
       {({ open }) => (
         <>
           <div className="px-4 sm:px-6 lg:px-8">
@@ -42,37 +43,37 @@ export default function Navigation() {
                     <h3 className="text-lg font-bold leading-6 ">OpenConductor</h3>
                   </div>
                 </a>
-                <div className="hidden md:ml-6 md:flex md:space-x-8">
+                <div className="hidden md:ml-6 md:flex">
                   {/* <div className="mt-3">
                     <SelectTeam />
                   </div> */}
                   {navigation.map((item) => (
-                    <a
-                      key={item.href}
-                      href={item.href}
-                      className={clsx(
-                        router.pathname.startsWith(item.href)
-                          ? 'border-indigo-500 text-neutral-900'
-                          : 'border-transparent text-neutral-500 hover:border-neutral-300 hover:text-neutral-700',
-                        'inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium',
-                      )}
-                    >
-                      {item.name}
+                    <a key={item.href} href={item.href} className="inline-flex items-center px-1 text-sm font-medium">
+                      <span
+                        className={clsx(
+                          router.pathname.startsWith(item.href) ? 'bg-neutral-200 dark:bg-neutral-800 ' : '',
+                          'px-3 py-1 rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-800',
+                        )}
+                      >
+                        {item.name}
+                      </span>
                     </a>
                   ))}
                 </div>
               </div>
               <div className="flex items-center">
                 <div className="hidden md:ml-4 md:flex md:flex-shrink-0 md:items-center">
-                  <button type="button" className="p-1 focus:outline-none ">
-                    <span className="sr-only">Toggle theme</span>
-                    <ToggleTheme />
-                  </button>
                   <Menu as="div" className="relative ml-3">
                     <div>
-                      <Menu.Button className="flex text-sm focus:outline-none ">
-                        <span className="sr-only">Open settings</span>
-                        <CogIcon className="h-6 w-6" aria-hidden="true" />
+                      <Menu.Button className="flex text-sm font-medium focus:outline-none ">
+                        <span
+                          className={clsx(
+                            router.pathname.startsWith('/settings') ? 'bg-neutral-200 dark:bg-neutral-800 ' : '',
+                            'px-3 py-1 rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-800',
+                          )}
+                        >
+                          Settings
+                        </span>
                       </Menu.Button>
                     </div>
                     <Transition
@@ -84,17 +85,31 @@ export default function Navigation() {
                       leaveFrom="transform opacity-100 scale-100"
                       leaveTo="transform opacity-0 scale-95"
                     >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-neutral-800 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <Menu.Item>
                           {({ active }) => (
                             <a
                               href="/settings"
                               className={clsx(
-                                active ? 'bg-neutral-100' : '',
-                                'block px-4 py-2 text-sm text-neutral-700',
+                                active ? 'bg-neutral-100 dark:bg-neutral-700' : '',
+                                'block px-4 py-2 text-sm text-neutral-700 dark:text-neutral-200',
                               )}
                             >
-                              Settings
+                              Account
+                            </a>
+                          )}
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href=""
+                              className={clsx(
+                                active ? 'bg-neutral-100 dark:bg-neutral-700' : '',
+                                'block px-4 py-2 text-sm text-neutral-700 dark:text-neutral-200',
+                              )}
+                              onClick={() => (theme == 'dark' ? setTheme('light') : setTheme('dark'))}
+                            >
+                              {currentTheme == 'dark' ? 'Light' : 'Dark'} mode
                             </a>
                           )}
                         </Menu.Item>
@@ -103,8 +118,8 @@ export default function Navigation() {
                             <a
                               href="#"
                               className={clsx(
-                                active ? 'bg-neutral-100' : '',
-                                'block px-4 py-2 text-sm text-neutral-700',
+                                active ? 'bg-neutral-100 dark:bg-neutral-700' : '',
+                                'block px-4 py-2 text-sm text-neutral-700 dark:text-neutral-200',
                               )}
                               onClick={() => {
                                 void signOut({ redirect: true, callbackUrl: '/' });
@@ -129,7 +144,7 @@ export default function Navigation() {
               <Disclosure.Button
                 as="a"
                 href="#"
-                className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-neutral-500 hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-700 sm:pl-5 sm:pr-6"
+                className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-neutral-500 hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-700 sm:pl-5 sm:pr-6 "
               >
                 Team
               </Disclosure.Button>

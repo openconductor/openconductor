@@ -28,12 +28,12 @@ export default function Button({ children, variant = ButtonVariant.Secondary, ..
       {...props}
       type="button"
       className={clsx(
-        variant === ButtonVariant.Primary ? ' border-indigo-700 bg-indigo-600 text-white hover:bg-indigo-500' : '',
+        variant === ButtonVariant.Primary ? ' border-indigo-500 bg-indigo-600 text-white hover:bg-indigo-500' : '',
         variant === ButtonVariant.Secondary
-          ? 'border-neutral-200 bg-neutral-100 text-neutral-700 hover:bg-neutral-200 '
+          ? 'border-neutral-200 dark:border-neutral-700 dark:hover:border-neutral-600 bg-neutral-50 dark:bg-neutral-800 text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-700 dark:text-neutral-200'
           : '',
         variant === ButtonVariant.Tertiary ? 'border-indigo-700 bg-white text-indigo-500 hover:bg-indigo-50' : '',
-        'mx-1  px-3.5 py-2 text-sm font-semibold border rounded-md shadow-sm items-center justify-center inline-flex',
+        'mx-1  px-5 py-1.5 text-sm font-semibold border rounded-md shadow-sm items-center justify-center inline-flex',
       )}
     >
       {children}
