@@ -20,7 +20,7 @@ export async function runAgent({
   userId,
   prompt,
   input,
-  enabledPlugins = ['documents'],
+  enabledPlugins = ['documents', 'google'],
   // enabledPlugins = ['documents', 'github', 'git', 'filesystem', 'calculator', 'serp'],
   maxIterations = 15,
 }: {
