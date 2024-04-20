@@ -22,7 +22,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="h-screen">
         <Navigation />
         <div
-          className="bg-repeat p-8"
+          className="min-h-screen bg-repeat p-8"
           style={{
             backgroundImage: currentTheme === 'dark' ? `url('/grid--dark.svg')` : `url('/grid--light.svg')`,
           }}
