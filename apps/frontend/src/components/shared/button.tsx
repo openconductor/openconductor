@@ -34,7 +34,7 @@ export default function Button({ children, variant = ButtonVariant.Secondary, lo
           ? 'border-neutral-200 dark:border-neutral-700 dark:hover:border-neutral-600 bg-neutral-50 dark:bg-neutral-800 text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-700 dark:text-neutral-200'
           : '',
         variant === ButtonVariant.Tertiary ? 'border-indigo-700 bg-white text-indigo-500 hover:bg-indigo-50' : '',
-        'mx-1  px-2.5 py-1.5 text-sm font-semibold border rounded-md shadow-sm items-center justify-center inline-flex',
+        ' px-2.5 py-1.5 text-sm font-semibold border rounded-md shadow-sm items-center justify-center inline-flex',
       )}
     >
       {loading && <SpinIcon className="w-4 h-4 mr-2 text-white animate-spin" />}
