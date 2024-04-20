@@ -5,7 +5,7 @@ interface LayoutProps {
   message: React.ReactNode;
 }
 
-export default async function ExamplesLayout({ children, message }: LayoutProps) {
+export default async function Layout({ children, message }: LayoutProps) {
   return (
     <>
       <ResizablePanel defaultSize={70} minSize={70}>

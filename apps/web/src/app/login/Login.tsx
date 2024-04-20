@@ -17,7 +17,11 @@ export default function Login() {
   if (status === 'authenticated') {
     router.push('/inbox');
   } else if (status === 'loading') {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen animate-pulse">
+        <Logo />
+      </div>
+    );
   }
 
   return (

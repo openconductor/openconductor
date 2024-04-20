@@ -5,10 +5,7 @@ import { DataTable } from './components/data-table';
 import { api } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Message as MessageDb, MessageType } from '@openconductor/db';
-import { useEffect, useState } from 'react';
-import { SideDrawer } from '@/components/drawer';
-import { Message } from './@message/Message';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { useEffect } from 'react';
 import { Separator } from '@/components/ui/separator';
 import { useMessage } from './use-message';
 
@@ -46,16 +43,13 @@ export default function TriageTable({ type, contribute }: { type: MessageType; c
   };
 
   const handleRowClick = (row: { original: { id: string } }) => {
-    console.log('row', row.original.id);
     const message = messages?.find((message) => message.id === row.original.id);
     if (message) {
-      console.log('message', message);
       selectMessage(message);
     }
   };
 
   useEffect(() => {
-    console.log('selectedMessage', selectedMessage);
     if (!selectedMessage && messages?.[0]) {
       selectMessage(messages[0]);
     }
@@ -68,7 +62,6 @@ export default function TriageTable({ type, contribute }: { type: MessageType; c
         if (event.key === 'ArrowUp') {
           newIndex = currentIndex > 0 ? currentIndex - 1 : messages.length - 1;
         } else if (event.key === 'ArrowDown') {
-          console.log('ArrowDown');
           newIndex = currentIndex < messages.length - 1 ? currentIndex + 1 : 0;
         }
 
@@ -119,6 +112,7 @@ export default function TriageTable({ type, contribute }: { type: MessageType; c
           {type === MessageType.REVIEW && 'Review'}
         </h1>
         <Button
+          variant="secondary"
           size="sm"
           onClick={(event) => {
             event.preventDefault();
@@ -131,12 +125,15 @@ export default function TriageTable({ type, contribute }: { type: MessageType; c
       </div>
       <Separator />
       <div className="p-4">
+        {/* <ScrollArea className="p-4">
+          <ScrollBar orientation="vertical" className="invisible" /> */}
         <DataTable
           data={contribute ? filteredDataTable : dataTable}
           columns={columns}
           onRowClick={handleRowClick}
           selectedRowId={selectedMessage?.id}
         />
+        {/* </ScrollArea> */}
       </div>
     </>
   );

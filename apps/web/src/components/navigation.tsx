@@ -1,16 +1,31 @@
 'use client';
 import * as React from 'react';
-import { Blocks, Cog, Inbox, Split, SquareStack } from 'lucide-react';
+import { Blocks, Inbox, Split, SquareStack } from 'lucide-react';
 
 import { AccountSwitcher } from '@/app/examples/mail/components/account-switcher';
 import { Nav } from '@/app/examples/mail/components/nav';
 import { accounts } from '@/app/examples/mail/data';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
-import { ThemeToggle } from './theme-toggle';
 import { UserNav } from './user-nav';
+import { api } from '@/lib/api';
+import { MessageType } from '@openconductor/db';
 
 export function Navigation({ isCollapsed }: { isCollapsed: boolean }) {
+  const { data: triageMessages, status: reviewMessagesStatus } = api.message.count.useQuery(
+    { type: MessageType.REVIEW },
+    {
+      enabled: true,
+    },
+  );
+
+  const { data: reviewMessages, status: triageMessagesStatus } = api.message.count.useQuery(
+    { type: MessageType.TRIAGE },
+    {
+      enabled: true,
+    },
+  );
+
   return (
     <>
       <div className={cn('flex h-[52px] items-center justify-between', isCollapsed ? 'h-[52px] px-2.5' : 'px-2')}>
@@ -20,7 +35,6 @@ export function Navigation({ isCollapsed }: { isCollapsed: boolean }) {
           </div>
         )}
         <div className="flex items-center space-x-2">
-          {!isCollapsed && <ThemeToggle />}
           <UserNav />
         </div>
       </div>
@@ -37,13 +51,13 @@ export function Navigation({ isCollapsed }: { isCollapsed: boolean }) {
           {
             href: '/triage',
             title: 'Triage',
-            label: '9',
+            label: `${triageMessagesStatus === 'success' && triageMessages?._count}`,
             icon: Split,
           },
           {
             href: '/review',
             title: 'Review',
-            label: '',
+            label: `${reviewMessagesStatus === 'success' && reviewMessages?._count}`,
             icon: SquareStack,
           },
           {
