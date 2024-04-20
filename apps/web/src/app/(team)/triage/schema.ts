@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const messageSchema = z.object({
   id: z.string(),
   key: z.string(),
-  repo: z.string(),
+  source: z.string(),
   title: z.string(),
   body: z.string(),
   url: z.string().nullable(),

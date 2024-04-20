@@ -21,11 +21,11 @@ export default function Sources() {
           <h2 className="text-2xl font-bold tracking-tight">Sources</h2>
           <p className="text-muted-foreground">Manage your sources.</p>
         </div>
-        <DialogButton variant="default" size="sm" label="Create">
+        <DialogButton variant="default" label="Create">
           <SourceForm />
         </DialogButton>
       </div>
-      <div className="items-start justify-center gap-6 rounded-lg p-8 md:grid lg:grid-cols-3 xl:grid-cols-4">
+      <div className="items-start justify-center gap-6 rounded-lg md:grid lg:grid-cols-3 xl:grid-cols-4">
         {sourcesStatus === 'success' && sources.map((source) => <SourceCard {...source} />)}
       </div>
     </div>

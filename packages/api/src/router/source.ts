@@ -8,7 +8,7 @@ import { z } from 'zod';
 export const sourceRouter = createTRPCRouter({
   all: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.source.findMany({
-      orderBy: { id: 'desc' },
+      orderBy: { name: 'asc' },
       where: {
         team: {
           members: {
@@ -48,4 +48,7 @@ export const sourceRouter = createTRPCRouter({
         taskQueue,
       });
     }),
+  delete: protectedProcedure.input(z.string()).mutation(({ ctx, input }) => {
+    return ctx.prisma.source.delete({ where: { id: input } });
+  }),
 });

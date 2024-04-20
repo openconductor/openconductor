@@ -222,7 +222,7 @@ model Message {
   createdAt         DateTime
   embedding         Unsupported("vector(384)")?
 
-  source   Source @relation(fields: [sourceId], references: [id])
+  source   Source @relation(fields: [sourceId], references: [id], onDelete: Cascade)
   sourceId String
 
   author   Author @relation(fields: [authorId], references: [id])
@@ -270,7 +270,7 @@ model Label {
   color             String?
   messages          Message[]
 
-  source   Source @relation(fields: [sourceId], references: [id])
+  source   Source @relation(fields: [sourceId], references: [id], onDelete: Cascade)
   sourceId String
 
   @@unique([sourceId, sourceReferenceId])
