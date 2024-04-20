@@ -4,10 +4,11 @@ import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/providers/theme';
 import { Nav } from '@/components/nav';
 import { TrpcProvider } from '@/providers/trpc';
+import { SessionProvider } from '@/providers/auth';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -16,10 +17,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.className)}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <TrpcProvider>
-            <Nav />
-            {children}
-          </TrpcProvider>
+          <SessionProvider>
+            <TrpcProvider>
+              <Nav />
+              {children}
+            </TrpcProvider>
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>
