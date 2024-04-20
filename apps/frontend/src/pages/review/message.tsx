@@ -78,7 +78,7 @@ export function Message({ messageId }: { messageId: string }) {
             ))}
           </div>
         </div>
-        <div className="my-5 p-5 bg-gradient-to-br from-indigo-950/50 to-blue-950/50 rounded-lg">
+        <div className="my-5 p-5 bg-gradient-to-br from-blue-900/50 to-blue-950/50 rounded-lg">
           {message.aiItems &&
             message.aiItems.map((aiItem, index) => {
               if (aiItem.type === AiItemType.SUMMARY) {
@@ -86,10 +86,10 @@ export function Message({ messageId }: { messageId: string }) {
                 return (
                   <div key={index} className="space-y-5">
                     <div className="space-y-2">
-                      <p className="text-xs font-medium uppercase text-neutral-400/50">AI Summary</p>
+                      <p className="text-xs font-medium uppercase text-blue-400/50">AI Summary</p>
                       <p onClick={() => setAreBulletsVisible(!areBulletsVisible)}>{response.summary}</p>
                       {areBulletsVisible && (
-                        <ul className="list-disc text-neutral-300 space-y-1 p-4">
+                        <ul className="text-sm list-disc text-neutral-300 space-y-1 px-4">
                           {response.bullets.map((bullet, bulletIndex) => (
                             <li key={bulletIndex}>{bullet}</li>
                           ))}
@@ -97,11 +97,11 @@ export function Message({ messageId }: { messageId: string }) {
                       )}
                     </div>
                     <div className="space-y-2">
-                      <p className="text-xs font-medium uppercase text-neutral-400/50">AI Priority</p>
+                      <p className="text-xs font-medium uppercase text-blue-400/50">AI Priority</p>
                       <p>{response.priority}</p>
                     </div>
                     <div className="space-y-2">
-                      <p className="text-xs font-medium uppercase text-neutral-400/50">AI Suggestions</p>
+                      <p className="text-xs font-medium uppercase text-blue-400/50">AI Suggestions</p>
                       <div className="space-y-2">
                         {response.suggestions?.map((suggestion, suggestionIndex) => {
                           return (
