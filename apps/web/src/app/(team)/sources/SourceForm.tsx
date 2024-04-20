@@ -16,10 +16,13 @@ interface SourceFormProps {
 export function SourceForm({ onClose, onSuccess }: SourceFormProps) {
   const [url, setUrl] = useState('');
   const { data: teamData } = api.team.activeTeam.useQuery();
+  const utils = api.useUtils();
   const { mutateAsync: createSource, isLoading } = api.source.create.useMutation({
     onSuccess: () => {
       onSuccess();
+      utils.source.all.invalidate();
       onClose();
+      utils.source.all.invalidate();
     },
   });
 
