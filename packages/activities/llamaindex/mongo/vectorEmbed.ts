@@ -15,8 +15,12 @@ export async function mongoVectorEmbed({ message }: { message: Message }): Promi
 
   const document = new Document({ text: message.body, metadata: { messageId: message.id } });
 
-  await VectorStoreIndex.fromDocuments([document], { storageContext });
+  const createdEmbeddings = await VectorStoreIndex.fromDocuments([document], { storageContext });
+
+  console.log(createdEmbeddings);
+
   console.log(`Successfully created embeddings in the MongoDB collection ${process.env.MONGODB_VECTORS}.`);
+
   await client.close();
   return true;
 }
