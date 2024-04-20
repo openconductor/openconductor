@@ -11,10 +11,11 @@ export async function githubRepoActivity({
   repoName: string;
 }) {
   // https://docs.github.com/en/graphql/overview/explorer
+
   const query = `
       query repositoryActivity($owner: String!, $name: String!) {
         repository(owner: $owner, name: $name) {
-          issues(last:20) {
+          issues(last:20, labels: ["good first issue"]) {
             nodes {
               __typename
               id
@@ -70,7 +71,7 @@ export async function githubRepoActivity({
               }
             }
           }
-          pullRequests(last:20) {
+          pullRequests(last:0) {
             nodes {
               __typename
               id

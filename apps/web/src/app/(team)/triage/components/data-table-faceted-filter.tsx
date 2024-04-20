@@ -22,7 +22,7 @@ interface DataTableFacetedFilterProps<TData, TValue> {
   title?: string;
   options: {
     label: string;
-    value: string;
+    value?: string;
     icon?: React.ComponentType<{ className?: string }>;
   }[];
 }
@@ -54,7 +54,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                   </Badge>
                 ) : (
                   options
-                    .filter((option) => selectedValues.has(option.value))
+                    .filter((option) => selectedValues.has(option.value!))
                     .map((option) => (
                       <Badge variant="secondary" key={option.value} className="rounded-sm px-1 font-normal">
                         {option.label}
@@ -73,15 +73,15 @@ export function DataTableFacetedFilter<TData, TValue>({
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
               {options.map((option) => {
-                const isSelected = selectedValues.has(option.value);
+                const isSelected = selectedValues.has(option.value!);
                 return (
                   <CommandItem
                     key={option.value}
                     onSelect={() => {
                       if (isSelected) {
-                        selectedValues.delete(option.value);
+                        selectedValues.delete(option.value!);
                       } else {
-                        selectedValues.add(option.value);
+                        selectedValues.add(option.value!);
                       }
                       const filterValues = Array.from(selectedValues);
                       column?.setFilterValue(filterValues.length ? filterValues : undefined);

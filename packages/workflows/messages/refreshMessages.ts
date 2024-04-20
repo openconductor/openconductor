@@ -15,8 +15,8 @@ export async function refreshMessages({ userId, teamId }: { userId: string; team
     throw new ApplicationFailure(`No github token for user ${userId}`);
   }
 
-  const repoOwner = 'apache';
-  const repoName = 'superset';
+  const repoOwner = 'microsoft';
+  const repoName = 'vscode';
 
   const { repository } = await githubRepoActivity({ accessToken, repoOwner, repoName });
 

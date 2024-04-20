@@ -2,7 +2,6 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/providers/theme';
-import { Nav } from '@/components/nav';
 import { TrpcProvider } from '@/providers/trpc';
 import { SessionProvider } from '@/providers/auth';
 
@@ -18,10 +17,7 @@ export default async function RootLayout({
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.className)}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <SessionProvider>
-            <TrpcProvider>
-              <Nav />
-              {children}
-            </TrpcProvider>
+            <TrpcProvider>{children}</TrpcProvider>
           </SessionProvider>
         </ThemeProvider>
       </body>

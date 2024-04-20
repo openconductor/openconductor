@@ -18,15 +18,24 @@ import {
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
-import { DataTablePagination } from '../components/data-table-pagination';
-import { DataTableToolbar } from '../components/data-table-toolbar';
+import { DataTablePagination } from './data-table-pagination';
+import { DataTableToolbar } from './data-table-toolbar';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  onRowClick?: (row: any) => void;
+  selectedRowId?: string;
+  minimal?: boolean;
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({
+  columns,
+  data,
+  onRowClick,
+  selectedRowId,
+  minimal,
+}: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -41,7 +50,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
       rowSelection,
       columnFilters,
     },
-    enableRowSelection: true,
+    enableRowSelection: minimal ?? true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -52,11 +61,17 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    initialState: {
+      pagination: {
+        pageIndex: 0,
+        pageSize: 25,
+      },
+    },
   });
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} />
+      {!minimal && <DataTableToolbar table={table} />}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -75,7 +90,17 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                  onClick={() => onRowClick && onRowClick(row)}
+                  className={
+                    //@ts-ignore
+                    selectedRowId === row.original.id
+                      ? 'border-l-2 border-l-blue-500'
+                      : 'border-l-2 border-l-transparent'
+                  }
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}
@@ -91,7 +116,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      {!minimal && <DataTablePagination table={table} />}
     </div>
   );
 }

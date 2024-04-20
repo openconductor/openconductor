@@ -4,15 +4,15 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: 'Examples',
-  description: 'Check out some examples app built using the components.',
+  title: 'OpenConductor',
+  description: 'OpenConductor',
 };
 
-interface ExamplesLayoutProps {
+interface TeamLayoutProps {
   children: React.ReactNode;
 }
 
-export default async function ExamplesLayout({ children }: ExamplesLayoutProps) {
+export default async function TeamLayout({ children }: TeamLayoutProps) {
   const user = await getCurrentUser();
 
   if (!user) {
