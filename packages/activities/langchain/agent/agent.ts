@@ -11,15 +11,17 @@ export async function langchainAgent({
   steps = [],
   enabledPlugins,
   openAIApiKey = process.env.OPENAI_API_KEY,
+  userId,
 }: {
   input?: string;
   steps: AgentStep[];
   enabledPlugins?: string[];
   openAIApiKey?: string;
+  userId: string;
 }): Promise<AgentAction | AgentFinish> {
   const model = new ChatOpenAI({ temperature: 0, openAIApiKey });
 
-  const tools = await langchainToolRegistry(enabledPlugins);
+  const tools = await langchainToolRegistry({ userId, enabledPlugins });
 
   const prompt = new CustomPromptTemplate({
     tools,
@@ -29,7 +31,6 @@ export async function langchainAgent({
   const llmChain = new LLMChain({
     prompt,
     llm: model,
-    verbose: true,
   });
 
   const agent = new LLMSingleActionAgent({

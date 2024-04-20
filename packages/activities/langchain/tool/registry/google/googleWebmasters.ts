@@ -20,16 +20,15 @@ export class GoogleWebmastersTool extends StructuredTool {
   });
 
   webmasters?: webmasters_v3.Webmasters;
-  private googleAccessToken: string;
-  private googleRefreshToken: string;
   private oauth2Client: OAuth2Client;
 
-  constructor({ googleAccessToken, googleRefreshToken }: { googleAccessToken?: string; googleRefreshToken?: string }) {
+  constructor({ googleRefreshToken }: { googleRefreshToken?: string | null }) {
     super();
-    this.googleAccessToken = googleAccessToken!;
-    this.googleRefreshToken = googleRefreshToken!;
-    this.oauth2Client = new OAuth2Client();
-    this.oauth2Client.setCredentials({ access_token: this.googleAccessToken, refresh_token: this.googleRefreshToken });
+    this.oauth2Client = new OAuth2Client({
+      clientId: process.env.GOOGLE_OAUTH_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+    });
+    this.oauth2Client.setCredentials({ refresh_token: googleRefreshToken });
   }
 
   private async getWebmasters(): Promise<webmasters_v3.Webmasters> {
@@ -50,7 +49,7 @@ export class GoogleWebmastersTool extends StructuredTool {
         startDate,
         endDate,
         dimensions: ['query'],
-        rowLimit: numResults || 10,
+        rowLimit: 10,
       },
     };
 

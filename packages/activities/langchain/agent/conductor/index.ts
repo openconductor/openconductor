@@ -11,15 +11,17 @@ export async function langchainAgentConductor({
   steps,
   enabledPlugins,
   openAIApiKey = process.env.OPENAI_API_KEY,
+  userId,
 }: {
   input?: string;
   steps: AgentStep[];
   enabledPlugins?: string[];
   openAIApiKey?: string;
+  userId: string;
 }): Promise<AgentAction | AgentFinish> {
   const model = new ChatOpenAI({ temperature: 0, openAIApiKey });
 
-  const tools = await langchainToolRegistry(enabledPlugins);
+  const tools = await langchainToolRegistry({ userId, enabledPlugins });
 
   const prompt = new ConductorPromptTemplate({
     tools,

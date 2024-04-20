@@ -62,7 +62,7 @@ export async function runAgent({
 
   while (iterations < maxIterations) {
     try {
-      const stepOutput = await langchainAgent({ input: renderedPrompt, enabledPlugins, steps });
+      const stepOutput = await langchainAgent({ input: renderedPrompt, enabledPlugins, steps, userId });
 
       if (isAgentFinish(stepOutput)) {
         const endBlock = await createDbBlock({
@@ -91,7 +91,7 @@ export async function runAgent({
       await createDbEvent({ blockId: blockTool.id, runId: run.id, output: stepOutput.log });
 
       try {
-        const observation = await langchainToolCall({ action: stepOutput });
+        const observation = await langchainToolCall({ action: stepOutput, userId });
 
         await createDbEvent({
           blockId: blockTool.id,
