@@ -1,9 +1,19 @@
 'use client';
 
-import { columns } from '../examples/tasks/components/columns';
+import { columns } from './columns';
 import { DataTable } from '../examples/tasks/components/data-table';
 import { UserNav } from '../examples/tasks/components/user-nav';
 import { api } from '@/lib/api';
+
+export type ResponseSummary = {
+  summary: string;
+  bullets: String[];
+  priority: string;
+  suggestions: {
+    cta: string;
+    body: string;
+  }[];
+};
 
 export default function TriageTable() {
   const { data: teamData, status: teamStatus } = api.team.activeTeam.useQuery();
@@ -25,13 +35,23 @@ export default function TriageTable() {
 
   if (!messages) return <></>;
 
-  const data = messages.map((message) => ({
-    label: message.labels.map((label) => label.name).join(', '),
-    status: message.state,
-    id: message.id,
-    title: message.title,
-    priority: message.aiItems[0]?.response.priority ?? '',
-  }));
+  const dataTable =
+    messages.map((message) => ({
+      id: message.id,
+      key: message.key,
+      source: message.source,
+      title: message.title,
+      body: message.body,
+      url: message.url,
+      createdAt: message.createdAt.toLocaleDateString(),
+      author: {
+        ...message.author,
+      },
+      status: message.state,
+      labels: message.labels,
+      summary: (message.aiItems?.[0]?.response as unknown as ResponseSummary)?.summary,
+      priority: (message.aiItems?.[0]?.response as unknown as ResponseSummary)?.priority,
+    })) ?? [];
 
   return (
     <>
@@ -39,14 +59,14 @@ export default function TriageTable() {
       <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
         <div className="flex items-center justify-between space-y-2">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Welcome back!</h2>
+            <h2 className="text-2xl font-bold tracking-tight">Triage</h2>
             <p className="text-muted-foreground">Here&apos;s a list of your tasks for this month!</p>
           </div>
           <div className="flex items-center space-x-2">
             <UserNav />
           </div>
         </div>
-        <DataTable data={data} columns={columns} />
+        <DataTable data={dataTable} columns={columns} />
       </div>
     </>
   );

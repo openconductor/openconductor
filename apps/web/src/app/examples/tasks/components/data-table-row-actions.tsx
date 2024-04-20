@@ -19,14 +19,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { labels } from '../data/data';
-import { taskSchema } from '../data/schema';
+import { messageSchema } from '../../../triage/schema';
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
 }
 
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
-  const task = taskSchema.parse(row.original);
+  const message = messageSchema.parse(row.original);
 
   return (
     <DropdownMenu>
@@ -44,7 +44,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
-            <DropdownMenuRadioGroup value={task.label}>
+            <DropdownMenuRadioGroup value={message.key}>
               {labels.map((label) => (
                 <DropdownMenuRadioItem key={label.value} value={label.value}>
                   {label.label}
