@@ -75,6 +75,7 @@ model User {
   plugins       Plugin[]
   documents     Document[]
   Message       Message[]
+  Source        Source[]
 }
 
 // Teams
@@ -92,6 +93,7 @@ model Team {
   plugins   Plugin[]
   documents Document[]
   Message   Message[]
+  Source    Source[]
 }
 
 model TeamMember {
@@ -209,17 +211,19 @@ enum MessageType {
 }
 
 model Message {
-  id        String                      @id @default(cuid())
-  type      MessageType
-  source    String
-  sourceId  String
-  key       String
-  title     String
-  body      String
-  url       String?
-  state     String?
-  createdAt DateTime
-  embedding Unsupported("vector(384)")?
+  id                String                      @id @default(cuid())
+  sourceReferenceId String
+  type              MessageType
+  key               String
+  title             String
+  body              String
+  url               String?
+  state             String?
+  createdAt         DateTime
+  embedding         Unsupported("vector(384)")?
+
+  source   Source @relation(fields: [sourceId], references: [id])
+  sourceId String
 
   author   Author @relation(fields: [authorId], references: [id])
   authorId String
@@ -236,7 +240,7 @@ model Message {
   creatorId String
   aiItems   AiItem[]
 
-  @@unique([source, sourceId])
+  @@unique([sourceId, sourceReferenceId])
 }
 
 enum AuthorType {
@@ -252,20 +256,24 @@ model Author {
   handle   String
   url      String?
   messages Message[]
+  sources  Source[]
 
   @@unique([type, typeId])
 }
 
 model Label {
-  id          String    @id @default(cuid())
-  source      String
-  name        String
-  description String?
-  createdAt   DateTime
-  color       String?
-  messages    Message[]
+  id                String    @id @default(cuid())
+  name              String
+  sourceReferenceId String
+  description       String?
+  createdAt         DateTime
+  color             String?
+  messages          Message[]
 
-  @@unique([source, name])
+  source   Source @relation(fields: [sourceId], references: [id])
+  sourceId String
+
+  @@unique([sourceId, sourceReferenceId])
 }
 
 enum AiItemType {
@@ -286,4 +294,32 @@ model AiItem {
   messageId String?
 
   @@unique([type, messageId])
+}
+
+enum SourceType {
+  GITHUB_REPO
+}
+
+model Source {
+  id          String     @id @default(cuid())
+  type        SourceType
+  sourceId    String
+  name        String
+  url         String
+  imageUrl    String?
+  description String?
+  messages    Message[]
+
+  team      Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId    String
+  creator   User   @relation(fields: [creatorId], references: [id])
+  creatorId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Label     Label[]
+  Author    Author?  @relation(fields: [authorId], references: [id])
+  authorId  String?
+
+  @@unique([type, sourceId])
 }

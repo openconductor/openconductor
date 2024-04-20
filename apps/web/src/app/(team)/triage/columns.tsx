@@ -58,7 +58,7 @@ export const columns: ColumnDef<Message>[] = [
     },
   },
   {
-    accessorKey: 'source',
+    accessorKey: 'repo',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Repo" />,
   },
   {

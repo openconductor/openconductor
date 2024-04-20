@@ -10,7 +10,7 @@ export async function githubRepoActivity({
   repoOwner: string;
   repoName: string;
 }) {
-  // https://docs.github.com/en/graphql/overview/explorer
+  // https://studio.apollographql.com/public/github/variant/current/explorer
 
   const query = `
       query repositoryActivity($owner: String!, $name: String!) {

@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { DemoCookieSettings } from './components/cookie-settings';
 import { DemoCreateAccount } from './components/create-account';
 import { DemoDatePicker } from './components/date-picker';
-import { DemoGithub } from './components/github-card';
+import { DemoGithub } from '../../(team)/sources/SourceCard';
 import { DemoNotifications } from './components/notifications';
 import { DemoPaymentMethod } from './components/payment-method';
 import { DemoReportAnIssue } from './components/report-an-issue';
