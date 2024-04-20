@@ -72,7 +72,7 @@ export function Navigation({ isCollapsed }: { isCollapsed: boolean }) {
             icon: Blocks,
           },
           {
-            href: '/aiagents',
+            href: '/aiAgents',
             title: 'AI Agents',
             label: '',
             icon: Bot,

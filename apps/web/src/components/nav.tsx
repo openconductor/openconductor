@@ -27,7 +27,7 @@ const examples = [
   },
   {
     name: 'AI Agents',
-    href: '/aiagents',
+    href: '/aiAgents',
   },
   // {
   //   name: 'Mail',
