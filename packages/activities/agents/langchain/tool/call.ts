@@ -1,4 +1,4 @@
-import { langchainToolRegistry } from '.';
+import { langchainToolRegistry } from './registry';
 import { AgentAction } from 'langchain/schema';
 
 export async function langchainToolCall({ action }: { action: AgentAction }): Promise<{
