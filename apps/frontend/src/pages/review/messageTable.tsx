@@ -8,6 +8,7 @@ import { SideDrawer } from '~/components/shared/Drawer';
 import Link from 'next/link';
 import Markdown from 'react-markdown';
 import { MessageType } from '@openconductor/db';
+import Label from '~/components/shared/label';
 
 export function Message({ messageId }: { messageId: string }) {
   const {
@@ -129,6 +130,19 @@ export default function MessageTable({ type }: { type: MessageType }) {
       accessor: 'title',
     },
     {
+      Header: 'Labels',
+      accessor: 'labels',
+      Cell: ({ value }: { value: { name: string; color: string }[] }) => (
+        <div className="flex items-center gap-2">
+          {value.map((label, index) => (
+            <div key={index}>
+              <Label name={label.name} color={label.color} />
+            </div>
+          ))}
+        </div>
+      ),
+    },
+    {
       Header: 'Source',
       accessor: 'source',
     },
@@ -155,6 +169,7 @@ export default function MessageTable({ type }: { type: MessageType }) {
         ...message.author,
       },
       status: message.state,
+      labels: message.labels,
     })) ?? [];
 
   return (

@@ -27,6 +27,7 @@ export const messageRouter = createTRPCRouter({
       },
       include: {
         author: true,
+        labels: true,
       },
     });
   }),

@@ -57,6 +57,17 @@ export async function githubRepoActivity({
                   url
                 }
               }
+              labels(last:100) {
+                nodes {
+                  name
+                  id
+                  description
+                  createdAt
+                  color
+                  updatedAt
+                  isDefault
+                }
+              }
             }
           }
           pullRequests(last:20) {
@@ -101,6 +112,17 @@ export async function githubRepoActivity({
                   id
                   publishedAt
                   url
+                }
+              }
+              labels(last:100) {
+                nodes {
+                  name
+                  id
+                  description
+                  createdAt
+                  color
+                  updatedAt
+                  isDefault
                 }
               }
             }
