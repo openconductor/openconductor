@@ -3,11 +3,11 @@ import clsx from 'clsx';
 import type { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import type { AppType } from 'next/app';
-import { Toaster } from 'react-hot-toast';
 import { OnboardingWrapper } from '~/context/onboarding';
 import { api } from '~/utils/api';
 import '../styles/globals.css';
 import { ThemeProvider } from 'next-themes';
+import { Toaster } from '~/components/shared/toaster';
 
 const inter = Inter({ subsets: ['latin'] });
 

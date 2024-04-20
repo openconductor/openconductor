@@ -1,5 +1,5 @@
-import { StructuredTool, Tool } from 'langchain/tools';
 import { Octokit } from '@octokit/rest';
+import { StructuredTool, Tool } from 'langchain/tools';
 import { z } from 'zod';
 
 export class GithubGetBranchTool extends StructuredTool {
@@ -26,7 +26,13 @@ export class GithubGetBranchTool extends StructuredTool {
     return this.octokit.repos
       .getBranch({ owner, repo, branch })
       .then((res) => {
-        return JSON.stringify(res.data, null, 2);
+        const result = {
+          name: res.data.name,
+          commit: {
+            sha: res.data.commit.sha,
+          },
+        };
+        return JSON.stringify(result, null, 2);
       })
       .catch((e) => {
         return JSON.stringify(e.response.data);
