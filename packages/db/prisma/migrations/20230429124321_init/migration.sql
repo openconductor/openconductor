@@ -2,7 +2,7 @@
 CREATE EXTENSION IF NOT EXISTS "vector" WITH SCHEMA "extensions";
 
 -- CreateEnum
-CREATE TYPE "Plugins" AS ENUM ('GITHUB', 'SERP');
+CREATE TYPE "Plugins" AS ENUM ('GITHUB', 'SERP', 'CALCULATOR', 'OPENCONDUCTOR', 'FILESYSTEM', 'GIT');
 
 -- CreateEnum
 CREATE TYPE "DocumentTypes" AS ENUM ('GITHUB', 'MEMORY');
@@ -88,6 +88,7 @@ CREATE TABLE "Agent" (
     "prompt" TEXT,
     "input" JSONB,
     "output" JSONB,
+    "playground" BOOLEAN NOT NULL DEFAULT false,
     "teamId" TEXT NOT NULL,
     "creatorId" TEXT NOT NULL,
 
@@ -160,6 +161,12 @@ CREATE TABLE "Document" (
     CONSTRAINT "Document_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "_AgentToPlugin" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Account_provider_providerAccountId_key" ON "Account"("provider", "providerAccountId");
 
@@ -177,6 +184,12 @@ CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_AgentToPlugin_AB_unique" ON "_AgentToPlugin"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_AgentToPlugin_B_index" ON "_AgentToPlugin"("B");
 
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -228,3 +241,9 @@ ALTER TABLE "Document" ADD CONSTRAINT "Document_teamId_fkey" FOREIGN KEY ("teamI
 
 -- AddForeignKey
 ALTER TABLE "Document" ADD CONSTRAINT "Document_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AgentToPlugin" ADD CONSTRAINT "_AgentToPlugin_A_fkey" FOREIGN KEY ("A") REFERENCES "Agent"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AgentToPlugin" ADD CONSTRAINT "_AgentToPlugin_B_fkey" FOREIGN KEY ("B") REFERENCES "Plugin"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -97,7 +97,7 @@ Thought:{agent_scratchpad}`;
         return { log: text, returnValues: finalAnswers };
       }
 
-      const match = /Action\s*\d*:\s*(.*)\nAction Input\s*\d*:\s*([\s\S]*)/i.exec(text);
+      const match = /Action\s*\d*:\s*(.*)\n?Action Input\s*\d*:\s*([\s\S]*)/i.exec(text);
       if (!match) {
         throw new Error(`Could not parse LLM output: ${text}`);
       }

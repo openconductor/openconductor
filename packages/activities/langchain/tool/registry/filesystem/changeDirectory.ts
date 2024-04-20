@@ -13,13 +13,21 @@ export class FilesystemChangeDirectoryTool extends StructuredTool {
   });
 
   async _call({ path: filePath }: z.infer<typeof this.schema>) {
-    // Check if the directory exists and create it if it doesn't
-    const directoryPath = path.dirname(filePath);
-    if (!fs.existsSync(directoryPath)) {
-      fs.mkdirSync(directoryPath, { recursive: true });
+    // Resolve the absolute path for the given filePath
+    const resolvedPath = path.resolve(filePath);
+
+    // Check if the resolved directory exists, and create it if it doesn't
+    if (!fs.existsSync(resolvedPath)) {
+      fs.mkdirSync(resolvedPath, { recursive: true });
+    } else {
+      // Check if the resolved path is a directory
+      const stats = fs.statSync(resolvedPath);
+      if (!stats.isDirectory()) {
+        throw new Error(`The path "${resolvedPath}" is not a directory.`);
+      }
     }
 
-    process.chdir(filePath);
-    return `Changed current directory to ${filePath}.`;
+    process.chdir(resolvedPath);
+    return `Changed current directory to ${resolvedPath}.`;
   }
 }

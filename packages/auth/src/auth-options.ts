@@ -1,9 +1,9 @@
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { type DefaultSession, type NextAuthOptions } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
-import GitHubProvider from "next-auth/providers/github";
-import GoogleProvider from "next-auth/providers/google";
-import { prisma } from "@openconductor/db";
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { type DefaultSession, type NextAuthOptions } from 'next-auth';
+import DiscordProvider from 'next-auth/providers/discord';
+import GitHubProvider from 'next-auth/providers/github';
+import GoogleProvider from 'next-auth/providers/google';
+import { prisma } from '@openconductor/db';
 
 /**
  * Module augmentation for `next-auth` types
@@ -11,7 +11,7 @@ import { prisma } from "@openconductor/db";
  * and keep type safety
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  **/
-declare module "next-auth" {
+declare module 'next-auth' {
   interface Session extends DefaultSession {
     user: {
       id: string;
@@ -21,7 +21,7 @@ declare module "next-auth" {
       lastName: string | null | undefined;
       email: string | null | undefined;
       image: string | null | undefined;
-    } & DefaultSession["user"];
+    } & DefaultSession['user'];
   }
 }
 
@@ -35,8 +35,8 @@ export const authOptions: NextAuthOptions = {
     session({ session, user }) {
       session.user.id = user.id;
       session.user.name = user.name;
-      session.user.firstName = user.name?.split(" ")[0];
-      session.user.lastName = user.name?.split(" ")[1];
+      session.user.firstName = user.name?.split(' ')[0];
+      session.user.lastName = user.name?.split(' ')[1];
       session.user.email = user.email;
       session.user.image = user.image;
       return session;
@@ -48,7 +48,7 @@ export const authOptions: NextAuthOptions = {
         // Create a new Team for the user
         const team = await prisma.team.create({
           data: {
-            name: "Personal Space",
+            name: 'Personal Space',
             creator: { connect: { id: message.user.id } },
           },
         });
@@ -60,22 +60,33 @@ export const authOptions: NextAuthOptions = {
             isAdmin: true,
           },
         });
+        // Create a new agent playground for the user
+        await prisma.agent.create({
+          data: {
+            name: 'Playground',
+            prompt: 'Show me an {keyword}',
+            input: { keyword: 'example' },
+            playground: true,
+            team: { connect: { id: team.id } },
+            creator: { connect: { id: message.user.id } },
+          },
+        });
       }
     },
   },
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_OAUTH_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET || "",
+      clientId: process.env.GOOGLE_OAUTH_CLIENT_ID || '',
+      clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET || '',
     }),
     DiscordProvider({
-      clientId: process.env.DISCORD_CLIENT_ID || "",
-      clientSecret: process.env.DISCORD_CLIENT_SECRET || "",
+      clientId: process.env.DISCORD_CLIENT_ID || '',
+      clientSecret: process.env.DISCORD_CLIENT_SECRET || '',
     }),
     GitHubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID || "",
-      clientSecret: process.env.GITHUB_CLIENT_SECRET || "",
+      clientId: process.env.GITHUB_CLIENT_ID || '',
+      clientSecret: process.env.GITHUB_CLIENT_SECRET || '',
     }),
     /**
      * ...add more providers here
@@ -88,6 +99,6 @@ export const authOptions: NextAuthOptions = {
      **/
   ],
   pages: {
-    signIn: "/login",
+    signIn: '/login',
   },
 };
