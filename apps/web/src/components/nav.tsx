@@ -68,8 +68,10 @@ export function Nav({ className, ...props }: NavProps) {
               </Link>
             ))}
           </div>
-          <UserNav />
-          <ThemeToggle />
+          <div className="flex items-center space-x-2">
+            <ThemeToggle />
+            <UserNav />
+          </div>
         </div>
         <ScrollBar orientation="horizontal" className="invisible" />
       </ScrollArea>
