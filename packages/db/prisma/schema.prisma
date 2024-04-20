@@ -5,6 +5,7 @@ generator client {
   provider        = "prisma-client-js"
   output          = "../types"
   previewFeatures = ["postgresqlExtensions"]
+  extensions      = [vector]
 }
 
 // enable pgvector https://github.com/prisma/prisma/issues/18442
@@ -208,7 +209,7 @@ enum MessageType {
 }
 
 model Message {
-  id        String      @id @default(cuid())
+  id        String                      @id @default(cuid())
   type      MessageType
   source    String
   sourceId  String
@@ -218,6 +219,7 @@ model Message {
   url       String?
   state     String?
   createdAt DateTime
+  embedding Unsupported("vector(384)")?
 
   author   Author @relation(fields: [authorId], references: [id])
   authorId String
@@ -228,10 +230,11 @@ model Message {
 
   labels Label[]
 
-  team      Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId    String
-  creator   User   @relation(fields: [creatorId], references: [id])
+  creator   User     @relation(fields: [creatorId], references: [id])
   creatorId String
+  aiItems   AiItem[]
 
   @@unique([source, sourceId])
 }
@@ -263,4 +266,24 @@ model Label {
   messages    Message[]
 
   @@unique([source, name])
+}
+
+enum AiItemType {
+  SUMMARY
+}
+
+model AiItem {
+  id        String     @id @default(cuid())
+  type      AiItemType
+  prompt    String?
+  response  Json?
+  tokens    Int?
+  cost      Int?
+  createdAt DateTime
+  updatedAt DateTime?
+
+  message   Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  messageId String?
+
+  @@unique([type, messageId])
 }
