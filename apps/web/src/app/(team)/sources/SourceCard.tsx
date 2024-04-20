@@ -1,12 +1,4 @@
-import {
-  ChevronDownIcon,
-  CircleIcon,
-  GitHubLogoIcon,
-  OpenInNewWindowIcon,
-  PlusIcon,
-  StarIcon,
-  TrashIcon,
-} from '@radix-ui/react-icons';
+import { GitHubLogoIcon } from '@radix-ui/react-icons';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,7 +14,7 @@ import Link from 'next/link';
 import { MoreVertical } from 'lucide-react';
 import { api } from '@/lib/api';
 
-export function SourceCard({ id, type, sourceId, name, url, description, createdAt }: Source) {
+export function SourceCard({ id, type, sourceId, name, url, description, createdAt, enabled }: Source) {
   const utils = api.useUtils();
 
   const { mutate: deleteSource } = api.source.delete.useMutation({
@@ -30,11 +22,20 @@ export function SourceCard({ id, type, sourceId, name, url, description, created
       utils.source.all.invalidate();
     },
   });
+
+  const { mutate: toggleSource } = api.source.update.useMutation({
+    onSuccess: () => {
+      utils.source.all.invalidate();
+    },
+  });
+
   return (
     <Card>
       <CardHeader className="space-y-5">
         <div className="flex justify-between items-center">
-          <CardTitle>{name}</CardTitle>
+          <CardTitle>
+            {name} {!enabled && 'disabled'}
+          </CardTitle>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">
@@ -47,6 +48,9 @@ export function SourceCard({ id, type, sourceId, name, url, description, created
                 <Link href={url} target="_blank">
                   Visit
                 </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => toggleSource({ id, enabled: !enabled })}>
+                {enabled ? 'Disable' : 'Enable'}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => deleteSource(id)}>Delete</DropdownMenuItem>
             </DropdownMenuContent>

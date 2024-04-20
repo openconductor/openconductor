@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { UserNav } from './user-nav';
 import { api } from '@/lib/api';
 import { MessageType } from '@openconductor/db';
+import Logo from './logo';
 
 export function Navigation({ isCollapsed }: { isCollapsed: boolean }) {
   const { data: triageMessages, status: reviewMessagesStatus } = api.message.count.useQuery(
@@ -31,7 +32,11 @@ export function Navigation({ isCollapsed }: { isCollapsed: boolean }) {
       <div className={cn('flex h-[52px] items-center justify-between', isCollapsed ? 'h-[52px] px-2.5' : 'px-2')}>
         {!isCollapsed && (
           <div className="flex items-center">
-            <AccountSwitcher isCollapsed={isCollapsed} accounts={accounts} />
+            <div className="flex items-center space-x-2 opacity-50 hover:opacity-100 cursor-pointer">
+              <Logo className="h-6 w-6" />
+              <p className="font-medium">OpenConductor</p>
+            </div>
+            {/* <AccountSwitcher isCollapsed={isCollapsed} accounts={accounts} /> */}
           </div>
         )}
         <div className="flex items-center space-x-2">

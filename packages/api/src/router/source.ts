@@ -51,4 +51,17 @@ export const sourceRouter = createTRPCRouter({
   delete: protectedProcedure.input(z.string()).mutation(({ ctx, input }) => {
     return ctx.prisma.source.delete({ where: { id: input } });
   }),
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        enabled: z.boolean(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.source.update({
+        where: { id: input.id },
+        data: { enabled: input.enabled },
+      });
+    }),
 });

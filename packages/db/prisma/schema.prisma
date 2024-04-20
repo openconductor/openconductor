@@ -308,6 +308,7 @@ model Source {
   url         String
   imageUrl    String?
   description String?
+  enabled     Boolean?
   messages    Message[]
 
   team      Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
