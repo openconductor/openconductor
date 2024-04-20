@@ -55,11 +55,11 @@ export async function langchainAgentConductor({
     tools: await langchainToolRegistry({ userId }),
   });
 
-  console.log('executor', executor)
+  console.log('executor', executor);
 
   const result = await executor.call({ input });
 
-  console.log('result', result)
+  console.log('result', result);
 
   return result;
 }

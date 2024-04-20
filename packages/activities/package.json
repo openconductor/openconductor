@@ -9,15 +9,17 @@
     "lint": "TIMING=1 eslint \"**/*.ts*\""
   },
   "dependencies": {
-    "@dqbd/tiktoken": "^1.0.4",
-    "@octokit/rest": "^19.0.7",
-    "@openconductor/db": "*",
-    "@sanity/client": "^5.4.2",
-    "@sanity/uuid": "^3.0.1",
-    "@temporalio/activity": "^1.7.4",
-    "googleapis": "^117.0.0",
+    "@dqbd/tiktoken": "^1.0.13",
+    "@octokit/graphql-schema": "^15.2.0",
+    "@octokit/rest": "^20.0.2",
+    "@openconductor/db": "^0.1.0",
+    "@sanity/client": "^6.15.3",
+    "@sanity/uuid": "^3.0.2",
+    "@temporalio/activity": "^1.9.3",
+    "googleapis": "^133.0.0",
     "langchain": "^0.0.90",
-    "marked": "^4.3.0",
+    "marked": "^12.0.1",
+    "octokit": "^3.1.2",
     "twitter-api-sdk": "^1.2.1"
   }
 }

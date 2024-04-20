@@ -7,11 +7,11 @@
     "lint": "TIMING=1 eslint \"**/*.ts*\""
   },
   "dependencies": {
-    "@temporalio/workflow": "^1.7.4",
-    "@openconductor/db": "*",
-    "langchain": "^0.0.90"
+    "@openconductor/db": "^0.1.0",
+    "@temporalio/workflow": "^1.9.3",
+    "langchain": "^0.1.25"
   },
   "devDependencies": {
-    "@openconductor/activities": "*"
+    "@openconductor/activities": "^0.0.1"
   }
 }

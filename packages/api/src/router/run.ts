@@ -1,7 +1,7 @@
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 import { taskQueue } from '@openconductor/config-temporal';
 import { connectToTemporal } from '@openconductor/config-temporal/temporal-client';
-import { runAgent, runConductor } from '@openconductor/workflows';
+import { runAgent, runConductor, runConductorTool } from '@openconductor/workflows';
 import { z } from 'zod';
 
 export const runRouter = createTRPCRouter({
@@ -65,7 +65,7 @@ export const runRouter = createTRPCRouter({
           taskQueue,
         });
       }
-      return temporal.workflow.start(runAgent, {
+      return temporal.workflow.start(runConductorTool, {
         workflowId: `${input.agentId}-executor-${new Date()}`,
         args: [{ agentId: input.agentId, prompt: input.prompt, input: input.input, userId: ctx.session?.user.id }],
         taskQueue,

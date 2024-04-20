@@ -2,7 +2,7 @@ import { NextPage } from 'next';
 import AppLayout from '~/components/layouts/appLayout';
 import MessageTable from '~/pages/inbox/messageTable';
 
-const Dashboard: NextPage = () => {
+const Inbox: NextPage = () => {
   return (
     <AppLayout>
       <MessageTable />
@@ -10,4 +10,4 @@ const Dashboard: NextPage = () => {
   );
 };
 
-export default Dashboard;
+export default Inbox;
