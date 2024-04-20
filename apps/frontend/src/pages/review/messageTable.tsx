@@ -9,6 +9,7 @@ import Link from 'next/link';
 import Markdown from 'react-markdown';
 import { MessageType } from '@openconductor/db';
 import Label from '~/components/shared/label';
+import clsx from 'clsx';
 
 export function Message({ messageId }: { messageId: string }) {
   const {
@@ -93,6 +94,9 @@ export default function MessageTable({ type }: { type: MessageType }) {
           setSelectedMessageId(newSelectedMessageId);
           setDrawerOpen(true);
         }
+      } else if (event.key === 'Escape') {
+        setSelectedMessageId('');
+        setDrawerOpen(false);
       }
     };
 
@@ -108,6 +112,16 @@ export default function MessageTable({ type }: { type: MessageType }) {
     {
       Header: 'Id',
       accessor: 'key',
+      Cell: ({ row }: { row: { original: { id: string; key: string } } }) => (
+        <div
+          className={clsx(
+            row.original.id === selectedMessageId ? 'border-l-2 border-indigo-500 pl-1' : 'pl-1.5',
+            '-ml-2',
+          )}
+        >
+          {row.original.key}
+        </div>
+      ),
     },
     {
       Header: 'Author',
