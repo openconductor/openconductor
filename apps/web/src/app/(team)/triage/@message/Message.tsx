@@ -121,8 +121,8 @@ export function MessageContent({ messageId }: { messageId: string }) {
         </div>
         <Separator />
         <div className="flex flex-col h-full justify-between max-h-[calc(100vh-53px)] p-4">
-          <div className="max-w-full w-full flex-1 flex">
-            <div className="p-4 pr-8 space-y-5 max-w-full">
+          <div className="max-w-full w-full flex-1 flex overflow-scroll">
+            <div className="p-4 pr-8 space-y-5 max-w-full h-0 grow">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   {message.labels.map((label, index) => (
