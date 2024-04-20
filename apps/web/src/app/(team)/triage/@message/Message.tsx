@@ -11,17 +11,17 @@ import { Button } from '@/components/ui/button';
 import { LabelColor } from '@/components/ui/label';
 import { useMessage } from '../use-message';
 import { Separator } from '@/components/ui/separator';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { MoreVertical } from 'lucide-react';
 import { OpenInNewWindowIcon } from '@radix-ui/react-icons';
 import { Textarea } from '@/components/ui/textarea';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 export type ResponseSummary = {
   summary: string;
@@ -261,8 +261,28 @@ export function MessageContent({ messageId }: { messageId: string }) {
                 <form>
                   <div className="grid gap-4">
                     <Textarea className="p-4" placeholder={`Ask AI ...`} />
-                    <div className="flex items-center">
-                      <Button onClick={(e) => e.preventDefault()} size="sm" className="ml-auto">
+                    <div className="flex justify-end">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button onClick={(e) => e.preventDefault()} size="sm" className="ml-4">
+                            Assign to
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuGroup>
+                            <DropdownMenuItem>
+                              Devin
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              Continue
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              Sweep
+                            </DropdownMenuItem>
+                          </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                      <Button onClick={(e) => e.preventDefault()} size="sm" className="ml-4">
                         Ask AI
                       </Button>
                     </div>
