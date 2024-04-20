@@ -1,6 +1,5 @@
 import { ChevronDownIcon, ChevronUpIcon, XMarkIcon } from '@heroicons/react/20/solid';
-import { Agent } from '@openconductor/db/types';
-import { Block, Event } from '@prisma/client';
+import { Agent, Block, Event } from '@openconductor/db/types';
 import ReactMarkdown from 'react-markdown';
 import { api } from '~/utils/api';
 

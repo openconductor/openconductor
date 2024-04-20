@@ -1,3 +1,11 @@
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- CreateEnum
+CREATE TYPE "Agents" AS ENUM ('EXTRACT', 'TRANSFORM', 'LOAD', 'SCHEDULE');
+
+-- CreateEnum
+CREATE TYPE "Integrations" AS ENUM ('OPENCONDUCTOR', 'OPENAI', 'GITHUB', 'SUPABASE', 'S3');
+
 -- CreateTable
 CREATE TABLE "Account" (
     "id" TEXT NOT NULL,
@@ -87,9 +95,9 @@ CREATE TABLE "Workflow" (
 -- CreateTable
 CREATE TABLE "Block" (
     "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "order" INTEGER NOT NULL,
-    "input" JSONB,
-    "output" JSONB,
+    "input" TEXT NOT NULL,
     "workflowId" TEXT NOT NULL,
     "agentId" TEXT NOT NULL,
     "creatorId" TEXT NOT NULL,
@@ -101,8 +109,8 @@ CREATE TABLE "Block" (
 CREATE TABLE "Run" (
     "id" TEXT NOT NULL,
     "temporalId" TEXT NOT NULL,
-    "input" JSONB,
-    "output" JSONB,
+    "input" TEXT,
+    "output" TEXT,
     "status" TEXT NOT NULL,
     "startedAt" TIMESTAMP(3),
     "endedAt" TIMESTAMP(3),
@@ -115,14 +123,13 @@ CREATE TABLE "Run" (
 -- CreateTable
 CREATE TABLE "Event" (
     "id" TEXT NOT NULL,
-    "runId" TEXT NOT NULL,
-    "blockId" TEXT NOT NULL,
+    "output" TEXT,
     "status" TEXT NOT NULL,
     "startedAt" TIMESTAMP(3),
     "endedAt" TIMESTAMP(3),
-    "input" JSONB,
-    "output" JSONB,
-    "tokens" TEXT,
+    "tokens" INTEGER,
+    "runId" TEXT NOT NULL,
+    "blockId" TEXT NOT NULL,
 
     CONSTRAINT "Event_pkey" PRIMARY KEY ("id")
 );
@@ -132,7 +139,11 @@ CREATE TABLE "Agent" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
-    "type" TEXT NOT NULL,
+    "type" "Agents" NOT NULL DEFAULT 'TRANSFORM',
+    "input" TEXT,
+    "output" TEXT,
+    "systemTemplate" TEXT,
+    "promptTemplate" TEXT,
     "isPublic" BOOLEAN NOT NULL,
     "integrationId" TEXT NOT NULL,
     "teamId" TEXT NOT NULL,
@@ -144,13 +155,24 @@ CREATE TABLE "Agent" (
 -- CreateTable
 CREATE TABLE "Integration" (
     "id" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
+    "type" "Integrations" NOT NULL DEFAULT 'OPENCONDUCTOR',
     "authId" TEXT,
     "authToken" TEXT,
     "teamId" TEXT NOT NULL,
     "creatorId" TEXT NOT NULL,
 
     CONSTRAINT "Integration_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Document" (
+    "id" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "source" TEXT NOT NULL,
+    "vector" vector,
+
+    CONSTRAINT "Document_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex

@@ -1,8 +1,8 @@
 import type * as activities from '@openconductor/activities';
-import { Run } from '@openconductor/db';
+import { Run } from '@openconductor/db/types';
 import { proxyActivities, uuid4 } from '@temporalio/workflow';
 
-const { createLangchainConversationChain, getDbWorkflow, createDbRun, createDbEvent, updateDbEvent } = proxyActivities<
+const { langchainPromptsConversation, getDbWorkflow, createDbRun, createDbEvent, updateDbEvent } = proxyActivities<
   typeof activities
 >({
   startToCloseTimeout: '1m',
@@ -21,7 +21,7 @@ export async function test({ workflowId, userId }: { workflowId: string; userId:
   for (const [index, block] of workflow.blocks.entries()) {
     const event = await createDbEvent(block.id, run.id);
     try {
-      const { response, tokens } = await createLangchainConversationChain({
+      const { response, tokens } = await langchainPromptsConversation({
         systemTemplate: block.agent.systemTemplate || undefined,
         promptTemplate: block.agent.promptTemplate || undefined,
         input: index === 0 ? block.input : previousBlockResponse,

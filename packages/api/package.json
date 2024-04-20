@@ -9,13 +9,13 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@trpc/client": "^10.9.0",
-    "@trpc/server": "^10.9.0",
+    "@trpc/client": "^10.19.1",
+    "@trpc/server": "^10.19.1",
     "@openconductor/auth": "*",
     "@openconductor/db": "*",
     "@openconductor/workflows": "*",
     "@openconductor/config-temporal": "*",
-    "langchain": "^0.0.42",
+    "langchain": "^0.0.56",
     "openai": "^3.1.0",
     "superjson": "1.12.2",
     "zod": "^3.20.2"

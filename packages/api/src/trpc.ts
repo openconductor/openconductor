@@ -7,12 +7,13 @@
  * The pieces you will need to use are documented accordingly near the end
  */
 
-import { TRPCError, initTRPC } from "@trpc/server";
-import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
-import superjson from "superjson";
-import { getServerSession, type Session } from "@openconductor/auth";
-import { connectToTemporal } from "@openconductor/config-temporal";
-import { prisma } from "@openconductor/db";
+import { TRPCError, initTRPC } from '@trpc/server';
+import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
+import superjson from 'superjson';
+import { getServerSession, type Session } from '@openconductor/auth';
+import { connectToTemporal } from '@openconductor/config-temporal';
+import { prisma } from '@openconductor/db';
+import { Client } from '@temporalio/client';
 
 /**
  * 1. CONTEXT
@@ -25,6 +26,8 @@ import { prisma } from "@openconductor/db";
  */
 type CreateContextOptions = {
   session: Session | null;
+  prisma: typeof prisma;
+  temporal: Client;
 };
 
 /**
@@ -39,8 +42,8 @@ type CreateContextOptions = {
 const createInnerTRPCContext = async (opts: CreateContextOptions) => {
   return {
     session: opts.session,
-    prisma,
-    temporal: await connectToTemporal(),
+    prisma: opts.prisma,
+    temporal: opts.temporal,
   };
 };
 
@@ -52,11 +55,10 @@ const createInnerTRPCContext = async (opts: CreateContextOptions) => {
 export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   const { req, res } = opts;
 
-  // Get the session from the server using the unstable_getServerSession wrapper function
-  const session = await getServerSession({ req, res });
-
   return createInnerTRPCContext({
-    session,
+    session: await getServerSession({ req, res }),
+    prisma,
+    temporal: await connectToTemporal(),
   });
 };
 
@@ -101,7 +103,7 @@ export const publicProcedure = t.procedure;
  */
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.session?.user) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
+    throw new TRPCError({ code: 'UNAUTHORIZED' });
   }
   return next({
     ctx: {

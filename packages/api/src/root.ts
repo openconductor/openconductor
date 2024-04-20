@@ -9,14 +9,14 @@ import { workflowRouter } from './router/workflow';
 import { createTRPCRouter } from './trpc';
 
 export const appRouter = createTRPCRouter({
-  auth: authRouter,
-  team: teamRouter,
-  integration: integrationRouter,
   agent: agentRouter,
-  workflow: workflowRouter,
+  auth: authRouter,
   block: blockRouter,
-  run: runRouter,
   event: eventRouter,
+  integration: integrationRouter,
+  run: runRouter,
+  team: teamRouter,
+  workflow: workflowRouter,
 });
 
 // export type definition of API
