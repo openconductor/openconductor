@@ -10,9 +10,10 @@ import { Fragment } from 'react';
 import Logo from '../shared/logo';
 
 const navigation = [
-  { name: 'Workflows', href: '/workflows' },
   { name: 'Agents', href: '/agents' },
-  { name: 'Usage', href: '/usage' },
+  { name: 'Runs', href: '/runs' },
+  { name: 'Plugins', href: '/plugins' },
+  { name: 'Documents', href: '/documents' },
 ];
 
 export default function Navigation() {

@@ -1,6 +1,6 @@
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 import { taskQueue } from '@openconductor/config-temporal';
-import { executor } from '@openconductor/workflows';
+import { runAgent } from '@openconductor/workflows';
 import { z } from 'zod';
 
 export const runRouter = createTRPCRouter({
@@ -8,10 +8,10 @@ export const runRouter = createTRPCRouter({
     return ctx.prisma.run.findMany({
       orderBy: { id: 'desc' },
       include: {
-        workflow: true,
+        agent: true,
       },
       where: {
-        workflow: {
+        agent: {
           team: {
             members: {
               some: {
@@ -26,7 +26,7 @@ export const runRouter = createTRPCRouter({
   activeRun: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.run.findFirst({
       where: {
-        workflow: {
+        agent: {
           team: {
             members: {
               some: {
@@ -42,18 +42,16 @@ export const runRouter = createTRPCRouter({
     return ctx.prisma.run.findFirst({
       where: { id: input.id },
       include: {
-        workflow: true,
+        agent: true,
       },
     });
   }),
   create: protectedProcedure
-    .input(z.object({ workflowId: z.string(), prompt: z.string(), input: z.record(z.string(), z.any()) }))
+    .input(z.object({ agentId: z.string(), prompt: z.string(), input: z.record(z.string(), z.any()) }))
     .mutation(async ({ input, ctx }) => {
-      return await ctx.temporal.workflow.start(executor, {
-        workflowId: `${input.workflowId}-executor-${new Date()}`,
-        args: [
-          { workflowId: input.workflowId, prompt: input.prompt, input: input.input, userId: ctx.session?.user.id },
-        ],
+      return await ctx.temporal.workflow.start(runAgent, {
+        workflowId: `${input.agentId}-executor-${new Date()}`,
+        args: [{ agentId: input.agentId, prompt: input.prompt, input: input.input, userId: ctx.session?.user.id }],
         taskQueue,
       });
     }),

@@ -11,7 +11,7 @@ export const blockRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
       z.object({
-        workflowId: z.string(),
+        agentId: z.string(),
         prevOrder: z.number(),
       }),
     )
@@ -20,7 +20,7 @@ export const blockRouter = createTRPCRouter({
       const [_, newBlock] = await ctx.prisma.$transaction([
         ctx.prisma.block.updateMany({
           where: {
-            workflowId: input.workflowId,
+            agentId: input.agentId,
             order: {
               gte: input.prevOrder,
             },
@@ -36,9 +36,9 @@ export const blockRouter = createTRPCRouter({
             name: 'New block',
             input: 'Add input',
             order: input.prevOrder + 1,
-            workflow: {
+            agent: {
               connect: {
-                id: input.workflowId,
+                id: input.agentId,
               },
             },
             creator: {
@@ -72,7 +72,7 @@ export const blockRouter = createTRPCRouter({
     const [_, newBlock] = await ctx.prisma.$transaction([
       ctx.prisma.block.updateMany({
         where: {
-          workflowId: block.workflowId,
+          agentId: block.agentId,
           order: {
             gte: block.order - 1,
             lte: block.order,
@@ -104,7 +104,7 @@ export const blockRouter = createTRPCRouter({
     const [_, newBlock] = await ctx.prisma.$transaction([
       ctx.prisma.block.updateMany({
         where: {
-          workflowId: block.workflowId,
+          agentId: block.agentId,
           order: {
             gte: block.order,
             lte: block.order + 1,

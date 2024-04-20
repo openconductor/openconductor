@@ -54,24 +54,24 @@ model VerificationToken {
 }
 
 model User {
-  id            String        @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
   firstName     String?
   lastName      String?
-  username      String?       @unique
-  email         String?       @unique
+  username      String?      @unique
+  email         String?      @unique
   emailVerified DateTime?
   image         String?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
   accounts      Account[]
   sessions      Session[]
   createdTeams  Team[]
   teams         TeamMember[]
-  workflows     Workflow[]
+  agents        Agent[]
   blocks        Block[]
   runs          Run[]
-  integrations  Integration[]
+  plugins       Plugin[]
   documents     Document[]
 }
 
@@ -83,12 +83,12 @@ model Team {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  creator      User          @relation(fields: [creatorId], references: [id])
-  creatorId    String
-  members      TeamMember[]
-  workflows    Workflow[]
-  integrations Integration[]
-  documents    Document[]
+  creator   User         @relation(fields: [creatorId], references: [id])
+  creatorId String
+  members   TeamMember[]
+  agents    Agent[]
+  plugins   Plugin[]
+  documents Document[]
 }
 
 model TeamMember {
@@ -104,30 +104,31 @@ model TeamMember {
 
 // Orchestration
 
-model Workflow {
-  id        String  @id @default(cuid())
+model Agent {
+  id        String   @id @default(cuid())
   name      String
   prompt    String?
   input     Json?
   output    Json?
-  team      Team    @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId    String
-  creator   User    @relation(fields: [creatorId], references: [id])
+  creator   User     @relation(fields: [creatorId], references: [id])
   creatorId String
   blocks    Block[]
   runs      Run[]
+  plugins   Plugin[]
 }
 
 model Block {
-  id         String   @id @default(cuid())
-  name       String
-  order      Int
-  input      String
-  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
-  workflowId String
-  creator    User     @relation(fields: [creatorId], references: [id])
-  creatorId  String
-  events     Event[]
+  id        String  @id @default(cuid())
+  name      String
+  order     Int
+  input     String
+  agent     Agent   @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  agentId   String
+  creator   User    @relation(fields: [creatorId], references: [id])
+  creatorId String
+  events    Event[]
 }
 
 model Run {
@@ -138,8 +139,8 @@ model Run {
   status     String
   startedAt  DateTime?
   endedAt    DateTime?
-  workflow   Workflow  @relation(fields: [workflowId], references: [id], onDelete: Cascade)
-  workflowId String
+  agent      Agent     @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  agentId    String
   creator    User      @relation(fields: [creatorId], references: [id])
   creatorId  String
   events     Event[]
@@ -158,20 +159,25 @@ model Event {
   blockId   String
 }
 
-enum Integrations {
+enum Plugins {
   GITHUB
   SERP
+  CALCULATOR
+  OPENCONDUCTOR
+  FILESYSTEM
+  GIT
 }
 
-model Integration {
-  id        String       @id @default(cuid())
-  type      Integrations @default(GITHUB)
+model Plugin {
+  id        String  @id @default(cuid())
+  type      Plugins @default(GITHUB)
   authId    String?
   authToken String?
-  team      Team         @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  team      Team    @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId    String
-  creator   User         @relation(fields: [creatorId], references: [id])
+  creator   User    @relation(fields: [creatorId], references: [id])
   creatorId String
+  agents    Agent[]
 }
 
 enum DocumentTypes {
