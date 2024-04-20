@@ -25,7 +25,7 @@ export function Layout({ children }: LayoutProps) {
           defaultSize={15}
           collapsedSize={2}
           collapsible={true}
-          minSize={2}
+          minSize={15}
           maxSize={15}
           onCollapse={() => {
             setIsCollapsed(true);

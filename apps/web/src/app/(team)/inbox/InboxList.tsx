@@ -2,7 +2,7 @@ import { formatDistanceToNow } from 'date-fns';
 
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { AiItemType, Label, Message } from '@openconductor/db';
+import { Label, Message } from '@openconductor/db';
 import { useMessage } from '../triage/use-message';
 import { SparklesIcon } from 'lucide-react';
 import { LabelColor } from '@/components/ui/label';

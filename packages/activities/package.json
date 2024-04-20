@@ -5,8 +5,9 @@
   "main": "./index.ts",
   "scripts": {
     "build": "tsc --build",
-    "build.watch": "tsc --build --watch",
-    "lint": "TIMING=1 eslint \"**/*.ts*\""
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "eslint",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@dqbd/tiktoken": "^1.0.13",
