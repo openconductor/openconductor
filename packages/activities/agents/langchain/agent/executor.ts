@@ -3,25 +3,11 @@ import { LLMChain, OpenAI } from 'langchain';
 import { AgentExecutor, ZeroShotAgent } from 'langchain/agents';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { ChainValues } from 'langchain/dist/schema';
-import {
-  BasePromptTemplate,
-  ChatPromptTemplate,
-  HumanMessagePromptTemplate,
-  SystemMessagePromptTemplate,
-} from 'langchain/prompts';
+import { ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate } from 'langchain/prompts';
 import { SerpAPI } from 'langchain/tools';
 import { Calculator } from 'langchain/tools/calculator';
-import { langchainVectorTool } from '../vectorstore/tool';
+import { langchainVectorTool } from '../tool/registry/vectorstore';
 import { CallbackManager, ConsoleCallbackHandler } from 'langchain/callbacks';
-import { StructuredOutputParser } from 'langchain/output_parsers';
-
-import {
-  BasePromptSelector,
-  ConditionalPromptSelector,
-  isChatModel,
-  isLLM,
-} from 'langchain/dist/chains/prompt_selector';
-import { z } from 'zod';
 
 export async function langchainAgentExecutor({
   query,
@@ -66,10 +52,6 @@ export async function langchainAgentExecutor({
 This was your previous work (but I haven't seen any of it! I only see what you return as final answer):
 {agent_scratchpad}`),
   ]);
-
-  // const promptSelector = new ConditionalPromptSelector(chatPrompt, [[isChatModel, chatPrompt]]);
-
-  // const { prompt = promptSelector.getPrompt(model) } = params;
 
   const chat = new ChatOpenAI({
     temperature: 0,

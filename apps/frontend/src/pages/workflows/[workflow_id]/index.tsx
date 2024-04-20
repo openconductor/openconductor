@@ -25,11 +25,25 @@ const WorkflowPage: React.FC = () => {
     return <div>Error!</div>;
   }
 
+  const instructionBlock = {
+    id: 'instruction',
+    name: 'Instructions',
+    order: 0,
+    input: 'input',
+    workflowId: workflow.id,
+    agentId: '',
+    creatorId: '',
+    events: [],
+  };
+
   return (
     <WorkflowLayout>
       <main>
         <WorkflowHeader />
         <ul className={clsx(blockId ? 'max-w-sm' : ' mx-auto max-w-sm', 'flex flex-col gap-y-6 mt-8')}>
+          <Fragment>
+            <BlockCard key="instructions" block={instructionBlock} />
+          </Fragment>
           {workflow?.blocks?.map((block) => (
             <div
               key={block.id}
