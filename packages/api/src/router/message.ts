@@ -3,12 +3,19 @@ import { createTRPCRouter, protectedProcedure } from '../trpc';
 import { z } from 'zod';
 import { taskQueue } from '@openconductor/config-temporal/temporal-connection';
 import { refreshMessages } from '@openconductor/workflows/messages/refreshMessages';
+import { MessageType } from '@openconductor/db';
 
 export const messageRouter = createTRPCRouter({
-  all: protectedProcedure.input(z.object({})).query(({ ctx, input }) => {
+  all: protectedProcedure.input(z.object({ type: z.string() })).query(({ ctx, input }) => {
     return ctx.prisma.message.findMany({
       orderBy: { createdAt: 'desc' },
       where: {
+        type: {
+          equals: input.type as MessageType,
+        },
+        state: {
+          not: 'CLOSED',
+        },
         team: {
           members: {
             some: {

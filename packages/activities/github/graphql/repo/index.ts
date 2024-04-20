@@ -1,1 +1,1 @@
-export * from './getPullRequests';
+export * from './activity';

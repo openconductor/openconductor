@@ -201,8 +201,15 @@ model Document {
   creatorId String
 }
 
+enum MessageType {
+  TRIAGE
+  REVIEW
+  COMMENT
+}
+
 model Message {
-  id        String   @id @default(cuid())
+  id        String      @id @default(cuid())
+  type      MessageType
   source    String
   sourceId  String
   key       String

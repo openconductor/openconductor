@@ -7,6 +7,7 @@ import { api } from '~/utils/api';
 import { SideDrawer } from '~/components/shared/Drawer';
 import Link from 'next/link';
 import Markdown from 'react-markdown';
+import { MessageType } from '@openconductor/db';
 
 export function Message({ messageId }: { messageId: string }) {
   const {
@@ -46,15 +47,18 @@ export function Message({ messageId }: { messageId: string }) {
   );
 }
 
-export default function MessageTable() {
+export default function MessageTable({ type }: { type: MessageType }) {
   const { data: teamData, status: teamStatus } = api.team.activeTeam.useQuery();
   const {
     data: messages,
     status: messagesStatus,
     refetch,
-  } = api.message.all.useQuery({
-    enabled: true,
-  });
+  } = api.message.all.useQuery(
+    { type },
+    {
+      enabled: true,
+    },
+  );
   const { mutateAsync: refreshMessages, isLoading: isRefreshing } = api.message.refresh.useMutation();
 
   const [isDrawerOpen, setDrawerOpen] = useState(false);

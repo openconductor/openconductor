@@ -1,9 +1,9 @@
 import { nonRetryPolicy } from '../policies';
 import type * as activities from '@openconductor/activities';
 import { ApplicationFailure, proxyActivities } from '@temporalio/workflow';
-import { AuthorType } from '@openconductor/db';
+import { AuthorType, MessageType } from '@openconductor/db';
 
-const { getDbAccount, githubRepoPullRequests, createDbMessage } = proxyActivities<typeof activities>(nonRetryPolicy);
+const { getDbAccount, githubRepoActivity, createDbMessage } = proxyActivities<typeof activities>(nonRetryPolicy);
 
 export async function refreshMessages({ userId, teamId }: { userId: string; teamId: string }): Promise<boolean> {
   const { access_token: accessToken } = await getDbAccount({
@@ -18,17 +18,19 @@ export async function refreshMessages({ userId, teamId }: { userId: string; team
   const repoOwner = 'apache';
   const repoName = 'superset';
 
-  const { repository } = await githubRepoPullRequests({ accessToken, repoOwner, repoName });
+  const { repository } = await githubRepoActivity({ accessToken, repoOwner, repoName });
 
   // Unified handling for both issues and pull requests
   const items = [...(repository.issues.nodes ?? []), ...(repository.pullRequests.nodes ?? [])];
   for (const item of items) {
     if (!item) continue;
     const itemType = item.__typename === 'Issue' ? 'issue' : 'pull';
+    const messageType = item.__typename === 'Issue' ? MessageType.TRIAGE : MessageType.REVIEW;
     const authorType = item.author?.__typename === 'Bot' ? AuthorType.GITHUB_BOT : AuthorType.GITHUB_USER;
 
     // Create a message for the issue or pull request
     const parentMessage = await createDbMessage({
+      type: messageType,
       source: `${repoOwner}/${repoName}`,
       sourceId: item.id,
       key: `${itemType}/${item.number}`,
@@ -67,6 +69,7 @@ export async function refreshMessages({ userId, teamId }: { userId: string; team
       if (!comment) continue;
       const commentAuthorType = comment.author?.__typename === 'Bot' ? AuthorType.GITHUB_BOT : AuthorType.GITHUB_USER;
       await createDbMessage({
+        type: MessageType.COMMENT,
         source: `${repoOwner}/${repoName}`,
         sourceId: comment.id,
         key: `${itemType}/${item.number}/comment/${comment.databaseId}`,
