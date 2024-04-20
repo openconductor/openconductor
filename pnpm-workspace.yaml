@@ -1,0 +1,10 @@
+packages:
+  # - apps/frontend
+  - apps/web
+  - apps/worker
+  - packages/activities
+  - packages/api
+  - packages/auth
+  - packages/db
+  - packages/config/*
+  - packages/workflows

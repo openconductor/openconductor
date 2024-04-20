@@ -1,0 +1,27 @@
+{
+  "name": "@openconductor/worker",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/worker.js",
+  "scripts": {
+    "dev": "pnpm with-env tsx watch src/worker.ts",
+    "start": "node --experimental-specifier-resolution=node --loader ts-node/esm dist/worker.js",
+    "build": "tsc --build",
+    "lint": "eslint src --fix --max-warnings 0 --cache",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "with-env": "dotenv -e ../../.env --"
+  },
+  "dependencies": {
+    "@openconductor/activities": "^0.0.1",
+    "@openconductor/config-temporal": "^0.0.1",
+    "@openconductor/workflows": "^0.0.1",
+    "@temporalio/activity": "^1.9.3",
+    "@temporalio/worker": "^1.9.3",
+    "@temporalio/workflow": "^1.9.3"
+  },
+  "devDependencies": {
+    "tsx": "4.7.1"
+  }
+}

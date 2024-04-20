@@ -1,0 +1,9 @@
+{
+  "name": "@openconductor/config-temporal",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./index.ts",
+  "dependencies": {
+    "@temporalio/client": "^1.9.3"
+  }
+}
