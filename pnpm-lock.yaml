@@ -119,7 +119,7 @@ importers:
       '@sanity/uuid': ^3.0.1
       '@temporalio/activity': ^1.7.4
       googleapis: ^117.0.0
-      langchain: ^0.0.62
+      langchain: ^0.0.66
       marked: ^4.3.0
     dependencies:
       '@dqbd/tiktoken': 1.0.4
@@ -129,7 +129,7 @@ importers:
       '@sanity/uuid': 3.0.1
       '@temporalio/activity': 1.7.4
       googleapis: 117.0.0
-      langchain: 0.0.62
+      langchain: 0.0.66
       marked: 4.3.0
 
   packages/api:
@@ -212,11 +212,11 @@ importers:
       '@openconductor/activities': '*'
       '@openconductor/db': '*'
       '@temporalio/workflow': ^1.7.4
-      langchain: ^0.0.62
+      langchain: ^0.0.66
     dependencies:
       '@openconductor/db': link:../db
       '@temporalio/workflow': 1.7.4
-      langchain: 0.0.62
+      langchain: 0.0.66
     devDependencies:
       '@openconductor/activities': link:../activities
 
@@ -442,6 +442,10 @@ packages:
 
   /@dqbd/tiktoken/1.0.4:
     resolution: {integrity: sha512-C0HrJj2RNlsB3wslfNHGNH8xN7QQMki+y4JkUor/GE+oIfPvH7yVep9l1/2powam8AAH6+gdv5MggA5gsszweg==}
+    dev: false
+
+  /@dqbd/tiktoken/1.0.7:
+    resolution: {integrity: sha512-bhR5k5W+8GLzysjk8zTMVygQZsgvf7W1F0IlL4ZQ5ugjo5rCyiwGM5d8DYriXspytfu98tv59niang3/T+FoDw==}
     dev: false
 
   /@esbuild-kit/cjs-loader/2.4.2:
@@ -3422,8 +3426,8 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
-  /langchain/0.0.62:
-    resolution: {integrity: sha512-OgcMHb4qKkG2OnSGI4gpdEF7FFCG6XOx9DJWrbmadHkQWabqchFqB5ItfyqMumqv3yUjA1C3XxsU+DPuXzp89g==}
+  /langchain/0.0.66:
+    resolution: {integrity: sha512-HsVdXFDp2+YB12tvpMFOK6kIXaLvFzJKQUzitr5VEamhZCFUoojZgcS7ckRjxJIv+aVWbEzCi3KJI/2kPKsMkA==}
     engines: {node: '>=18'}
     peerDependencies:
       '@aws-sdk/client-lambda': ^3.310.0
@@ -3433,10 +3437,13 @@ packages:
       '@opensearch-project/opensearch': '*'
       '@pinecone-database/pinecone': '*'
       '@supabase/supabase-js': ^2.10.0
+      '@tensorflow-models/universal-sentence-encoder': '*'
+      '@tensorflow/tfjs-converter': '*'
+      '@tensorflow/tfjs-core': '*'
       '@zilliz/milvus2-sdk-node': ^2.2.0
-      axios: ^0.26.0
+      axios: '*'
       cheerio: ^1.0.0-rc.12
-      chromadb: ^1.3.0
+      chromadb: ^1.4.0
       cohere-ai: ^5.0.2
       d3-dsv: ^2.0.0
       epub2: ^3.0.1
@@ -3466,6 +3473,12 @@ packages:
       '@pinecone-database/pinecone':
         optional: true
       '@supabase/supabase-js':
+        optional: true
+      '@tensorflow-models/universal-sentence-encoder':
+        optional: true
+      '@tensorflow/tfjs-converter':
+        optional: true
+      '@tensorflow/tfjs-core':
         optional: true
       '@zilliz/milvus2-sdk-node':
         optional: true
@@ -3507,7 +3520,7 @@ packages:
         optional: true
     dependencies:
       '@anthropic-ai/sdk': 0.4.3
-      '@dqbd/tiktoken': 1.0.4
+      '@dqbd/tiktoken': 1.0.7
       binary-extensions: 2.2.0
       browser-or-node: 2.1.1
       expr-eval: 2.0.2

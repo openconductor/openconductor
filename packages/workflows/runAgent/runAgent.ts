@@ -4,6 +4,7 @@ import { proxyActivities, uuid4 } from '@temporalio/workflow';
 import { AgentAction, AgentFinish, AgentStep } from 'langchain/schema';
 
 const {
+  langchainToolRegistry,
   getDbAgent,
   createDbRun,
   deleteDbBlocks,
@@ -20,8 +21,8 @@ export async function runAgent({
   userId,
   prompt,
   input,
-  enabledPlugins = ['documents', 'google'],
-  // enabledPlugins = ['documents', 'github', 'git', 'filesystem', 'calculator', 'serp'],
+  enabledPlugins = ['openai', 'google', 'calculator'],
+  // enabledPlugins = ['filesystem', 'openai', 'google', 'git', 'documents', 'calculator'],
   maxIterations = 15,
 }: {
   agentId: string;

@@ -21,7 +21,17 @@ export async function langchainToolCall({ action }: { action: AgentAction }): Pr
 
   const toolInput = isJsonString(action.toolInput) ? JSON.parse(action.toolInput) : action.toolInput;
 
-  const observation = tool ? await tool.call(toolInput) : `${action.tool} is not a valid tool, try another one.`;
+  let observation = '';
+
+  if (!tool) {
+    observation = `${action.tool} is not a valid tool, try another one.`;
+  }
+
+  try {
+    observation = await tool!.call(toolInput);
+  } catch (error: any) {
+    observation = error.message;
+  }
 
   return { action, observation };
 }

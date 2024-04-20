@@ -32,32 +32,27 @@ export class GoogleSearchTool extends StructuredTool {
   }
 
   async _call({ query, numResults }: z.infer<typeof this.schema>) {
-    try {
-      const response = await this.getCustomSearch().cse.list({
-        q: query,
-        cx: this.googleCseId,
-        auth: this.googleApiKey,
-      });
+    const response = await this.getCustomSearch().cse.list({
+      q: query,
+      cx: this.googleCseId,
+      auth: this.googleApiKey,
+    });
 
-      if (!response.data.items || response.data.items.length === 0) {
-        return 'No Google Search Result was found';
-      }
-
-      const results = response.data.items.slice(0, numResults || response.data.items.length).map((result) => {
-        const metadataResult: customsearch_v1.Schema$Result = {
-          title: result.title || '',
-          link: result.link || '',
-        };
-        if (result.snippet) {
-          metadataResult.snippet = result.snippet;
-        }
-        return metadataResult;
-      });
-
-      return JSON.stringify(results, null, 2);
-    } catch (error) {
-      console.log(`Error searching Google: ${error}`);
-      throw error;
+    if (!response.data.items || response.data.items.length === 0) {
+      return 'No Google Search Result was found';
     }
+
+    const results = response.data.items.slice(0, numResults || response.data.items.length).map((result) => {
+      const metadataResult: customsearch_v1.Schema$Result = {
+        title: result.title || '',
+        link: result.link || '',
+      };
+      if (result.snippet) {
+        metadataResult.snippet = result.snippet;
+      }
+      return metadataResult;
+    });
+
+    return JSON.stringify(results, null, 2);
   }
 }
