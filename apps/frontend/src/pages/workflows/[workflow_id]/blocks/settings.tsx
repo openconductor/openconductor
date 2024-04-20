@@ -49,7 +49,7 @@ export default function BlockSettings({ blockId }: { blockId: string }) {
         className="space-y-2"
       >
         {/* Block name */}
-        <div className="space-y-2 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
+        <div className="space-y-2 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5 ">
           <div>
             <label htmlFor="project-name" className="block text-sm font-medium leading-6 text-gray-900 sm:mt-1.5">
               Name
