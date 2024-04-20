@@ -220,7 +220,8 @@ export function MessageContent({ messageId }: { messageId: string }) {
                   {message.author?.handle}
                 </div>
                 <div className={`${!isExpanded ? 'max-h-48 overflow-hidden' : ''}`}>
-                  <Markdown className="text-base space-y-4 dark:text-neutral-300">{message.body}</Markdown>
+                  <Markdown className="markdown text-xl space-y-4 dark:text-neutral-300 mb-4">{message.title}</Markdown>
+                  <Markdown className="markdown">{message.body}</Markdown>
                 </div>
                 <Button variant="secondary" onClick={() => setIsExpanded(!isExpanded)}>
                   {isExpanded ? 'Collapse' : 'Expand'}
