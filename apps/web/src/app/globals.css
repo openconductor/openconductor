@@ -78,3 +78,7 @@
 .markdown > * {
   all: revert;
 }
+
+code {
+  white-space: pre-wrap !important;
+}
