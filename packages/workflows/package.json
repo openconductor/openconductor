@@ -1,0 +1,19 @@
+{
+  "name": "@openconductor/workflows",
+  "version": "0.0.1",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "eslint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@openconductor/db": "^0.1.0",
+    "@temporalio/workflow": "^1.9.3",
+    "langchain": "^0.1.25"
+  },
+  "devDependencies": {
+    "@openconductor/activities": "^0.0.1"
+  }
+}
