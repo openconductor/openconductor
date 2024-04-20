@@ -12,10 +12,12 @@ export async function githubRepoActivity({
 }) {
   // https://studio.apollographql.com/public/github/variant/current/explorer
 
+  // issues(last:25, labels: ["good first issue"]) {
+
   const query = `
       query repositoryActivity($owner: String!, $name: String!) {
         repository(owner: $owner, name: $name) {
-          issues(last:20, labels: ["good first issue"]) {
+          issues(last:25) {
             nodes {
               __typename
               id
@@ -37,7 +39,7 @@ export async function githubRepoActivity({
                   id
                 }
               }
-              comments(last:100) {
+              comments(last:25) {
                 nodes {
                   author {
                     __typename
@@ -58,7 +60,7 @@ export async function githubRepoActivity({
                   url
                 }
               }
-              labels(last:100) {
+              labels(last:25) {
                 nodes {
                   name
                   id
@@ -71,7 +73,7 @@ export async function githubRepoActivity({
               }
             }
           }
-          pullRequests(last:0) {
+          pullRequests(last:25) {
             nodes {
               __typename
               id
@@ -93,7 +95,7 @@ export async function githubRepoActivity({
                   id
                 }
               }
-              comments(last:100) {
+              comments(last:25) {
                 nodes {
                   __typename
                   author {
@@ -115,7 +117,7 @@ export async function githubRepoActivity({
                   url
                 }
               }
-              labels(last:100) {
+              labels(last:25) {
                 nodes {
                   name
                   id

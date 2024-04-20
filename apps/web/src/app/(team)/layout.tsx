@@ -1,4 +1,4 @@
-import { Nav } from '@/components/nav';
+import { Layout } from '@/components/layout';
 import { getCurrentUser } from '@/lib/session';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -19,10 +19,5 @@ export default async function TeamLayout({ children }: TeamLayoutProps) {
     return notFound();
   }
 
-  return (
-    <>
-      <Nav />
-      <div>{children}</div>
-    </>
-  );
+  return <Layout>{children}</Layout>;
 }

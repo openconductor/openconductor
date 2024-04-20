@@ -16,7 +16,7 @@ import {
 
 import { AccountSwitcher } from '@/app/examples/mail/components/account-switcher';
 import { MailDisplay } from '@/app/examples/mail/components/mail-display';
-import { MailList } from '@/app/examples/mail/components/mail-list';
+import { MailList } from '@/app/(team)/inbox/InboxList';
 import { Nav } from '@/app/examples/mail/components/nav';
 import type { Mail } from '@/app/examples/mail/data';
 import { useMail } from '@/app/examples/mail/use-mail';
