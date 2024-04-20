@@ -33,7 +33,7 @@ export default function Button({ children, variant = ButtonVariant.Secondary, ..
           ? 'border-neutral-200 bg-neutral-100 text-neutral-700 hover:bg-neutral-200 '
           : '',
         variant === ButtonVariant.Tertiary ? 'border-indigo-700 bg-white text-indigo-500 hover:bg-indigo-50' : '',
-        'mx-1  px-3.5 py-2 text-sm font-semibold border rounded-md shadow-sm',
+        'mx-1  px-3.5 py-2 text-sm font-semibold border rounded-md shadow-sm items-center justify-center inline-flex',
       )}
     >
       {children}

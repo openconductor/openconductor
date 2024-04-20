@@ -1,4 +1,4 @@
-import { LLMChain, OpenAI } from 'langchain';
+import { LLMChain } from 'langchain/chains';
 import { ZeroShotAgent } from 'langchain/agents';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 

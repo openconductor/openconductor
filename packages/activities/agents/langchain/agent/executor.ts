@@ -1,5 +1,5 @@
 import { Context } from '@temporalio/activity';
-import { LLMChain, OpenAI } from 'langchain';
+
 import { AgentExecutor, ZeroShotAgent } from 'langchain/agents';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { ChainValues } from 'langchain/dist/schema';
@@ -8,6 +8,8 @@ import { SerpAPI } from 'langchain/tools';
 import { Calculator } from 'langchain/tools/calculator';
 import { langchainVectorTool } from '../tool/registry/vectorstore';
 import { CallbackManager, ConsoleCallbackHandler } from 'langchain/callbacks';
+import { OpenAI } from 'langchain/llms/openai';
+import { LLMChain } from 'langchain/chains';
 
 export async function langchainAgentExecutor({
   query,

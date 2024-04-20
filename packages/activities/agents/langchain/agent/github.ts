@@ -1,4 +1,4 @@
-import { OpenAI } from 'langchain';
+import { OpenAI } from 'langchain/llms/openai';
 import { initializeAgentExecutor } from 'langchain/agents';
 
 import { PromptTemplate } from 'langchain/prompts';
@@ -7,14 +7,12 @@ import { langchainToolRegistry } from '../tool/registry';
 // import { z } from 'zod';
 
 export async function langchainGithubAgent({
-  repo_full,
   issue,
   owner,
   repo,
   type,
   openAIApiKey = process.env.OPENAI_API_KEY,
 }: {
-  repo_full: string;
   issue?: string;
   owner?: string;
   repo?: string;

@@ -1,9 +1,12 @@
-import { MagicWandIcon } from "@radix-ui/react-icons";
+import { useTheme } from 'next-themes';
+import Image from 'next/image';
 
 export default function Logo({ ...props }) {
-  return (
-    <div className="rounded-full bg-black dark:bg-white p-2 w-14 h-14 justify-center items-center">
-      <MagicWandIcon className="h-10 w-10 text-white dark:" {...props} />
-    </div>
+  const { systemTheme, theme } = useTheme();
+  const currentTheme = theme === 'system' ? systemTheme : theme;
+  return currentTheme == 'dark' ? (
+    <Image src="/logo--dark.svg" width="60" height="60" alt="OpenConductor" className="h-20 w-20" {...props} />
+  ) : (
+    <Image src="/logo--light.svg" width="60" height="60" alt="OpenConductor" className="h-20 w-20" {...props} />
   );
 }

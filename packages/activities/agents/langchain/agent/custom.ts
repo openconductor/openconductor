@@ -1,8 +1,12 @@
-import { BasePromptTemplate, LLMChain } from 'langchain';
 import { AgentActionOutputParser, LLMSingleActionAgent } from 'langchain/agents';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 
-import { BaseChatPromptTemplate, SerializedBasePromptTemplate, renderTemplate } from 'langchain/prompts';
+import {
+  BaseChatPromptTemplate,
+  BasePromptTemplate,
+  SerializedBasePromptTemplate,
+  renderTemplate,
+} from 'langchain/prompts';
 import {
   AgentAction,
   AgentFinish,
@@ -15,6 +19,7 @@ import {
 
 import { langchainToolRegistry } from '../tool/registry';
 import { Tool } from 'langchain/tools';
+import { LLMChain } from 'langchain/chains';
 
 export async function langchainAgentCustom({
   input,

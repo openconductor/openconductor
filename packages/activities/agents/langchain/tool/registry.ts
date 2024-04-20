@@ -15,15 +15,14 @@ import {
   GithubCodeSearchTool,
   GithubIssueGetTool,
   GithubPullRequestCreateTool,
-  ProcessChDir,
 } from './registry/github';
-import { FsInsertText, FsListFiles, FsReadFile, FsRemoveText } from './registry/filesystem';
+import { FsCreateFile, FsInsertText, FsListFiles, FsReadFile, FsRemoveText, ProcessChDir } from './registry/filesystem';
 
 export async function langchainToolRegistry(): Promise<Tool[]> {
   const vectorTool = langchainVectorTool({});
 
-  const localStore = new NodeFileStore();
-  const auth = process.env.GITHUB_API_TOKEN;
+  // const localStore = new NodeFileStore();
+  // const auth = process.env.GITHUB_API_TOKEN;
 
   const tools = [
     // new SerpAPI(process.env.SERPAPI_API_KEY, {
@@ -31,23 +30,24 @@ export async function langchainToolRegistry(): Promise<Tool[]> {
     //   hl: 'en',
     //   gl: 'us',
     // }),
-    new ReadFileTool({ store: localStore }),
-    new WriteFileTool({ store: localStore }),
-    new Calculator(),
+    // new ReadFileTool({ store: localStore }),
+    // new WriteFileTool({ store: localStore }),
+    // new Calculator(),
     vectorTool,
-    new GithubCodeSearchTool({ auth }),
-    new GithubIssueGetTool({ auth }),
-    new GithubPullRequestCreateTool({ auth }),
-    new GithubBranchGetTool({ auth }),
-    new GitCloneRepository(),
-    new GitCheckoutNewBranch(),
-    new GitCheckoutBranch(),
-    new GitListBranches(),
-    new GitStatus(),
-    new GitAddFile(),
-    new GitCommit(),
-    new GitPushBranch(),
+    // new GithubCodeSearchTool({ auth }),
+    // new GithubIssueGetTool({ auth }),
+    // new GithubPullRequestCreateTool({ auth }),
+    // new GithubBranchGetTool({ auth }),
+    // new GitCloneRepository(),
+    // new GitCheckoutNewBranch(),
+    // new GitCheckoutBranch(),
+    // new GitListBranches(),
+    // new GitStatus(),
+    // new GitAddFile(),
+    // new GitCommit(),
+    // new GitPushBranch(),
     new ProcessChDir(),
+    new FsCreateFile(),
     new FsReadFile(),
     new FsInsertText(),
     new FsRemoveText(),
