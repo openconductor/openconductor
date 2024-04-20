@@ -2,7 +2,7 @@ import { createTRPCRouter, protectedProcedure } from '../trpc';
 import { z } from 'zod';
 
 export const agentRouter = createTRPCRouter({
-  all: protectedProcedure.query(({ ctx }) => {
+  all: protectedProcedure.input(z.object({ conductor: z.boolean().optional() })).query(({ ctx, input }) => {
     return ctx.prisma.agent.findMany({
       orderBy: { id: 'desc' },
       include: {
@@ -10,6 +10,7 @@ export const agentRouter = createTRPCRouter({
         runs: true,
       },
       where: {
+        conductor: input.conductor,
         playground: false,
         team: {
           members: {
@@ -38,10 +39,11 @@ export const agentRouter = createTRPCRouter({
       },
     });
   }),
-  playground: protectedProcedure.input(z.object({})).query(({ ctx }) => {
+  playground: protectedProcedure.input(z.object({ conductor: z.boolean().optional() })).query(({ ctx, input }) => {
     return ctx.prisma.agent.findFirst({
       where: {
         playground: true,
+        conductor: input.conductor,
         team: {
           members: {
             some: {
@@ -59,12 +61,14 @@ export const agentRouter = createTRPCRouter({
         teamId: z.string(),
         prompt: z.string().optional(),
         input: z.record(z.string(), z.any()).optional(),
+        conductor: z.boolean().optional(),
       }),
     )
     .mutation(({ ctx, input }) => {
       return ctx.prisma.agent.create({
         data: {
           playground: false,
+          conductor: input.conductor,
           name: input.name,
           prompt: input.prompt,
           input: input.input || {},

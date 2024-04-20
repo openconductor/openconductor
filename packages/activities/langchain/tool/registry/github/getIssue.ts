@@ -1,5 +1,5 @@
-import { StructuredTool } from 'langchain/tools';
 import { Octokit } from '@octokit/rest';
+import { StructuredTool } from 'langchain/tools';
 import { z } from 'zod';
 
 export class GithubGetIssueTool extends StructuredTool {
@@ -26,7 +26,11 @@ export class GithubGetIssueTool extends StructuredTool {
     return this.octokit.issues
       .get({ owner, repo, issue_number })
       .then((res) => {
-        return JSON.stringify(res.data, null, 2);
+        const data = {
+          title: res.data.title,
+          body: res.data.body,
+        };
+        return JSON.stringify(data, null, 2);
       })
       .catch((e) => {
         return JSON.stringify(e.response.data);

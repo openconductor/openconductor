@@ -8,7 +8,7 @@ import {
 import { AgentStep, BaseChatMessage, HumanChatMessage, InputValues, PartialValues } from 'langchain/schema';
 import { Tool } from 'langchain/tools';
 
-export class CustomPromptTemplate extends BaseChatPromptTemplate {
+export class ConductorPromptTemplate extends BaseChatPromptTemplate {
   tools: Tool[];
 
   constructor(args: { tools: Tool[]; inputVariables: string[] }) {

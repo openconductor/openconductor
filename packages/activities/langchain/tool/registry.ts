@@ -34,7 +34,9 @@ export async function langchainToolRegistry(enabledPlugins?: string[]): Promise<
 
     new gitTool.GitAddFile(),
     new gitTool.GitCheckoutBranch(),
+    new gitTool.GitCreateBranch(),
     new gitTool.GitCloneRepository(),
+    new gitTool.GitInitRepository(),
     new gitTool.GitCommit(),
     new gitTool.GitListBranches(),
     new gitTool.GitPushBranch(),

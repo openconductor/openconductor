@@ -1,25 +1,38 @@
+import Logo from '../shared/logo';
 import SelectTeam from '../shared/selectTeam';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { signOut } from 'next-auth/react';
+import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
-import Logo from '../shared/logo';
-import { useTheme } from 'next-themes';
 
 const navigation = [
-  { name: 'Playground', href: '/playground' },
+  { name: 'Conductors', href: '/conductors', root: true },
   { name: 'Agents', href: '/agents' },
-  { name: 'Runs', href: '/runs' },
-  { name: 'Plugins', href: '/plugins' },
   { name: 'Documents', href: '/documents' },
+];
+
+const sideNavigation = [
+  { name: 'Playground', href: '/playground' },
+  { name: 'Usage', href: '/runs' },
+];
+
+const settingsNavigation = [
+  { name: 'Plugins', href: '/plugins' },
+  { name: 'Account', href: '/settings' },
 ];
 
 export default function Navigation() {
   const router = useRouter();
   const { systemTheme, theme, setTheme } = useTheme();
   const currentTheme = theme === 'system' ? systemTheme : theme;
+
+  function isActive(item: { name: string; href: string; root?: boolean }) {
+    return router.pathname.startsWith(item.href) || (router.pathname === '/' && item.root);
+  }
+
   return (
     <Disclosure as="nav" className="bg-white dark:bg-neutral-900 shadow">
       {({ open }) => (
@@ -52,7 +65,7 @@ export default function Navigation() {
                     <a key={item.href} href={item.href} className="inline-flex items-center px-1 text-sm font-medium">
                       <span
                         className={clsx(
-                          router.pathname.startsWith(item.href) ? 'bg-neutral-200 dark:bg-neutral-800 ' : '',
+                          isActive(item) ? 'bg-neutral-200 dark:bg-neutral-800 ' : '',
                           'px-3 py-1 rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-800',
                         )}
                       >
@@ -64,12 +77,28 @@ export default function Navigation() {
               </div>
               <div className="flex items-center">
                 <div className="hidden md:ml-4 md:flex md:flex-shrink-0 md:items-center">
-                  <Menu as="div" className="relative ml-3">
+                  {sideNavigation.map((item) => (
+                    <a key={item.href} href={item.href} className="inline-flex items-center px-1 text-sm font-medium">
+                      <span
+                        className={clsx(
+                          isActive(item)
+                            ? 'bg-neutral-200 dark:bg-neutral-800 '
+                            : item.name === 'Playground' && '!bg-indigo-600 hover:!bg-indigo-500 text-white',
+                          'px-3 py-1 rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-800',
+                        )}
+                      >
+                        {item.name}
+                      </span>
+                    </a>
+                  ))}
+                  <Menu as="div" className="relative ml-1">
                     <div>
                       <Menu.Button className="flex text-sm font-medium focus:outline-none ">
                         <span
                           className={clsx(
-                            router.pathname.startsWith('/settings') ? 'bg-neutral-200 dark:bg-neutral-800 ' : '',
+                            isActive({ name: 'Settings', href: '/settings' })
+                              ? 'bg-neutral-200 dark:bg-neutral-800 '
+                              : '',
                             'px-3 py-1 rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-800',
                           )}
                         >
@@ -87,19 +116,22 @@ export default function Navigation() {
                       leaveTo="transform opacity-0 scale-95"
                     >
                       <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-neutral-800 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <Menu.Item>
-                          {({ active }) => (
-                            <a
-                              href="/settings"
-                              className={clsx(
-                                active ? 'bg-neutral-100 dark:bg-neutral-700' : '',
-                                'block px-4 py-2 text-sm text-neutral-700 dark:text-neutral-200',
-                              )}
-                            >
-                              Account
-                            </a>
-                          )}
-                        </Menu.Item>
+                        {settingsNavigation.map((item) => (
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                href={item.href}
+                                className={clsx(
+                                  active ? 'bg-neutral-100 dark:bg-neutral-700' : '',
+                                  'block px-4 py-2 text-sm text-neutral-700 dark:text-neutral-200',
+                                )}
+                              >
+                                {item.name}
+                              </a>
+                            )}
+                          </Menu.Item>
+                        ))}
+
                         <Menu.Item>
                           {({ active }) => (
                             <a

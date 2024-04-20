@@ -78,6 +78,7 @@ export default function AgentInstructions({ agentId }: { agentId: string }) {
                 agentId: agent.id,
                 prompt: agentPrompt!,
                 input: JSON.parse(agentInput!),
+                conductor: false,
               });
             }}
           >

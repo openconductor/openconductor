@@ -1,27 +1,29 @@
-import { StructuredTool, Tool } from 'langchain/tools';
 import { execSync, ChildProcess } from 'child_process';
 import fs from 'fs';
+import { StructuredTool } from 'langchain/tools';
+import * as path from 'path';
 import { z } from 'zod';
 
-export class GitCheckoutNewBranch extends StructuredTool {
-  name = 'git-CheckoutNewBranch';
+export class GitCreateBranch extends StructuredTool {
+  name = 'git-CreateBranch';
   description = `Create a new branch in a local repository. Please format your input as an object with the following parameters:
 - "branch": (string) [REQUIRED] The name of the branch. Cannot contain wildcard characters
-- "root": (string) [REQUIRED] The path to the root of the repository. Should always use /tmp/[repo]`;
+- "path": (string) [REQUIRED] The path to the local repository relative to your current working directory.`;
 
   schema = z.object({
     branch: z.string(),
-    root: z.string(),
+    path: z.string(),
   });
 
-  async _call({ branch, root }: z.infer<typeof this.schema>) {
-    if (!fs.existsSync(root)) {
-      return `Directory ${root} does not exist. Please clone the repository first.`;
+  async _call({ branch, path }: z.infer<typeof this.schema>) {
+    if (!fs.existsSync(path)) {
+      return `Directory ${path} does not exist. Please clone the repository first.`;
     }
-    if (process.cwd() !== root) {
-      process.chdir(root);
+    if (process.cwd() !== path) {
+      process.chdir(path);
     }
     try {
+      execSync(`git fetch`);
       const result = execSync(`git checkout -b ${branch}`);
       return result.toString();
     } catch (e) {
