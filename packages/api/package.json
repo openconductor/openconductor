@@ -1,0 +1,24 @@
+{
+  "name": "@openconductor/api",
+  "version": "0.1.0",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "eslint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@trpc/client": "^10.9.0",
+    "@trpc/server": "^10.9.0",
+    "@openconductor/auth": "*",
+    "@openconductor/db": "*",
+    "@openconductor/workflows": "*",
+    "@openconductor/config-temporal": "*",
+    "langchain": "^0.0.42",
+    "openai": "^3.1.0",
+    "superjson": "1.12.2",
+    "zod": "^3.20.2"
+  },
+  "devDependencies": {}
+}

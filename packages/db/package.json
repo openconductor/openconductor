@@ -1,0 +1,20 @@
+{
+  "name": "@openconductor/db",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./index.ts",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "db:generate": "pnpm with-env prisma generate",
+    "db:push": "pnpm with-env prisma db push --skip-generate",
+    "db:push-hard": "pnpm with-env prisma db push --skip-generate --accept-data-loss --force-reset",
+    "db:migrate": "pnpm with-env prisma migrate dev --name init",
+    "dev": "pnpm with-env prisma studio --port 5556 --browser none",
+    "with-env": "dotenv -e ../../.env --"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.12.0",
+    "prisma": "^4.12.0"
+  },
+  "devDependencies": {}
+}

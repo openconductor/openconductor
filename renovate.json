@@ -1,0 +1,17 @@
+{
+  "extends": [
+    "config:base",
+    "group:allNonMajor",
+    "schedule:monthly"
+  ],
+  "assigneesFromCodeOwners": true,
+  "assigneesSampleSize": 1,
+  "separateMinorPatch": true,
+  "packageRules": [
+    {
+      "updateTypes": ["patch"],
+      "enabled": false
+    }
+  ],
+  "enabledManagers": ["npm"]
+}
