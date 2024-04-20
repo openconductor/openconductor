@@ -12,7 +12,7 @@ export async function embedGithub({
   repoUrl,
   branch,
   accessToken,
-  recursive = true,
+  recursive = false,
   userId,
   teamId,
 }: {

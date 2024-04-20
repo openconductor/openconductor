@@ -3,6 +3,7 @@ import * as gitTool from './registry/git';
 import * as githubTool from './registry/github';
 import * as googleTool from './registry/google';
 import * as openaiTool from './registry/openai';
+import * as openconductorTool from './registry/openconductor';
 import * as vectorTool from './registry/vectorstore';
 import { SerpAPI, StructuredTool, Tool } from 'langchain/tools';
 import { Calculator } from 'langchain/tools/calculator';
@@ -15,6 +16,7 @@ export async function langchainToolRegistry(enabledPlugins?: string[]): Promise<
   const googleApiKey = process.env.GOOGLE_API_KEY;
 
   const availableTools = [
+    new openconductorTool.OpenconductorDatetime(),
     new googleTool.GoogleSearchTool({ googleCseId, googleApiKey }),
     new SerpAPI(serpApiKey, {
       location: 'Austin,Texas,United States',
