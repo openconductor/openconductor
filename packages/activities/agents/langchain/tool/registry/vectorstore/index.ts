@@ -22,7 +22,7 @@ export function langchainVectorTool({ openAIApiKey = process.env.OPENAI_API_KEY 
     db: prisma,
     prisma: Prisma,
     tableName: 'Document',
-    vectorColumnName: 'vector',
+    vectorColumnName: 'embedding',
     columns: {
       id: PrismaVectorStore.IdColumn,
       content: PrismaVectorStore.ContentColumn,

@@ -18,7 +18,7 @@ export async function langchainVectorStoreSearch({
     db: prisma,
     prisma: Prisma,
     tableName: 'Document',
-    vectorColumnName: 'vector',
+    vectorColumnName: 'embedding',
     columns: {
       id: PrismaVectorStore.IdColumn,
       content: PrismaVectorStore.ContentColumn,

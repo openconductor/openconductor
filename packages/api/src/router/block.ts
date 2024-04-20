@@ -12,7 +12,6 @@ export const blockRouter = createTRPCRouter({
     .input(
       z.object({
         workflowId: z.string(),
-        agentId: z.string(),
         prevOrder: z.number(),
       }),
     )
@@ -42,11 +41,6 @@ export const blockRouter = createTRPCRouter({
                 id: input.workflowId,
               },
             },
-            agent: {
-              connect: {
-                id: input.agentId,
-              },
-            },
             creator: {
               connect: {
                 id: ctx.session?.user.id,
@@ -64,7 +58,6 @@ export const blockRouter = createTRPCRouter({
       data: {
         ...(input.name && { name: input.name }),
         ...(input.input && { input: input.input }),
-        ...(input.agentId && { agentId: input.agentId }),
         ...(input.order && { order: input.order }),
       },
     });

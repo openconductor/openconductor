@@ -24,9 +24,6 @@ export async function createDbBlock({
       creator: {
         connect: { id: userId },
       },
-      agent: {
-        connect: { id: 'clgi388yh000gqh0btfawl75t' },
-      },
     },
   });
 }

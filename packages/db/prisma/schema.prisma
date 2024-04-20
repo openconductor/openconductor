@@ -2,13 +2,17 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../types"
+  provider        = "prisma-client-js"
+  output          = "../types"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
+// enable pgvector https://github.com/prisma/prisma/issues/18442
+
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgvector(map: "vector", schema: "extensions")]
 }
 
 // NextAuth.js Models
@@ -41,6 +45,14 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
 model User {
   id            String        @id @default(cuid())
   name          String?
@@ -56,19 +68,11 @@ model User {
   sessions      Session[]
   createdTeams  Team[]
   teams         TeamMember[]
-  agents        Agent[]
   workflows     Workflow[]
   blocks        Block[]
   runs          Run[]
-  integration   Integration[]
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
+  integrations  Integration[]
+  documents     Document[]
 }
 
 // Teams
@@ -79,12 +83,12 @@ model Team {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  creator     User          @relation(fields: [creatorId], references: [id])
-  creatorId   String
-  members     TeamMember[]
-  workflows   Workflow[]
-  agents      Agent[]
-  integration Integration[]
+  creator      User          @relation(fields: [creatorId], references: [id])
+  creatorId    String
+  members      TeamMember[]
+  workflows    Workflow[]
+  integrations Integration[]
+  documents    Document[]
 }
 
 model TeamMember {
@@ -98,9 +102,12 @@ model TeamMember {
   userId    String
 }
 
+// Orchestration
+
 model Workflow {
   id        String  @id @default(cuid())
   name      String
+  prompt    String?
   input     Json?
   output    Json?
   team      Team    @relation(fields: [teamId], references: [id], onDelete: Cascade)
@@ -118,8 +125,6 @@ model Block {
   input      String
   workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
   workflowId String
-  agent      Agent    @relation(fields: [agentId], references: [id])
-  agentId    String
   creator    User     @relation(fields: [creatorId], references: [id])
   creatorId  String
   events     Event[]
@@ -153,56 +158,35 @@ model Event {
   blockId   String
 }
 
-enum Agents {
-  EXTRACT
-  TRANSFORM
-  LOAD
-  SCHEDULE
-}
-
-model Agent {
-  id             String      @id @default(cuid())
-  name           String
-  description    String?
-  type           Agents      @default(TRANSFORM)
-  input          String?
-  output         String?
-  systemTemplate String?
-  promptTemplate String?
-  isPublic       Boolean
-  integration    Integration @relation(fields: [integrationId], references: [id])
-  integrationId  String
-  team           Team        @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  teamId         String
-  creator        User        @relation(fields: [creatorId], references: [id])
-  creatorId      String
-  blocks         Block[]
-}
-
 enum Integrations {
-  OPENCONDUCTOR
-  OPENAI
   GITHUB
-  SUPABASE
-  S3
+  SERP
 }
 
 model Integration {
   id        String       @id @default(cuid())
-  type      Integrations @default(OPENCONDUCTOR)
+  type      Integrations @default(GITHUB)
   authId    String?
   authToken String?
   team      Team         @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId    String
   creator   User         @relation(fields: [creatorId], references: [id])
   creatorId String
-  agents    Agent[]
+}
+
+enum DocumentTypes {
+  GITHUB
+  MEMORY
 }
 
 model Document {
-  id      String                 @id @default(cuid())
-  content String
-  source  String
-  type    String
-  vector  Unsupported("vector")?
+  id        String                 @id @default(cuid())
+  content   String
+  source    String
+  type      DocumentTypes          @default(GITHUB)
+  embedding Unsupported("vector")?
+  team      Team                   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId    String
+  creator   User                   @relation(fields: [creatorId], references: [id])
+  creatorId String
 }

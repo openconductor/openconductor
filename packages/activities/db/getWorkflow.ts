@@ -6,11 +6,7 @@ export async function getDbWorkflow({ workflowId }: { workflowId: string }) {
       id: workflowId,
     },
     include: {
-      blocks: {
-        include: {
-          agent: true,
-        },
-      },
+      blocks: true,
     },
   });
 }

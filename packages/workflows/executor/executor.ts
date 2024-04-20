@@ -12,6 +12,7 @@ const {
   updateDbEvent,
   langchainToolCall,
   langchainAgentCustom,
+  langchainPromptTemplate,
 } = proxyActivities<typeof activities>(nonRetryPolicy);
 
 // tctl workflow run --taskqueue openconductor --workflow_type executor --input='{"input":"make an article about airbyte with 2 sections. Can you make a list of sections with a title and a prompt of maximum 200 characters for chatgpt mentioning airbyte. I want the result with only an array with object title and prompt."}'
@@ -20,12 +21,14 @@ const {
 export async function executor({
   workflowId,
   userId,
+  prompt,
   input,
   maxIterations = 15,
 }: {
   workflowId: string;
   userId: string;
-  input: string;
+  prompt: string;
+  input: Record<string, any>;
   maxIterations?: number;
 }): Promise<any> {
   const workflow = await getDbWorkflow({ workflowId });
@@ -35,6 +38,8 @@ export async function executor({
     temporalId,
     userId,
   });
+
+  const renderedPrompt = await langchainPromptTemplate({ prompt, input });
 
   let iterations = 0;
   const steps: AgentStep[] = [];
@@ -55,20 +60,20 @@ export async function executor({
   const startBlock = await createDbBlock({
     workflowId,
     userId,
-    input: input,
+    input: renderedPrompt,
     name: 'start',
     order: blockIndex,
   });
 
   while (iterations < maxIterations) {
     try {
-      const stepOutput = await langchainAgentCustom({ input, steps });
+      const stepOutput = await langchainAgentCustom({ input: renderedPrompt, steps });
 
       if (isAgentFinish(stepOutput)) {
         const endBlock = await createDbBlock({
           workflowId,
           userId,
-          input: input,
+          input: renderedPrompt,
           name: 'end',
           order: blockIndex,
         });
