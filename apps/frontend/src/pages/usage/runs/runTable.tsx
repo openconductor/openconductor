@@ -1,32 +1,21 @@
-import { Run } from '@openconductor/db';
+import { Run } from '@openconductor/db/types';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { api } from '~/utils/api';
 import { dayNow } from '~/utils/helpers/day';
 
 export default function RunTable() {
-  const { data: teamData, status: teamStatus } = api.team.activeTeam.useQuery();
+  const { data: runs, status: runsStatus } = api.run.all.useQuery();
 
-  const { data: runs, status: runsStatus, refetch } = api.run.all.useQuery();
-
-  const { mutate: deleteRun } = api.run.delete.useMutation({
-    async onSuccess() {
-      await refetch();
-    },
-  });
-
-  const router = useRouter();
-
-  if (teamStatus !== 'success' || runsStatus !== 'success') {
+  if (runsStatus !== 'success') {
     return <></>;
   }
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8">
+    <div>
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <h1 className="text-base font-semibold leading-6 ">Runs</h1>
-          <p className="mt-2 text-sm text-neutral-700">A list of all of your AI-powered runs.</p>
+          <p className="mt-2 text-sm text-neutral-700">All your AI-powered runs.</p>
         </div>
       </div>
       <div className="mt-8 flow-root">
@@ -43,9 +32,6 @@ export default function RunTable() {
                   </th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold ">
                     Scheduled
-                  </th>
-                  <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                    <span className="sr-only">Edit</span>
                   </th>
                 </tr>
               </thead>
@@ -64,21 +50,6 @@ export default function RunTable() {
                     </td>
                     <td className="px-3 py-4 text-sm text-neutral-500">
                       <span className="inline-flex px-2 text-xs leading-5">{dayNow(run.startedAt!)}</span>
-                    </td>
-                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <Link href={`/runs/${run.id}`} className="text-gigas-600 hover:text-gigas-900">
-                        Edit
-                      </Link>
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          deleteRun(run.id);
-                        }}
-                        className="text-red-600 hover:text-red-900 ml-4"
-                      >
-                        Delete
-                      </a>
                     </td>
                   </tr>
                 ))}

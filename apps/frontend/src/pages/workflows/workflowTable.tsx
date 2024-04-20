@@ -16,7 +16,7 @@ export default function WorkflowTable() {
 
   const handleCreateWorkflow = async () => {
     const workflow = await createWorkflow({
-      name: 'My new chain',
+      name: 'My new workflow',
       teamId: teamData?.id || '',
     });
 
@@ -28,11 +28,11 @@ export default function WorkflowTable() {
   }
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8">
+    <div>
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <h1 className="text-base font-semibold leading-6 ">Chain</h1>
-          <p className="mt-2 text-sm text-neutral-700">All of your AI-powered chains.</p>
+          <h1 className="text-base font-semibold leading-6 ">Workflows</h1>
+          <p className="mt-2 text-sm text-neutral-700">All your AI-powered workflows.</p>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
           <button
@@ -43,7 +43,7 @@ export default function WorkflowTable() {
             type="button"
             className="block rounded-md bg-gigas-600 py-2 px-3 text-center text-sm font-semibold text-white shadow-sm hover:bg-gigas-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gigas-600"
           >
-            Create chain
+            Create workflow
           </button>
         </div>
       </div>
@@ -65,9 +65,6 @@ export default function WorkflowTable() {
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold ">
                     Status
                   </th>
-                  <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                    <span className="sr-only">Edit</span>
-                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-200">
@@ -88,22 +85,6 @@ export default function WorkflowTable() {
                       <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
                         TBD
                       </span>
-                    </td>
-
-                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <Link href={`/workflows/${workflow.id}`} className="text-gigas-600 hover:text-gigas-900">
-                        Edit
-                      </Link>
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          deleteWorkflow(workflow.id);
-                        }}
-                        className="text-red-600 hover:text-red-900 ml-4"
-                      >
-                        Delete
-                      </a>
                     </td>
                   </tr>
                 ))}

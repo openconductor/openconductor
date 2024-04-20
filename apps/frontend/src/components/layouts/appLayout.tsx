@@ -1,10 +1,8 @@
-import { NextPage } from 'next';
+import Navigation from './navigation';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import SidebarLayout from '~/components/layouts/sidebarLayout';
-import EventTable from '~/pages/events/eventTable';
 
-const Events: NextPage = () => {
+export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { data: userData, status: userStatus } = useSession();
   const router = useRouter();
 
@@ -16,14 +14,12 @@ const Events: NextPage = () => {
     void router.push('/login');
     return null;
   }
-
   return (
-    <div className="h-screen">
-      <SidebarLayout>
-        <EventTable />
-      </SidebarLayout>
-    </div>
+    <>
+      <div className="h-screen">
+        <Navigation />
+        <div className="p-8">{children}</div>
+      </div>
+    </>
   );
-};
-
-export default Events;
+}

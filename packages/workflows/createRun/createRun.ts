@@ -19,7 +19,11 @@ export async function test({ workflowId, userId }: { workflowId: string; userId:
   for (const block of workflow.blocks) {
     const event = await createDbEvent(block.id, run.id);
     try {
-      const { response, tokens } = await createLangchainConversationChain(block.input);
+      const { response, tokens } = await createLangchainConversationChain({
+        systemTemplate: block.agent.systemTemplate || undefined,
+        promptTemplate: block.agent.promptTemplate || undefined,
+        input: block.input,
+      });
       await updateDbEvent(event.id, 'success', response, tokens);
     } catch (error) {
       await updateDbEvent(event.id, 'failed');
