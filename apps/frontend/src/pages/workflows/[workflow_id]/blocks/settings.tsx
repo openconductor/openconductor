@@ -1,9 +1,11 @@
 import { updateBlockSchema } from '@openconductor/api/src/schema/block';
+import { useRouter } from 'next/router';
 import FieldError from '~/components/shared/formError';
 import { api } from '~/utils/api';
 import { useZodForm } from '~/utils/form';
 
 export default function BlockSettings({ blockId }: { blockId: string }) {
+  const router = useRouter();
   const utils = api.useContext();
   const { data: block, isLoading } = api.block.byId.useQuery(blockId as string);
   const { data: agents } = api.agent.all.useQuery();
@@ -17,6 +19,7 @@ export default function BlockSettings({ blockId }: { blockId: string }) {
   const { mutate: deleteBlock } = api.block.delete.useMutation({
     async onSuccess() {
       await utils.block.invalidate();
+      router.push(`/workflows/${block?.workflowId}`);
     },
   });
 
@@ -109,7 +112,9 @@ export default function BlockSettings({ blockId }: { blockId: string }) {
             <button
               type="button"
               className="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-              onClick={() => deleteBlock}
+              onClick={() => {
+                deleteBlock(block.id);
+              }}
             >
               Delete
             </button>
