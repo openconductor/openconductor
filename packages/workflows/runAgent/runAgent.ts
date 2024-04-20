@@ -1,8 +1,7 @@
+import { longNonRetryPolicy, nonRetryPolicy } from '../policies';
 import type * as activities from '@openconductor/activities';
 import { proxyActivities, uuid4 } from '@temporalio/workflow';
 import { AgentAction, AgentFinish, AgentStep } from 'langchain/schema';
-
-import { longNonRetryPolicy, nonRetryPolicy } from '../policies';
 
 const {
   getDbAgent,
@@ -21,7 +20,7 @@ export async function runAgent({
   userId,
   prompt,
   input,
-  enabledPlugins = ['documents', 'filesystem'],
+  enabledPlugins = ['documents'],
   // enabledPlugins = ['documents', 'github', 'git', 'filesystem', 'calculator', 'serp'],
   maxIterations = 15,
 }: {

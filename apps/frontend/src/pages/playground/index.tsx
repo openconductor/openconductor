@@ -5,7 +5,6 @@ import { api } from '~/utils/api';
 
 const Playground: NextPage = () => {
   const { data: agent, status: agentStatus } = api.agent.playground.useQuery({});
-  console.log('agent', agent);
   if (!agent || agentStatus === 'loading') {
     return <></>;
   }

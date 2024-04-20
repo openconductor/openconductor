@@ -8,7 +8,6 @@ import { OnboardingWrapper } from '~/context/onboarding';
 import { api } from '~/utils/api';
 import '../styles/globals.css';
 import { ThemeProvider } from 'next-themes';
-import Navigation from '~/components/layouts/navigation';
 
 const inter = Inter({ subsets: ['latin'] });
 

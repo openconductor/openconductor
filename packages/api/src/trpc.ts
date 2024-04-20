@@ -6,15 +6,13 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
+
+import { getServerSession, type Session } from '@openconductor/auth';
+import { prisma } from '@openconductor/db';
 import { TRPCError, initTRPC } from '@trpc/server';
 import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
-
-import { getServerSession, type Session } from '@openconductor/auth';
-import { connectToTemporal } from '@openconductor/config-temporal';
-import { prisma } from '@openconductor/db';
-import { Client } from '@temporalio/client';
 
 /**
  * 1. CONTEXT
@@ -28,7 +26,6 @@ import { Client } from '@temporalio/client';
 type CreateContextOptions = {
   session: Session | null;
   prisma: typeof prisma;
-  temporal: Client;
 };
 
 /**
@@ -44,7 +41,6 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
     session: opts.session,
     prisma: opts.prisma,
-    temporal: opts.temporal,
   };
 };
 
@@ -62,7 +58,6 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   return createInnerTRPCContext({
     session: await getServerSession({ req, res }),
     prisma,
-    temporal: await connectToTemporal(),
   });
 };
 

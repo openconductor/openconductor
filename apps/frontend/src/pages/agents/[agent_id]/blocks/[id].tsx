@@ -21,12 +21,12 @@ export default function Block({ blockId }: { blockId: string }) {
 
   return (
     <Slideover>
-      <div className="h-full border-2 border-gray-200 rounded-tl-lg  bg-white dark:bg-neutral-800 shadow-xl p-6 space-y-2">
+      <div className="h-full border-2 border-neutral-200 dark:border-neutral-600 rounded-tl-lg  bg-white dark:bg-neutral-800 shadow-xl p-6 space-y-2">
         {/* Header */}
         <div>
           <div className="flex items-start justify-between space-x-3">
             <div className="space-y-1">
-              <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">{block.name}</Dialog.Title>
+              <Dialog.Title className="text-base font-semibold leading-6">{block.name}</Dialog.Title>
             </div>
             <div className="flex h-7 items-center">
               <button
