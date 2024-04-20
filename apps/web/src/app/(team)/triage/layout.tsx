@@ -8,7 +8,7 @@ interface LayoutProps {
 export default async function Layout({ children, message }: LayoutProps) {
   return (
     <>
-      <ResizablePanel defaultSize={70} minSize={70}>
+      <ResizablePanel defaultSize={70} minSize={25}>
         {children}
       </ResizablePanel>
       <ResizableHandle withHandle />
