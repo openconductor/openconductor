@@ -13,6 +13,7 @@ export async function getDbSources({ teamId, type }: { teamId: string; type?: So
     where: {
       teamId,
       type,
+      enabled: true,
     },
   });
 }
