@@ -24,7 +24,7 @@ export const openaiAugmentMessage = async ({ message }: { message: Message }): P
   You are provided the following ${message.type} from ${message.source}.
   Make a summary for this message. Don't mention the word "summary".
   With a one line explanation and max 5 bullet points.
-  Set a priority for this ${message.type}.
+  Set a priority for this ${message.type} in the scope of all possible items in ${message.source} and based on summary.
   The user needs to take immediate action, lets help him win time by giving suggestion of replies.
   
   - Example of suggestions could be:
