@@ -12,14 +12,14 @@ const { langchainPromptsConversation, getDbWorkflow, createDbRun, createDbEvent,
 });
 
 export async function test({ workflowId, userId }: { workflowId: string; userId: string }): Promise<Run> {
-  const workflow = await getDbWorkflow(workflowId);
+  const workflow = await getDbWorkflow({ workflowId });
   const temporalId = uuid4();
-  const run = await createDbRun(workflow.id, temporalId, userId);
+  const run = await createDbRun({ workflowId: workflow.id, temporalId, userId });
 
   let previousBlockResponse = '';
 
   for (const [index, block] of workflow.blocks.entries()) {
-    const event = await createDbEvent(block.id, run.id);
+    const event = await createDbEvent({ blockId: block.id, runId: run.id });
     try {
       const { response, tokens } = await langchainPromptsConversation({
         systemTemplate: block.agent.systemTemplate || undefined,
@@ -27,10 +27,10 @@ export async function test({ workflowId, userId }: { workflowId: string; userId:
         input: index === 0 ? block.input : previousBlockResponse,
       });
 
-      await updateDbEvent(event.id, 'success', response, tokens);
+      await updateDbEvent({ eventId: event.id, status: 'success', output: response, tokens });
       previousBlockResponse = response;
     } catch (error) {
-      await updateDbEvent(event.id, 'failed');
+      await updateDbEvent({ eventId: event.id, status: 'failed' });
     }
   }
 

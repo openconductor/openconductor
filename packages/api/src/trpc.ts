@@ -6,10 +6,11 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
-
 import { TRPCError, initTRPC } from '@trpc/server';
 import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
 import superjson from 'superjson';
+import { ZodError } from 'zod';
+
 import { getServerSession, type Session } from '@openconductor/auth';
 import { connectToTemporal } from '@openconductor/config-temporal';
 import { prisma } from '@openconductor/db';
@@ -39,7 +40,7 @@ type CreateContextOptions = {
  * - trpc's `createSSGHelpers` where we don't have req/res
  * @see https://create.t3.gg/en/usage/trpc#-servertrpccontextts
  */
-const createInnerTRPCContext = async (opts: CreateContextOptions) => {
+const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
     session: opts.session,
     prisma: opts.prisma,
@@ -54,6 +55,9 @@ const createInnerTRPCContext = async (opts: CreateContextOptions) => {
  */
 export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   const { req, res } = opts;
+
+  // Get the session from the server using the unstable_getServerSession wrapper function
+  const session = await getServerSession({ req, res });
 
   return createInnerTRPCContext({
     session: await getServerSession({ req, res }),
@@ -70,8 +74,14 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
  */
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
-  errorFormatter({ shape }) {
-    return shape;
+  errorFormatter({ shape, error }) {
+    return {
+      ...shape,
+      data: {
+        ...shape.data,
+        zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
+      },
+    };
   },
 });
 

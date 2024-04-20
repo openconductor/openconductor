@@ -7,7 +7,7 @@ const { langchainVectorStoreSearch } = proxyActivities<typeof activities>(nonRet
 
 const { langchainPromptsDocuments } = proxyActivities<typeof activities>(longPolicy);
 
-// tctl workflow run --taskqueue openconductor --workflow_type vectorPrompt --input='{"query":"what is airbyte?"}'
+// tctl workflow run --taskqueue openconductor --workflow_type vectorPrompt --input='{"query":"what is langchain?"}'
 
 export async function vectorPrompt({ query }: { query: string }): Promise<any> {
   const searchedDocuments = await langchainVectorStoreSearch({ query });

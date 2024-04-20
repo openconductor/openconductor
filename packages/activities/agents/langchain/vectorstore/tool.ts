@@ -1,19 +1,21 @@
 import { prisma } from '@openconductor/db';
 import { Prisma } from '@openconductor/db/types';
+import { OpenAI } from 'langchain';
+import { CallbackManager, ConsoleCallbackHandler } from 'langchain/callbacks';
 import { VectorDBQAChain } from 'langchain/chains';
-import { OpenAI } from 'langchain/llms';
 import { OpenAIEmbeddings } from 'langchain/embeddings';
-import { PrismaVectorStore } from 'langchain/vectorstores';
-import { VectorStoreQATool } from 'langchain/tools';
-import { createVectorStoreAgent } from 'langchain/agents';
+import { ChainTool, Tool } from 'langchain/tools';
+import { PrismaVectorStore } from 'langchain/vectorstores/prisma';
 
-export async function langchainVectorStoreTool({
-  query,
-  openAIApiKey = process.env.OPENAI_API_KEY,
-}: {
-  query: string;
-  openAIApiKey?: string;
-}) {
+export function langchainVectorTool({ openAIApiKey = process.env.OPENAI_API_KEY }: { openAIApiKey?: string }): Tool {
+  const callbackManager = new CallbackManager();
+  callbackManager.addHandler(new ConsoleCallbackHandler());
+
+  const model = new OpenAI({
+    temperature: 0,
+    openAIApiKey,
+  });
+
   const embeddings = new OpenAIEmbeddings({ openAIApiKey });
 
   const vectorStore = new PrismaVectorStore(embeddings, {
@@ -27,18 +29,13 @@ export async function langchainVectorStoreTool({
     },
   });
 
-  const model = new OpenAI({ temperature: 0, openAIApiKey });
+  const chain = VectorDBQAChain.fromLLM(model, vectorStore);
 
-  // const chain = VectorDBQAChain.fromLLM(model, vectorStore);
-
-  const toolkit = new VectorStoreQATool(query, `agent for ${query}`, {
-    vectorStore,
-    llm: model,
+  const databaseTool: Tool = new ChainTool({
+    name: 'github',
+    description: 'useful for when you need to answer questions about tools that can be found on github',
+    chain: chain,
   });
 
-  // const toolkit = new VectorStoreToolkit(toolkit, model);
-
-  // createVectorStoreAgent(model,toolkit)
-
-  return toolkit;
+  return databaseTool;
 }
