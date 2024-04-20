@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Button, { ButtonVariant } from '~/components/shared/button';
 import HeaderTitle from '~/components/shared/headerTitle';
+import PageHeading from '~/components/shared/pageHeading';
 import { api } from '~/utils/api';
 
 export default function PluginTable() {
@@ -36,17 +37,17 @@ export default function PluginTable() {
 
   return (
     <main>
-      <HeaderTitle title="Plugins" description="All your AI-powered plugins.">
+      <PageHeading title="Plugins" description="All your AI-powered plugins.">
         <Button
           variant={ButtonVariant.Primary}
-          onClick={(e) => {
-            e.preventDefault();
+          onClick={(event) => {
+            event.preventDefault();
             void handleCreatePlugin();
           }}
         >
           Create plugin
         </Button>
-      </HeaderTitle>
+      </PageHeading>
       <div className="mt-8 flow-root">
         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">

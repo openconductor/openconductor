@@ -1,6 +1,7 @@
 import AgentPlayground from '../agents/[agent_id]/agentPlayground';
 import { NextPage } from 'next';
 import AgentLayout from '~/components/layouts/agentLayout';
+import PageHeading from '~/components/shared/pageHeading';
 import { api } from '~/utils/api';
 
 const Playground: NextPage = () => {
@@ -14,14 +15,7 @@ const Playground: NextPage = () => {
   }
   return (
     <AgentLayout>
-      <div className="md:flex md:items-center md:justify-between md:space-x-5">
-        <div className="flex space-x-5 items-center">
-          <div>
-            <h1 className="text-2xl font-bold ">Playground</h1>
-            <p className="text-sm font-medium text-neutral-500">Test your instructions and save them as agents.</p>
-          </div>
-        </div>
-      </div>
+      <PageHeading title="Playground" description="Test your instructions and save them as agents."></PageHeading>
       <AgentPlayground agentId={agent.id} />
     </AgentLayout>
   );

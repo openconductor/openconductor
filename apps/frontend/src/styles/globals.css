@@ -6,4 +6,27 @@
   body {
     @apply bg-white text-neutral-900 dark:bg-neutral-900 dark:text-white;
   }
+  /*
+    Table
+  */
+  .r-table {
+    @apply min-w-full text-sm
+  }
+
+
+  .r-table-th {
+    @apply px-2 py-3 text-left dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-800 font-bold tracking-wider uppercase
+  }
+
+  .r-table-tbody {
+    @apply divide-neutral-200 dark:divide-neutral-700 
+  }
+
+  .r-table-tr {
+    @apply hover:bg-neutral-200/25 dark:hover:bg-neutral-800/25
+  }
+
+  .r-table-td {
+    @apply px-2 py-3 whitespace-nowrap truncate max-w-sm font-medium
+  }
 }

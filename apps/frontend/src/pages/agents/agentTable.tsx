@@ -1,5 +1,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import Button, { ButtonVariant } from '~/components/shared/button';
+import PageHeading from '~/components/shared/pageHeading';
+import { Table } from '~/components/shared/table';
 import { api } from '~/utils/api';
 
 export default function AgentTable() {
@@ -27,70 +30,52 @@ export default function AgentTable() {
     return <></>;
   }
 
+  const columns = [
+    {
+      Header: 'Name',
+      accessor: 'name',
+    },
+    {
+      Header: 'Instructions',
+      accessor: 'prompt',
+    },
+    {
+      Header: 'Blocks',
+      accessor: 'blocks',
+    },
+    {
+      Header: 'Runs',
+      accessor: 'runs',
+    },
+  ];
+
+  const dataTable =
+    agents.map((agent) => ({
+      id: agent.id,
+      name: agent.name,
+      prompt: agent.prompt,
+      blocks: agent.blocks.length,
+      runs: agent.runs.length,
+    })) ?? [];
+
   return (
     <div>
-      <div className="sm:flex sm:items-center">
-        <div className="sm:flex-auto">
-          <h1 className="text-base font-semibold leading-6 ">Agents</h1>
-          <p className="mt-2 text-sm  ">All your AI-powered agents.</p>
-        </div>
-        <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              void handleCreateAgent();
-            }}
-            type="button"
-            className="block rounded-md bg-gigas-600 py-2 px-3 text-center text-sm font-semibold text-white shadow-sm hover:bg-gigas-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gigas-600"
-          >
-            Create agent
-          </button>
-        </div>
-      </div>
-      <div className="mt-8 flow-root">
-        <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <table className="min-w-full divide-y divide-neutral-300 dark:divide-neutral-600">
-              <thead>
-                <tr>
-                  <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold sm:pl-0">
-                    Name
-                  </th>
-                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold ">
-                    Blocks
-                  </th>
-                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold ">
-                    Runs
-                  </th>
-                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold ">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-neutral-200 dark:divide-neutral-700">
-                {agents.map((agent) => (
-                  <tr key={agent.id}>
-                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-0">
-                      <div className="font-medium hover:underline">
-                        <Link href={`/agents/${agent.id}`}>{agent.name}</Link>
-                      </div>
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-neutral-500">
-                      <div className="">{agent.blocks.length} blocks</div>
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-neutral-500">{agent.runs.length} runs</td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-neutral-500">
-                      <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
-                        TBD
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      <PageHeading title="Agents" description="All your AI-powered agents.">
+        <Button
+          variant={ButtonVariant.Primary}
+          onClick={(event) => {
+            event.preventDefault();
+            void handleCreateAgent();
+          }}
+        >
+          Create agent
+        </Button>
+      </PageHeading>
+      <Table
+        columns={columns}
+        data={dataTable}
+        onRowClick={async (row) => router.push(`/agents/${String(row.original.id)}`)}
+      />
     </div>
   );
 }

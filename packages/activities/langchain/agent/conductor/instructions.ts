@@ -9,7 +9,7 @@ export class Instructions {
 
 Task: the input task you must plan
 Thought: you should always think about what to do
-Action: the action to take, should be one of [${toolNames}]
+Action: action to plan, should be one of [${toolNames}]
 Action Input: the input to the action
 
 Observation: the result of the action
