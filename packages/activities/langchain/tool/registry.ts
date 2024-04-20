@@ -9,6 +9,11 @@ import * as vectorTool from './registry/vectorstore';
 import { SerpAPI, StructuredTool, Tool } from 'langchain/tools';
 import { Calculator } from 'langchain/tools/calculator';
 
+export type RegistryTool = {
+  name: string;
+  description: string;
+};
+
 export async function langchainToolRegistry({
   userId,
   enabledPlugins,
@@ -21,47 +26,52 @@ export async function langchainToolRegistry({
   const serpApiKey = process.env.SERPAPI_API_KEY;
   const googleCseId = process.env.GOOGLE_CSE_ID;
   const googleApiKey = process.env.GOOGLE_API_KEY;
-
-  const { refresh_token: googleRefreshToken } = await getDbAccount({
-    userId,
-    provider: 'google',
-  });
+  let googleRefreshToken = '';
+  try {
+    const { refresh_token } = await getDbAccount({
+      userId,
+      provider: 'google',
+    });
+    if (refresh_token) googleRefreshToken = refresh_token;
+  } catch (error) {
+    console.log('no googleRefreshToken');
+  }
 
   const availableTools = [
     new openconductorTool.OpenconductorDatetime(),
-    new googleTool.GoogleSearchTool({ googleCseId, googleApiKey }),
-    new googleTool.GoogleWebmastersTool({ googleRefreshToken }),
-    new SerpAPI(serpApiKey, {
-      location: 'Austin,Texas,United States',
-      hl: 'en',
-      gl: 'us',
-    }),
+    // new googleTool.GoogleSearchTool({ googleCseId, googleApiKey }),
+    // // new googleTool.GoogleWebmastersTool({ googleRefreshToken }),
+    // new SerpAPI(serpApiKey, {
+    //   location: 'Austin,Texas,United States',
+    //   hl: 'en',
+    //   gl: 'us',
+    // }),
 
-    new Calculator(),
+    // new Calculator(),
 
-    vectorTool.vectorstoreSearchDocuments({ openAIApiKey }),
+    // vectorTool.vectorstoreSearchDocuments({ openAIApiKey }),
 
-    new githubTool.GithubCreatePullRequestTool({ githubApiKey }),
-    new githubTool.GithubGetBranchTool({ githubApiKey }),
-    new githubTool.GithubGetIssueTool({ githubApiKey }),
+    // new githubTool.GithubCreatePullRequestTool({ githubApiKey }),
+    // new githubTool.GithubGetBranchTool({ githubApiKey }),
+    // new githubTool.GithubGetIssueTool({ githubApiKey }),
 
-    new gitTool.GitAddFile(),
-    new gitTool.GitCheckoutBranch(),
-    new gitTool.GitCreateBranch(),
-    new gitTool.GitCloneRepository(),
-    new gitTool.GitInitRepository(),
-    new gitTool.GitCommit(),
-    new gitTool.GitListBranches(),
-    new gitTool.GitPushBranch(),
-    new gitTool.GitPullBranch(),
-    new gitTool.GitStatus(),
+    // new gitTool.GitAddFile(),
+    // new gitTool.GitCheckoutBranch(),
+    // new gitTool.GitCreateBranch(),
+    // new gitTool.GitCloneRepository(),
+    // new gitTool.GitInitRepository(),
+    // new gitTool.GitCommit(),
+    // new gitTool.GitListBranches(),
+    // new gitTool.GitPushBranch(),
+    // new gitTool.GitPullBranch(),
+    // new gitTool.GitStatus(),
 
-    new filesystemTool.FilesystemChangeDirectoryTool(),
-    new filesystemTool.FilesystemCreateFileTool(),
-    new filesystemTool.FilesystemInsertContentTool(),
-    new filesystemTool.FilesystemListFilesTool(),
-    new filesystemTool.FilesystemReadFileTool(),
-    new filesystemTool.FilesystemRemoveContentTool(),
+    // new filesystemTool.FilesystemChangeDirectoryTool(),
+    // new filesystemTool.FilesystemCreateFileTool(),
+    // new filesystemTool.FilesystemInsertContentTool(),
+    // new filesystemTool.FilesystemListFilesTool(),
+    // new filesystemTool.FilesystemReadFileTool(),
+    // new filesystemTool.FilesystemRemoveContentTool(),
 
     new openaiTool.OpenaiPromptGpt({ openAIApiKey }),
   ];
@@ -88,4 +98,20 @@ export async function langchainToolRegistry({
   });
 
   return filteredTools as Tool[];
+}
+
+export async function langchainTools({
+  userId,
+  enabledPlugins,
+}: {
+  userId: string;
+  enabledPlugins?: string[];
+}): Promise<RegistryTool[]> {
+  const availableTools = await langchainToolRegistry({ userId });
+
+  const filteredTools = availableTools
+    .filter((tool) => enabledPlugins?.some((plugin) => tool.name.startsWith(plugin)))
+    .map((tool) => ({ name: tool.name, description: tool.description }));
+
+  return filteredTools;
 }

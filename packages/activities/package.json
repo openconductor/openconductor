@@ -16,7 +16,8 @@
     "@sanity/uuid": "^3.0.1",
     "@temporalio/activity": "^1.7.4",
     "googleapis": "^117.0.0",
-    "langchain": "^0.0.66",
-    "marked": "^4.3.0"
+    "langchain": "^0.0.90",
+    "marked": "^4.3.0",
+    "twitter-api-sdk": "^1.2.1"
   }
 }

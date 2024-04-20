@@ -4,12 +4,12 @@ import toast from 'react-hot-toast';
 import Button, { ButtonVariant } from '~/components/shared/button';
 import { api } from '~/utils/api';
 
-export default function AgentInstructions({ agentId }: { agentId: string }) {
+export default function AgentInstructions({ agentId, conductor }: { agentId: string; conductor?: boolean }) {
   const utils = api.useContext();
   const { data: teamData, status: teamStatus } = api.team.activeTeam.useQuery();
-  const { data: agent, status: agentStatus } = api.agent.byId.useQuery({ id: agentId });
+  const { data: agent, status: agentStatus } = api.agent.byId.useQuery({ id: agentId, conductor });
   const [agentPrompt, setAgentPrompt] = useState<string | undefined>(agent?.prompt!);
-  const [agentInput, setAgentInput] = useState<string | undefined>(JSON.stringify(agent?.input));
+  const [agentInput, setAgentInput] = useState<string | undefined>(JSON.stringify(agent?.input) || '{}');
   const { mutateAsync: createAgent } = api.agent.create.useMutation();
   const router = useRouter();
 
@@ -42,6 +42,12 @@ export default function AgentInstructions({ agentId }: { agentId: string }) {
     return <></>;
   }
 
+  console.log('agent', agent)
+
+  console.log('agentPrompt', agentPrompt)
+
+  console.log('JSON.parse(agentInput!)', agentInput)
+
   if (agentStatus === 'error' || !agent) {
     return <div>Error!</div>;
   }
@@ -68,44 +74,64 @@ export default function AgentInstructions({ agentId }: { agentId: string }) {
           />
         </div>
         <div className="">
-          <Button
-            variant={ButtonVariant.Primary}
-            className="w-1/2 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-neutral-300 hover:bg-neutral-50"
-            onClick={(e) => {
-              e.preventDefault();
-              mutate({ id: agent.id, prompt: agentPrompt!, input: JSON.parse(agentInput!) });
-              createRun({
-                agentId: agent.id,
-                prompt: agentPrompt!,
-                input: JSON.parse(agentInput!),
-                conductor: true,
-              });
-            }}
-          >
-            {agent.playground ? 'Test' : 'Run'}
-          </Button>
-          {agent.playground ? (
+          {conductor ? (
             <Button
-              variant={ButtonVariant.Secondary}
-              className="w-1/2 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-neutral-300 hover:bg-neutral-50"
-              onClick={(e) => {
-                e.preventDefault();
-                void handleCreateAgent();
-              }}
-            >
-              Save as agent
-            </Button>
-          ) : (
-            <Button
-              variant={ButtonVariant.Secondary}
+              variant={ButtonVariant.Primary}
               className="w-1/2 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-neutral-300 hover:bg-neutral-50"
               onClick={(e) => {
                 e.preventDefault();
                 mutate({ id: agent.id, prompt: agentPrompt!, input: JSON.parse(agentInput!) });
+                createRun({
+                  agentId: agent.id,
+                  prompt: agentPrompt!,
+                  input: JSON.parse(agentInput!),
+                  conductor,
+                });
               }}
             >
-              Save
+              Plan
             </Button>
+          ) : (
+            <>
+              <Button
+                variant={ButtonVariant.Primary}
+                className="w-1/2 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-neutral-300 hover:bg-neutral-50"
+                onClick={(e) => {
+                  e.preventDefault();
+                  mutate({ id: agent.id, prompt: agentPrompt!, input: JSON.parse(agentInput!) });
+                  createRun({
+                    agentId: agent.id,
+                    prompt: agentPrompt!,
+                    input: JSON.parse(agentInput!),
+                  });
+                }}
+              >
+                {agent.playground ? 'Test' : 'Run'}
+              </Button>
+              {agent.playground ? (
+                <Button
+                  variant={ButtonVariant.Secondary}
+                  className="w-1/2 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-neutral-300 hover:bg-neutral-50"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    void handleCreateAgent();
+                  }}
+                >
+                  Save as agent
+                </Button>
+              ) : (
+                <Button
+                  variant={ButtonVariant.Secondary}
+                  className="w-1/2 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-neutral-300 hover:bg-neutral-50"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    mutate({ id: agent.id, prompt: agentPrompt!, input: JSON.parse(agentInput!) });
+                  }}
+                >
+                  Save
+                </Button>
+              )}
+            </>
           )}
         </div>
       </div>

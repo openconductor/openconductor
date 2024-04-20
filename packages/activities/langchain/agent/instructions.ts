@@ -5,7 +5,7 @@ export class Instructions {
     suffix: string;
   } {
     const prefix = `Execute the following task as best you can. You have access to the following tools:`;
-    const instructions = `Use the following format:
+    const instructions = `Use the following format in your response:
 
 Task: the input task you must finish
 Thought: you should always think about what to do

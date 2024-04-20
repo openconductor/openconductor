@@ -64,7 +64,6 @@ export const nonRetryPolicy: ActivityOptions = {
 export const longNonRetryPolicy: ActivityOptions = {
   startToCloseTimeout: '30m',
   scheduleToCloseTimeout: '60m',
-  heartbeatTimeout: '1m',
   retry: {
     maximumAttempts: 1,
   },

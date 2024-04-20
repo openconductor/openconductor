@@ -15,7 +15,7 @@ const ConductorPage: React.FC = () => {
     <AgentLayout>
       <main>
         <AgentHeader />
-        <AgentPlayground agentId={conductor_id.toString()} />
+        <AgentPlayground agentId={conductor_id.toString()} conductor={true}/>
       </main>
     </AgentLayout>
   );

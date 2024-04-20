@@ -4,6 +4,7 @@ import { type DefaultSession, type NextAuthOptions } from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
 import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
+import TwitterProvider from 'next-auth/providers/twitter';
 
 /**
  * Module augmentation for `next-auth` types
@@ -67,6 +68,7 @@ export const authOptions: NextAuthOptions = {
             prompt: 'Show me an {keyword}',
             input: { keyword: 'example' },
             playground: true,
+            conductor: true,
             team: { connect: { id: team.id } },
             creator: { connect: { id: message.user.id } },
           },
@@ -98,6 +100,17 @@ export const authOptions: NextAuthOptions = {
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID || '',
       clientSecret: process.env.GITHUB_CLIENT_SECRET || '',
+    }),
+    TwitterProvider({
+      clientId: process.env.TWITTER_CLIENT_ID || '',
+      clientSecret: process.env.TWITTER_CLIENT_SECRET || '',
+      version: '2.0',
+      authorization: {
+        params: {
+          scope:
+            'tweet.read tweet.write tweet.moderate.write users.read follows.read follows.write offline.access space.read mute.read mute.write like.read like.write list.read list.write block.read block.write bookmark.read bookmark.write',
+        },
+      },
     }),
     /**
      * ...add more providers here
