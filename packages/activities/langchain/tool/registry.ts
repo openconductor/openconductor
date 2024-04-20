@@ -15,9 +15,14 @@ export async function langchainToolRegistry(enabledPlugins?: string[]): Promise<
   const googleCseId = process.env.GOOGLE_CSE_ID;
   const googleApiKey = process.env.GOOGLE_API_KEY;
 
+  // TBD accessToken from db await getDbAccount({accountId})).access_token
+  const googleAccessToken = process.env.GOOGLE_ACCESS_TOKEN;
+  const googleRefreshToken = process.env.GOOGLE_REFRESH_TOKEN;
+
   const availableTools = [
     new openconductorTool.OpenconductorDatetime(),
     new googleTool.GoogleSearchTool({ googleCseId, googleApiKey }),
+    new googleTool.GoogleWebmastersTool({ googleAccessToken, googleRefreshToken }),
     new SerpAPI(serpApiKey, {
       location: 'Austin,Texas,United States',
       hl: 'en',

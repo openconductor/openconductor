@@ -29,6 +29,7 @@ export async function langchainAgent({
   const llmChain = new LLMChain({
     prompt,
     llm: model,
+    verbose: true,
   });
 
   const agent = new LLMSingleActionAgent({

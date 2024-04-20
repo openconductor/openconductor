@@ -1,9 +1,9 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { prisma } from '@openconductor/db';
 import { type DefaultSession, type NextAuthOptions } from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
 import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
-import { prisma } from '@openconductor/db';
 
 /**
  * Module augmentation for `next-auth` types
@@ -79,6 +79,17 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_OAUTH_CLIENT_ID || '',
       clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET || '',
+      authorization: {
+        params: {
+          /**
+           * consent: The server should prompt the user for consent even if consent has already been granted for the requested scopes. This can be useful if you want the user to re-confirm their consent for certain actions.
+           */
+          prompt: 'consent',
+          access_type: 'offline',
+          response_type: 'code',
+          scope: 'openid https://www.googleapis.com/auth/webmasters.readonly',
+        },
+      },
     }),
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID || '',
