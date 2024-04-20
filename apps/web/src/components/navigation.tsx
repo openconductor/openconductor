@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { Blocks, Inbox, Split, SquareStack } from 'lucide-react';
+import { Blocks, Inbox, Split, SquareStack, Bot } from 'lucide-react';
 
 import { AccountSwitcher } from '@/app/examples/mail/components/account-switcher';
 import { Nav } from '@/app/examples/mail/components/nav';
@@ -70,6 +70,12 @@ export function Navigation({ isCollapsed }: { isCollapsed: boolean }) {
             title: 'Sources',
             label: '',
             icon: Blocks,
+          },
+          {
+            href: '/aiagents',
+            title: 'AI Agents',
+            label: '',
+            icon: Bot,
           },
           // {
           //   title: 'Junk',

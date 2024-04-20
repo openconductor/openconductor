@@ -76,6 +76,7 @@ model User {
   documents     Document[]
   Message       Message[]
   Source        Source[]
+  AiAgent       AiAgent[]
 }
 
 // Teams
@@ -94,6 +95,7 @@ model Team {
   documents Document[]
   Message   Message[]
   Source    Source[]
+  AiAgent   AiAgent[]
 }
 
 model TeamMember {
@@ -225,6 +227,9 @@ model Message {
   source   Source @relation(fields: [sourceId], references: [id], onDelete: Cascade)
   sourceId String
 
+  aiAgent   AiAgent @relation(fields: [aiAgentId], references: [id], onDelete: Cascade)
+  aiAgentId String
+
   author   Author @relation(fields: [authorId], references: [id])
   authorId String
 
@@ -257,6 +262,7 @@ model Author {
   url      String?
   messages Message[]
   sources  Source[]
+  aiAgents AiAgent[]
 
   @@unique([type, typeId])
 }
@@ -272,6 +278,9 @@ model Label {
 
   source   Source @relation(fields: [sourceId], references: [id], onDelete: Cascade)
   sourceId String
+
+  aiAgent   AiAgent @relation(fields: [aiAgentId], references: [id], onDelete: Cascade)
+  aiAgentId String
 
   @@unique([sourceId, sourceReferenceId])
 }
@@ -323,4 +332,33 @@ model Source {
   authorId  String?
 
   @@unique([type, sourceId])
+}
+
+enum AiAgentType {
+  GITHUB_REPO
+}
+
+model AiAgent {
+  id          String     @id @default(cuid())
+  type        AiAgentType
+  aiAgentId   String
+  name        String
+  url         String
+  imageUrl    String?
+  description String?
+  enabled     Boolean?
+  messages    Message[]
+
+  team      Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId    String
+  creator   User   @relation(fields: [creatorId], references: [id])
+  creatorId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Label     Label[]
+  Author    Author?  @relation(fields: [authorId], references: [id])
+  authorId  String?
+
+  @@unique([type, aiAgentId])
 }

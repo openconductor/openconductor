@@ -25,6 +25,10 @@ const examples = [
     name: 'Sources',
     href: '/sources',
   },
+  {
+    name: 'AI Agents',
+    href: '/aiagents',
+  },
   // {
   //   name: 'Mail',
   //   href: '/examples/mail',
