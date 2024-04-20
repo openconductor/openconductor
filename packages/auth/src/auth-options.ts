@@ -100,6 +100,11 @@ export const authOptions: NextAuthOptions = {
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID || '',
       clientSecret: process.env.GITHUB_CLIENT_SECRET || '',
+      authorization: {
+        params: {
+          scope: 'repo read:user user:email',
+        },
+      },
     }),
     TwitterProvider({
       clientId: process.env.TWITTER_CLIENT_ID || '',

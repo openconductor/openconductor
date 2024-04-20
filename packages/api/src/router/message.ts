@@ -16,12 +16,19 @@ export const messageRouter = createTRPCRouter({
             },
           },
         },
+        parentId: null,
+      },
+      include: {
+        author: true,
       },
     });
   }),
   byId: protectedProcedure.input(z.object({ id: z.string() })).query(({ ctx, input }) => {
     return ctx.prisma.message.findFirst({
       where: { id: input.id },
+      include: {
+        children: true,
+      },
     });
   }),
   refresh: protectedProcedure.input(z.object({ teamId: z.string() })).mutation(async ({ input, ctx }) => {
