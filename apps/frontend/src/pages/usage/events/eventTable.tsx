@@ -52,7 +52,8 @@ export default function EventTable({ blockId, agentId }: { blockId?: string; age
                     </td>
                     <td className="px-3 py-4 text-sm text-neutral-500">
                       <span className="inline-flex px-2 text-xs leading-5">
-                        {Math.round(Math.abs(event.endedAt!.getTime() - event.startedAt!.getTime()) / 1000)}s
+                        {event.endedAt &&
+                          `${Math.round(Math.abs(event.endedAt.getTime() - event.startedAt!.getTime()) / 1000)}s`}
                       </span>
                     </td>
                     <td className="px-3 py-4 text-sm text-neutral-500">

@@ -14,7 +14,6 @@ const config = {
     if (isServer) {
       config.plugins = [...config.plugins, new PrismaPlugin()]
     }
-
     return config
   },
   reactStrictMode: true,

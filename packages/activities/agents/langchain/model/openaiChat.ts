@@ -1,4 +1,4 @@
-import { ChatOpenAI } from 'langchain/chat_models';
+import { ChatOpenAI } from 'langchain/chat_models/openai';
 
 export async function langchainModelsOpenaiChat({
   openAIApiKey = process.env.OPENAI_API_KEY,

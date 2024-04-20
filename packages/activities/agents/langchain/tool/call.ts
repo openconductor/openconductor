@@ -1,5 +1,5 @@
 import { langchainTool } from '.';
-import { AgentAction, AgentFinish, AgentStep } from 'langchain/schema';
+import { AgentAction } from 'langchain/schema';
 
 export async function langchainToolCall({
   action,

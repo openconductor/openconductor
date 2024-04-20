@@ -1,10 +1,11 @@
 import { LLMChain, OpenAI } from 'langchain';
 import { ZeroShotAgent } from 'langchain/agents';
-import { ChatOpenAI } from 'langchain/chat_models';
+import { ChatOpenAI } from 'langchain/chat_models/openai';
 
 import { ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate } from 'langchain/prompts';
 import { AgentAction, AgentFinish, AgentStep } from 'langchain/schema';
 import { langchainTool } from '../tool';
+import { ConditionalPromptSelector, isChatModel } from 'langchain/dist/chains/prompt_selector';
 
 export async function langchainZeroShotAgent({
   input,
@@ -45,7 +46,7 @@ This was your previous work (but I haven't seen any of it! I only see what you r
 
   const llmChain = new LLMChain({
     prompt: chatPrompt,
-    llm: model,
+    llm: chat,
   });
 
   const agent = new ZeroShotAgent({

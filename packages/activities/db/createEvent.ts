@@ -1,6 +1,16 @@
 import { prisma } from '@openconductor/db';
 
-export async function createDbEvent({ blockId, runId }: { blockId: string; runId: string }) {
+export async function createDbEvent({
+  blockId,
+  runId,
+  status = 'started',
+  output,
+}: {
+  blockId: string;
+  runId: string;
+  status?: string;
+  output?: string;
+}) {
   return prisma.event.create({
     data: {
       startedAt: new Date(),
@@ -10,7 +20,8 @@ export async function createDbEvent({ blockId, runId }: { blockId: string; runId
       run: {
         connect: { id: runId },
       },
-      status: 'started',
+      status,
+      output,
     },
   });
 }
