@@ -10,6 +10,7 @@ import { agentRouter } from './router/agent';
 import { messageRouter } from './router/message';
 import { sourceRouter } from './router/source';
 import { createTRPCRouter } from './trpc';
+import { labelRouter } from './router/label';
 
 export const appRouter = createTRPCRouter({
   agent: agentRouter,
@@ -22,6 +23,7 @@ export const appRouter = createTRPCRouter({
   team: teamRouter,
   message: messageRouter,
   source: sourceRouter,
+  label: labelRouter
 });
 
 // export type definition of API

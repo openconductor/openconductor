@@ -13,13 +13,14 @@ import { useMessage } from '../use-message';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { MoreVertical } from 'lucide-react';
-import { OpenInNewWindowIcon } from '@radix-ui/react-icons';
+import { OpenInNewWindowIcon, ReloadIcon } from '@radix-ui/react-icons';
 import { Textarea } from '@/components/ui/textarea';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
@@ -37,6 +38,8 @@ export function MessageContent({ messageId }: { messageId: string }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [areBulletsVisible, setAreBulletsVisible] = useState(false);
   const [visibleSuggestionIndex, setVisibleSuggestionIndex] = useState<number | null>(null);
+
+  const { mutateAsync: assign, isLoading: isAssigning } = api.label.assign.useMutation();
 
   const {
     data: message,
@@ -61,6 +64,7 @@ export function MessageContent({ messageId }: { messageId: string }) {
   );
 
   const { mutateAsync: aiMessage, isLoading } = api.message.ai.useMutation();
+  const [owner, repo] = message?.source.sourceId.split("/") ?? [null, null]
 
   const handleAiMessage = async () => {
     await aiMessage({ messageId });
@@ -83,7 +87,9 @@ export function MessageContent({ messageId }: { messageId: string }) {
 
   return (
     messageStatus === 'success' &&
-    message && (
+    message &&
+    owner &&
+    repo && (
       <>
         <div className="flex items-center px-4 py-2 h-[52px]">
           <h2 className="text-md">{message.key}</h2>
@@ -264,13 +270,14 @@ export function MessageContent({ messageId }: { messageId: string }) {
                     <div className="flex justify-end">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button onClick={(e) => e.preventDefault()} size="sm" className="ml-4">
-                            Assign to
+                          <Button onClick={(e) => e.preventDefault()} size="sm" className="ml-4" disabled={isAssigning}>
+                            {isAssigning ? <ReloadIcon className="mr-2 h-4 w-4 animate-spin" /> : null}
+                            {isAssigning ? "Assigning" : "Assign to"}
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                           <DropdownMenuGroup>
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => assign({ owner, repo, issueId: message.sourceReferenceId})}>
                               Devin
                             </DropdownMenuItem>
                             <DropdownMenuItem>
@@ -278,6 +285,10 @@ export function MessageContent({ messageId }: { messageId: string }) {
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                               Sweep
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>
+                              Assign to all
                             </DropdownMenuItem>
                           </DropdownMenuGroup>
                         </DropdownMenuContent>
