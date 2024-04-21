@@ -3,7 +3,7 @@ import type * as activities from '@openconductor/activities';
 import { ApplicationFailure, proxyActivities } from '@temporalio/workflow';
 import { AiItemType } from '@openconductor/db';
 
-const { getDbMessage, embedMessage, openaiAugmentMessage, createAiItem, searchByEmbedding } =
+const { getDbMessage, embedMessage, openaiAugmentMessage, createAiItem, searchByEmbedding, mongoVectorEmbed } =
   proxyActivities<typeof activities>(nonRetryPolicy);
 
 export async function aiAugmentMessage({ messageId }: { messageId: string }): Promise<boolean> {
@@ -31,14 +31,9 @@ export async function aiAugmentMessage({ messageId }: { messageId: string }): Pr
     },
   });
 
-  const { embedding } = await embedMessage({ messageId });
+  await embedMessage({ messageId });
 
-  await searchByEmbedding({ embedding });
-
-  // difficulty -> first contribution
-  // assignement / specialist
-  // Issues -> context switch prompt
-  // Suggestion of labels
+  await mongoVectorEmbed({ message });
 
   return true;
 }
