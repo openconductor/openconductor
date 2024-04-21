@@ -2,13 +2,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $fullName }}-server
+  name: {{ $fullName }}-web
   labels:
     {{- include "openconductor.labels" . | nindent 4 }}
 spec:
   type: ClusterIP
   ports:
-  - port: {{ .Values.server.service.port }}
+  - port: {{ .Values.web.service.port }}
     targetPort: http
     protocol: TCP
     name: http

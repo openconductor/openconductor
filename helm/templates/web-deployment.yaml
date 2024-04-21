@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $fullName }}-server
+  name: {{ $fullName }}-web
   labels:
     {{- include "openconductor.labels" . | nindent 4 }}
 spec:
@@ -20,7 +20,7 @@ spec:
       - name: restack-ecr
       containers:
       - name: {{ $fullName }}-container
-        image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag }}"
+        image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}"
         imagePullPolicy: Always
         securityContext:
           capabilities:
@@ -39,12 +39,12 @@ spec:
 
         ports:
           - name: http
-            containerPort: {{ .Values.server.service.port }}
+            containerPort: {{ .Values.web.service.port }}
             protocol: TCP
         
-        {{- if .Values.server.resources }}
+        {{- if .Values.web.resources }}
         resources: 
-        {{- toYaml .Values.server.resources | nindent 10 }}
+        {{- toYaml .Values.web.resources | nindent 10 }}
         {{- end }}
         
       # nodeSelector:
