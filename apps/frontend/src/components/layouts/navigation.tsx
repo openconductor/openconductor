@@ -12,7 +12,6 @@ const navigation = [
   { name: 'Triage', href: '/triage', root: true },
   { name: 'Review', href: '/review' },
   // { name: 'Conductors', href: '/conductors' },
-  // { name: 'Agents', href: '/agents' },
   // { name: 'Documents', href: '/documents' },
 ];
 
