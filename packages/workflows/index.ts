@@ -4,5 +4,6 @@ export * from './embedGithub/embedGithub';
 export * from './runConductor/runConductorTool';
 export * from './messages/refreshMessages';
 export * from './ai';
+export * from  './aiAgent/createAiAgent';
 export * from './embed';
 export * from './source/createSource';
