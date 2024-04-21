@@ -227,8 +227,8 @@ model Message {
   source   Source @relation(fields: [sourceId], references: [id], onDelete: Cascade)
   sourceId String
 
-  aiAgent   AiAgent @relation(fields: [aiAgentId], references: [id], onDelete: Cascade)
-  aiAgentId String
+  aiAgent   AiAgent? @relation(fields: [aiAgentId], references: [id], onDelete: Cascade)
+  aiAgentId String?
 
   author   Author @relation(fields: [authorId], references: [id])
   authorId String
@@ -279,8 +279,8 @@ model Label {
   source   Source @relation(fields: [sourceId], references: [id], onDelete: Cascade)
   sourceId String
 
-  aiAgent   AiAgent @relation(fields: [aiAgentId], references: [id], onDelete: Cascade)
-  aiAgentId String
+  aiAgent   AiAgent? @relation(fields: [aiAgentId], references: [id], onDelete: Cascade)
+  aiAgentId String?
 
   @@unique([sourceId, sourceReferenceId])
 }
