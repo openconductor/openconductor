@@ -1,10 +1,10 @@
-{{- $fullName := include "seobuilder.fullname" . -}}
+{{- $fullName := include "openconductor.fullname" . -}}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ $fullName }}-server
   labels:
-    {{- include "seobuilder.labels" . | nindent 4 }}
+    {{- include "openconductor.labels" . | nindent 4 }}
 spec:
   type: ClusterIP
   ports:
@@ -13,4 +13,4 @@ spec:
     protocol: TCP
     name: http
   selector: 
-  {{- include "seobuilder.labels" . | nindent 6 }}
+  {{- include "openconductor.labels" . | nindent 6 }}

@@ -1,18 +1,18 @@
-{{- $fullName := include "seobuilder.fullname" . -}}
+{{- $fullName := include "openconductor.fullname" . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ $fullName }}-worker
   labels:
-    {{- include "seobuilder.labels" . | nindent 4 }}
+    {{- include "openconductor.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      {{- include "seobuilder.labels" . | nindent 6 }}
+      {{- include "openconductor.labels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "seobuilder.labels" . | nindent 8}}
+        {{- include "openconductor.labels" . | nindent 8}}
       annotations:
         commit_sha: {{ .Values.global.commit }}
     spec:
