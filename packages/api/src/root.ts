@@ -11,6 +11,7 @@ import { messageRouter } from './router/message';
 import { sourceRouter } from './router/source';
 import { aiAgentRouter } from './router/aiAgent';
 import { createTRPCRouter } from './trpc';
+import { labelRouter } from './router/label';
 
 export const appRouter = createTRPCRouter({
   agent: agentRouter,
@@ -23,7 +24,8 @@ export const appRouter = createTRPCRouter({
   team: teamRouter,
   message: messageRouter,
   source: sourceRouter,
-  aiAgent: aiAgentRouter,
+  label: labelRouter,
+  aiAgent: aiAgentRouter
 });
 
 // export type definition of API
