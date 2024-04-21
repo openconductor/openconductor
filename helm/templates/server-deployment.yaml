@@ -1,0 +1,53 @@
+{{- $fullName := include "seobuilder.fullname" . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $fullName }}-server
+  labels:
+    {{- include "seobuilder.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "seobuilder.labels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "seobuilder.labels" . | nindent 8}}
+      annotations:
+        commit_sha: {{ default "latest" .Values.global.commit }}
+    spec:
+      imagePullSecrets:
+      - name: restack-ecr
+      containers:
+      - name: {{ $fullName }}-container
+        image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag }}"
+        imagePullPolicy: Always
+        securityContext:
+          capabilities:
+            drop:
+            - ALL
+          runAsUser: 1001
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+
+        envFrom:
+          - configMapRef:
+              name: {{ $fullName }}
+          - secretRef:
+              name: {{ $fullName }}
+
+        ports:
+          - name: http
+            containerPort: {{ .Values.server.service.port }}
+            protocol: TCP
+        
+        {{- if .Values.server.resources }}
+        resources: 
+        {{- toYaml .Values.server.resources | nindent 10 }}
+        {{- end }}
+        
+      # nodeSelector:
+      # affinity:
+      # tolerations:
+

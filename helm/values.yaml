@@ -1,0 +1,22 @@
+global:
+  commit: "latest"
+
+worker:
+  image:
+    tag: "worker-v1.0.0"
+
+web:
+  ingress:
+    enabled: true
+  service:
+    port: 3001
+  image:
+    tag: "web-v1.0.0"
+
+frontend:
+  ingress:
+    enabled: true
+  service:
+    port: 3002 
+  image:
+    tag: "frontend-v1.0.0"

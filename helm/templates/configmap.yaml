@@ -1,0 +1,9 @@
+{{- $fullName := include "seobuilder.fullname" . -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "seobuilder.labels" . | nindent 4 }}
+data:
+  {{- toYaml .Values.global.configmap | nindent 2 }}

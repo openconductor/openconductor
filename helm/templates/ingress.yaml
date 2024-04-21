@@ -1,0 +1,26 @@
+{{- if .Values.server.ingress.enabled -}}
+{{- $fullName := include "seobuilder.fullname" . -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}-server
+  labels:
+    {{- include "seobuilder.labels" . | nindent 4 }}
+  {{- with .Values.server.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: nginx
+  rules:
+   - host: {{ .Values.server.ingress.hostname }}
+     http:
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: {{ $fullName }}-server
+              port:
+                number: {{ .Values.server.service.port }}
+{{- end }}
