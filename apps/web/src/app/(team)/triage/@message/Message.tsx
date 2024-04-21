@@ -121,9 +121,8 @@ export function MessageContent({ messageId }: { messageId: string }) {
         </div>
         <Separator />
         <div className="flex flex-col h-full justify-between max-h-[calc(100vh-53px)] p-4">
-          <ScrollArea>
-            <div className="p-4 pr-8 space-y-5">
-              <ScrollBar orientation="vertical" />
+          <div className="max-w-full w-full flex-1 flex overflow-scroll">
+            <div className="p-4 pr-8 space-y-5 max-w-full h-0 grow">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   {message.labels.map((label, index) => (
@@ -220,7 +219,8 @@ export function MessageContent({ messageId }: { messageId: string }) {
                   {message.author?.handle}
                 </div>
                 <div className={`${!isExpanded ? 'max-h-48 overflow-hidden' : ''}`}>
-                  <Markdown className="text-base space-y-4 dark:text-neutral-300">{message.body}</Markdown>
+                  <Markdown className="markdown text-xl space-y-4 dark:text-neutral-300 mb-4">{message.title}</Markdown>
+                  <Markdown className="markdown text-xs space-y-4 dark:text-neutral-300 mb-4">{message.body}</Markdown>
                 </div>
                 <Button variant="secondary" onClick={() => setIsExpanded(!isExpanded)}>
                   {isExpanded ? 'Collapse' : 'Expand'}
@@ -252,7 +252,7 @@ export function MessageContent({ messageId }: { messageId: string }) {
                 </div>
               </div>
             </div>
-          </ScrollArea>
+          </div>
 
           <div>
             <Separator className="mt-auto" />
