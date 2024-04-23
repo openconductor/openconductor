@@ -1,0 +1,45 @@
+name: Release Helm Chart
+
+on:
+  pull_request:
+    types:
+      - closed
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch name"
+        required: true
+        default: "main"
+
+jobs:
+  changes:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.event.inputs.branch }}
+          fetch-depth: 0
+          token: ${{ secrets.BOT_TOKEN }}
+          persist-credentials: true
+
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.event.inputs.branch }}
+          fetch-depth: 0
+          token: ${{ secrets.BOT_TOKEN }}
+          persist-credentials: true
+      - name: Release ${{ matrix.chart }}
+        id: release
+        uses: ./.github/actions/releaseHelmChart
+        with:
+          helm-repo: restack-prod
+          url: https://restackio.jfrog.io/artifactory/api/helm/restack-prod
+          username: ${{ secrets.HELM_REPO_USERNAME }}
+          password: ${{ secrets.HELM_REPO_PASSWORD }}
