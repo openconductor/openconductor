@@ -1,0 +1,26 @@
+{{- if .Values.web.ingress.enabled -}}
+{{- $fullName := include "openconductor.fullname" . -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}-web
+  labels:
+    {{- include "openconductor.labels" . | nindent 4 }}
+  {{- with .Values.web.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: nginx
+  rules:
+   - host: {{ .Values.web.ingress.hostname }}
+     http:
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: {{ $fullName }}-web
+              port:
+                number: {{ .Values.web.service.port }}
+{{- end }}

@@ -1,0 +1,9 @@
+{{- $fullName := include "openconductor.fullname" . -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "openconductor.labels" . | nindent 4 }}
+data:
+  {{- toYaml .Values.global.configmap | nindent 2 }}

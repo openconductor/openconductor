@@ -1,0 +1,7 @@
+apiVersion: v2
+name: OpenConductor
+description: Orchestrate AI Agents at scale
+
+type: application
+
+version: 0.0.1

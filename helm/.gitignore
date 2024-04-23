@@ -1,0 +1,5 @@
+charts
+mandatory
+debug.yaml
+*.lock
+*.tgz

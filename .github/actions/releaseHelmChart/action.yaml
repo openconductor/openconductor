@@ -1,0 +1,66 @@
+name: Release Helm Chart
+description: "Release, upload and tag new Restack chart version"
+
+inputs:
+  helm-repo:
+    description: "Name of Jfrog helm repository"
+    required: true
+  url:
+    description: "Url of Jfrog helm repository"
+    required: true
+  username:
+    description: "Name of Jfrog helm repository user"
+    required: true
+  password:
+    description: "Password of Jfrog helm repository user"
+    required: true
+  bot-token:
+    description: "Token of Github Bot"
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-go@v4
+      with:
+        go-version: "1.16.1"
+
+    - name: Install Pybump
+      run: pip3 install pybump
+      shell: bash
+
+    - name: Install Helm
+      uses: azure/setup-helm@v3
+      with:
+        version: v3.8.1
+
+    - name: Add OpenConductor Helm Repo
+      run: helm repo add ${{ inputs.helm-repo }} ${{ inputs.url }} --username ${{ inputs.username }} --password "${{ inputs.password }}"
+      shell: bash
+
+    - name: Bump Version
+      run: pybump bump --file helm/Chart.yaml --level minor
+      shell: bash
+
+    - name: Helm Package
+      id: package
+      run: |
+        cd helm
+        ./hdu.sh
+        helm package .
+        echo "version=$(pybump get --file Chart.yaml)" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Upload chart
+      run: |
+        curl -u${{ inputs.username }}:"${{ inputs.password }}" -T helm/openconductor-${{ steps.package.outputs.version }}.tgz "https://restackio.jfrog.io/artifactory/restack-prod/openconductor-${{ github.event.pull_request.head.ref || github.event.inputs.branch }}-${{ steps.package.outputs.version }}.tgz"
+      shell: bash
+
+    - name: Update Version Commit
+      uses: EndBug/add-and-commit@v9
+      with:
+        default_author: github_actions
+        message: "[OpenConductor] Release ${{ steps.package.outputs.version }}"
+        tag: openconductor-${{ github.event.pull_request.head.ref || github.event.inputs.branch }}-${{ steps.package.outputs.version }}
+        push: origin ${{ github.event.pull_request.head.ref || github.event.inputs.branch }} --force
+        github_token: ${{ inputs.bot-token }}
