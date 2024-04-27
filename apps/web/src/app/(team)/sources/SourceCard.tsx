@@ -33,9 +33,7 @@ export function SourceCard({ id, type, sourceId, name, url, description, created
     <Card>
       <CardHeader className="space-y-5">
         <div className="flex justify-between items-center">
-          <CardTitle>
-            {name} {!enabled && 'disabled'}
-          </CardTitle>
+          <CardTitle className={!enabled ? 'opacity-50' : ''}>{name}</CardTitle>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">

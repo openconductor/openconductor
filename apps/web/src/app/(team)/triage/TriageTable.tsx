@@ -117,7 +117,7 @@ export default function TriageTable({ type, contribute }: { type: MessageType; c
           {type === MessageType.TRIAGE && contribute && 'Contribute'}
           {type === MessageType.REVIEW && 'Review'}
         </h1>
-        <Button
+        {/* <Button
           variant="secondary"
           size="sm"
           onClick={(event) => {
@@ -127,7 +127,7 @@ export default function TriageTable({ type, contribute }: { type: MessageType; c
           disabled={isRecommending}
         >
           {isRecommending ? 'Recommending' : 'Recommend'}
-        </Button>
+        </Button> */}
         <Button
           variant="secondary"
           size="sm"
