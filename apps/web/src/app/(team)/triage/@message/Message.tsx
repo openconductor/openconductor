@@ -22,7 +22,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu';
 
 export type ResponseSummary = {
   summary: string;
@@ -64,7 +64,7 @@ export function MessageContent({ messageId }: { messageId: string }) {
   );
 
   const { mutateAsync: aiMessage, isLoading } = api.message.ai.useMutation();
-  const [owner, repo] = message?.source.sourceId.split("/") ?? [null, null]
+  const [owner, repo] = message?.source.sourceId.split('/') ?? [null, null];
 
   const handleAiMessage = async () => {
     await aiMessage({ messageId });
@@ -272,24 +272,26 @@ export function MessageContent({ messageId }: { messageId: string }) {
                         <DropdownMenuTrigger asChild>
                           <Button onClick={(e) => e.preventDefault()} size="sm" className="ml-4" disabled={isAssigning}>
                             {isAssigning ? <ReloadIcon className="mr-2 h-4 w-4 animate-spin" /> : null}
-                            {isAssigning ? "Assigning" : "Assign to"}
+                            {isAssigning ? 'Assigning' : 'Assign to'}
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                           <DropdownMenuGroup>
-                            <DropdownMenuItem onClick={() => assign({ owner, repo, issueId: message.sourceReferenceId})}>
+                            <DropdownMenuItem>Autocode Rover</DropdownMenuItem>
+                            <DropdownMenuItem>Bloop</DropdownMenuItem>
+                            <DropdownMenuItem>Continue</DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => assign({ owner, repo, issueId: message.sourceReferenceId })}
+                            >
                               Devin
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              Continue
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              Sweep
-                            </DropdownMenuItem>
+                            <DropdownMenuItem>DevOps agent</DropdownMenuItem>
+                            <DropdownMenuItem>OpenDevin</DropdownMenuItem>
+                            <DropdownMenuItem>React agent</DropdownMenuItem>
+                            <DropdownMenuItem>Swe agent</DropdownMenuItem>
+                            <DropdownMenuItem>Sweep</DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                              Assign to all
-                            </DropdownMenuItem>
+                            <DropdownMenuItem>Assign to all</DropdownMenuItem>
                           </DropdownMenuGroup>
                         </DropdownMenuContent>
                       </DropdownMenu>
